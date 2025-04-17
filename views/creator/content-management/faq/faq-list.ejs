@@ -1,0 +1,382 @@
+<%- include('../../partials/header') %>
+
+<!-- Start Breadcrumbbar -->
+<div class="breadcrumbbar">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <h4 class="page-title">Faqs</h4>
+      <div class="breadcrumb-list">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/api/creator">Dashboard</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Faqs</li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-4 col-lg-4">
+      <div class="widgetbar">
+        <a href="/api/creator/faq/category/list">
+          <button class="btn btn-outline-primary">Add Category</button>
+        </a>
+        <a href="/api/creator/faq/language/list">
+          <button class="btn btn-outline-primary">Add Language</button>
+        </a>
+        <button
+          class="btn btn-primary"
+          data-toggle="modal"
+          data-target="#addFaqModal"
+        >
+          <i class="feather icon-plus"></i> Add Faqs
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- contentbar starts -->
+<div class="contentbar">
+  <div class="card m-b-30">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="card-title"></h5>
+      <div class="d-flex">
+        <div class="searchbar m-r-10">
+          <div class="input-group">
+            <input
+              type="search"
+              class="form-control search_input"
+              placeholder="Search"
+              aria-label="Search"
+              aria-describedby="button-addon2"
+              value="<%= search %>"
+            />
+            <div class="input-group-append">
+              <button class="btn search-data" id="button-addon2">
+                <i class="feather icon-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <div
+          class="dataTables_wrapper container-fluid dt-bootstrap4"
+        >
+          <div class="row">
+            <div class="col-sm-12">
+              <table
+                class="display table table-striped table-bordered dataTable dtr-inline"
+              >
+                <thead>
+                  <tr role="row">
+                    <th>#</th>
+                    <th>Question</th>
+                    <th>Answer</th>
+                    <th>Category</th>
+                    <th>Language</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tfoot>
+                  <tr role="row">
+                    <th>#</th>
+                    <th>Question</th>
+                    <th>Answer</th>
+                    <th>Category</th>
+                    <th>Language</th>
+                    <th>Actions</th>
+                  </tr>
+                </tfoot>
+                <tbody>
+                  <% faqs.forEach((faq,i) => { %>
+                    <tr>
+                      <td><%= i+1 %></td>
+                      <td style="max-width: 200px;"><%= faq.question %></td>
+                      <td style="max-width: 200px;"><%= faq.answer %></td>
+                      <td><%= faq.category ? faq.category.title : '-' %></td>
+                      <td><%= faq.language.title %></td>
+                      <td>
+                        <div class="d-flex">
+                          <div
+                            title="Edit"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                            class="m-r-5"
+                          >
+                            <button
+                              class="btn btn-primary-rgba edit-faq-btn"
+                              data-toggle="modal"
+                              data-target="#editFaqModal"
+                              data-faq="<%= JSON.stringify((({_id,question,answer,language,category})=>({_id,question,answer,language:language._id,category:category ? category._id : undefined}))(faq)) %>"
+                            >
+                              <i class="feather icon-edit"></i>
+                            </button>
+                          </div>
+                          <div
+                            title="Delete"
+                            data-toggle="tooltip"
+                            data-placement="top"
+                          >
+                            <button
+                              class="btn btn-danger-rgba delete-faq-btn"
+                              data-toggle="modal"
+                              data-target="#confirmDelete"
+                              data-id="<%= faq._id %>"
+                            >
+                              <i class="feather icon-trash"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% if (total > 1) { %>
+      <!-- pagination starts -->
+      <div class="d-flex justify-content-center">
+        <ul class="pagination">
+          <% if (Number(page) > 1) { %>
+            <li class="page-item">
+              <a class="page-link prev-page" data-prev="<%= Number(page) - 1 %>">«</a>
+            </li>
+          <% } %>
+          <% if (Number(page) !== 1) { %>
+            <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) - 1 %>"><%= Number(page) - 1 %></a></li>
+          <% } %>
+          <li class="page-item active">
+            <a class="page-link page-num" data-page="<%= Number(page) %>"><%= Number(page) %></a>
+          </li>
+          <% if (Number(page) < Number(total)) { %>
+            <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) + 1 %>"><%= Number(page) + 1 %></a></li>
+          <% } %>
+          <% if (Number(page) !== Number(total)) { %>
+            <li class="page-item">
+              <a class="page-link next-page" data-next="<%= Number(page) + 1 %>">»</a>
+            </li>
+          <% } %>
+        </ul>
+      </div>
+      <!-- pagination ends -->
+    <% } %>   
+  </div>
+</div>
+<!-- contentbar starts -->
+
+<!-- add modal starts -->
+<div
+  class="modal fade"
+  id="addFaqModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mt-0">Add Faq</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/api/creator/faq/add" method="POST">
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <label for="question" class="text-dark">Question</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="question"
+                  name="question"
+                />
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="answer" class="text-dark">Answer</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="answer"
+                  name="answer"
+                />
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="language" class="text-dark">Language</label>
+                <select
+                  class="form-control"
+                  name="language"
+                  id="language"
+                >
+                <option disabled selected>Select Language</option>
+                <% faqLanguages.forEach(language => { %>
+                  <option value="<%= language._id %>"><%= language.title %></option>
+                <% }) %>
+                </select>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="category" class="text-dark">Category</label>
+                <select
+                  class="form-control"
+                  name="category"
+                  id="category"
+                >
+                <option disabled selected>Select Category</option>
+                <% faqCategories.forEach(category => { %>
+                  <option value="<%= category._id %>"><%= category.title %></option>
+                <% }) %>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="m-t-10">
+            <button type="submit" class="btn btn-success add_faq">
+              <i class="feather icon-plus m-r-5"></i> Add
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- add modal ends -->
+
+<!-- edit modal starts -->
+<div
+  class="modal fade"
+  id="editFaqModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mt-0">Edit Faq</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="" class="edit-faq-form" method="POST">
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <label for="question_edit" class="text-dark">Question</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="question_edit"
+                  name="question"
+                />
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="answer_edit" class="text-dark">Answer</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="answer_edit"
+                  name="answer"
+                />
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="language_edit" class="text-dark">Language</label>
+                <select
+                  class="form-control"
+                  name="language"
+                  id="language_edit"
+                >
+                <option disabled selected>Select Language</option>
+                <% faqLanguages.forEach(language => { %>
+                  <option value="<%= language._id %>"><%= language.title %></option>
+                <% }) %>
+                </select>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="category_edit" class="text-dark">Category</label>
+                <select
+                  class="form-control"
+                  name="category"
+                  id="category_edit"
+                >
+                <option disabled selected>Select Category</option>
+                <% faqCategories.forEach(category => { %>
+                  <option value="<%= category._id %>"><%= category.title %></option>
+                <% }) %>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="m-t-10">
+            <button type="submit" class="btn btn-success edit_faq">
+              <i class="feather icon-save m-r-5"></i> Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- edit modal ends -->
+
+<!-- delete modal starts -->
+<div
+  class="modal fade"
+  id="confirmDelete"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p class="text-muted font-18 text-center">Do you really want to delete this FAQ?</p>
+        <div class="d-flex justify-content-center m-t-25">
+          <button class="btn btn-secondary m-r-10" data-dismiss="modal">
+            Cancel
+          </button>
+          <form action="" class="delete-faq-form" method="POST">
+            <button type="submit" class="btn btn-danger">
+              <i class="feather icon-trash m-r-5"></i>
+              Delete
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- delete modal ends -->
+
+<script>
+  document.body.classList.add("toggle-menu");
+</script>
+<%- include('../../partials/footer') %>

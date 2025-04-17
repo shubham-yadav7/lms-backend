@@ -1,0 +1,805 @@
+<%- include('../partials/header') %>
+
+<!-- Start Breadcrumbbar -->
+<div class="breadcrumbbar">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <h4 class="page-title">
+        <%= courseBundle.title %>
+      </h4>
+      <div class="breadcrumb-list">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="/api/creator">Dashboard</a>
+          </li>
+          <li class="breadcrumb-item">
+            <a href="/api/creator/course-bundle/list">Course Bundles</a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">
+            <%= courseBundle.title %>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-4 col-lg-4">
+      <div class="widgetbar">
+        <button class="btn btn-primary">
+          <i class="feather icon-eye m-r-5"></i>
+          Preview
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- contentbar starts -->
+<div class="contentbar">
+  <div class="row">
+    <div class="col-lg-3">
+      <div class="card m-b-30">
+        <div class="card-body">
+          <div
+            class="nav flex-column nav-pills"
+            id="v-pills-tab"
+            role="tablist"
+            aria-orientation="vertical"
+          >
+            <a
+              class="nav-link mb-2 active"
+              id="v-pills-dashboard-tab"
+              href="/api/creator/course-bundle/<%= courseBundle._id %>"
+              role="tab"
+            >
+              <i class="feather icon-grid mr-2"></i>Information</a
+            >
+            <!-- <a
+              class="nav-link mb-2"
+              id="v-pills-order-tab"
+              href="/api/creator/course/<%#= course._id %>/topic/list"
+              role="tab"
+            >
+              <i class="feather icon-server mr-2"></i>Topics</a
+            > -->
+            <a
+              class="nav-link mb-2"
+              id="v-pills-order-tab"
+              href="/api/creator/diploma/<%= courseBundle._id %>/list"
+              role="tab"
+            >
+              <i class="feather icon-award mr-2"></i>Diploma</a
+            >
+            <a
+            class="nav-link mb-2"
+            id="v-pills-addresses-tab"
+            href="/api/creator/course-bundle/details/<%= courseBundle._id %>/learners"
+            role="tab"
+          >
+            <i class="feather icon-users mr-2"></i>Learners</a
+          >
+          <a
+            class="nav-link mb-2"
+            id="v-pills-wishlist-tab"
+            href="/api/creator/course-bundle/details/<%= courseBundle._id %>/Certificates"
+            role="tab"
+          >
+            <i class="feather icon-credit-card mr-2"></i>Certificates</a
+          >
+          <a
+            class="nav-link mb-2"
+            id="v-pills-wallet-tab"
+            href="/api/creator/course-bundle/details/<%= courseBundle._id %>/reviews"
+            role="tab"
+          >
+            <i class="feather icon-star mr-2"></i>Reviews</a
+          >
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-9">
+      <div class="card m-b-30">
+        <div class="card-header">
+          <h5 class="card-title">Information</h5>
+        </div>
+        <div class="card-body">
+          <ul
+            class="nav nav-tabs custom-tab-line mb-3 justify-content-around"
+            id="defaultTabLine"
+            role="tablist"
+          >
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                id="details-tab-line"
+                data-toggle="tab"
+                href="#details-line"
+                role="tab"
+                aria-controls="details-line"
+                aria-selected="false"
+              >
+                <i class="feather icon-home mr-2"></i>Details</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="pricing-tab-line"
+                data-toggle="tab"
+                href="#pricing-line"
+                role="tab"
+                aria-controls="pricing-line"
+                aria-selected="false"
+              >
+                <i class="feather icon-file-text mr-2"></i>Description</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="pages-tab-line"
+                data-toggle="tab"
+                href="#pages-line"
+                role="tab"
+                aria-controls="pages-line"
+                aria-selected="true"
+              >
+                <i class="feather icon-globe mr-2"></i>SEO</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="advanced-tab-line"
+                data-toggle="tab"
+                href="#advanced-line"
+                role="tab"
+                aria-controls="advanced-line"
+                aria-selected="false"
+              >
+                <i class="feather icon-settings mr-2"></i>Advanced</a
+              >
+            </li>
+          </ul>
+          <div class="tab-content" id="defaultTabContentLine">
+            <div
+              class="tab-pane fade active show"
+              id="details-line"
+              role="tabpanel"
+              aria-labelledby="details-tab-line"
+            >
+              <form action="/api/creator/course-bundle/<%= courseBundle._id %>?_method=PUT&type=details" method="POST">
+                <div class="row">
+                  <div class="col-12 col-lg-6">
+                    <div class="form-group">
+                      <label for="bundle_title" class="text-dark">Bundle Title</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="bundle_title"
+                        name="title"
+                        value="<%= courseBundle.title %>"
+                      />
+                    </div>
+                    <div class="">
+                      <label for="category" class="text-dark">Category</label>
+                      <div class="row">
+                        <div class="col-xl-10 col-lg-8  pr-0">
+                          <div class="input-group mb-3">
+                            <select
+                              class="form-control"
+                              name="category"
+                              id="category"
+                            >
+                              <% courseCategories.forEach(c => { %>
+                              <option <%= courseBundle.category.toString() === c._id.toString() ? 'selected' : '' %> value="<%= c._id %>"><%= c.title %></option>
+                              <% }) %>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-xl-2  col-lg-4 px-0">
+                          <button
+                            class="btn btn-secondary-rgba py-2"
+                            type="button"
+                            data-toggle="modal"
+                            data-target="#categoryModal"
+                          >
+                            <i class="feather icon-plus m-r-5"></i> Add
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group col-12 col-lg-6">
+                    <label for="bundle_excerpt" class="text-dark"
+                      >Bundle Excerpt</label
+                    >
+                    <textarea
+                      class="form-control"
+                      id="bundle_excerpt"
+                      name="excerpt"
+                      cols="100"
+                      rows="4"
+                    ><%= courseBundle.excerpt%></textarea>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="form-group">
+                      <label for="price" class="text-dark">Actual Price</label>
+                      <input type="text" class="form-control number" id="price" name="price" value="<%= courseBundle.price %>" />
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="form-group">
+                      <label for="discountedPrice" class="text-dark"
+                        >Discounted Price</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control number"
+                        id="discountedPrice"
+                        name="discountedPrice"
+                        value="<%= courseBundle.discountedPrice %>"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-lg-6">
+                    <div class="form-group">
+                      <label for="level" class="text-dark">Level</label>
+                      <select class="form-control" name="level" id="level">
+                        <% courseLevels.forEach(lvl => { %>
+                        <option <%= courseBundle.level === lvl.value ? 'selected' : '' %> value="<%= lvl.value %>">
+                          <%= lvl.name %>
+                        </option>
+                        <% }) %>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-lg-6">
+                    <div class="form-group">
+                      <label for="language" class="text-dark">Language</label>
+                      <div class="row">
+                        <div class="col-10 pr-0">
+                          <select
+                          class="form-control select2-multi-select add-bundle-select"
+                          multiple="multiple"
+                          name="language"
+                          id="language"
+                        >
+                          <% courseLanguages.forEach((lang,i) => { %>
+                          <option <%= courseBundle.language.includes(lang._id.toString()) ? 'selected' : '' %> value="<%= lang._id %>">
+                            <%= lang.name %>
+                          </option>
+                          <% }) %>
+                        </select>
+                        </div>
+                        <div class="col-2 pl-0">
+                          <button
+                            class="btn btn-secondary-rgba h-100"
+                            type="button"
+                            data-toggle="modal"
+                            data-target="#languageModal"
+                          >
+                            <i class="feather icon-plus m-r-5"></i> Add
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-lg-6">
+                    <div class="form-group">
+                      <label for="access" class="text-dark">Access</label>
+                      <select class="form-control" name="access" id="access">
+                        <% courseAccess.forEach(a => { %>
+                        <option <%= courseBundle.access === a.value ? 'selected' : '' %> value="<%= a.value %>"><%= a.name %></option>
+                        <% }) %>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <!-- <div class="col-md-6 col-lg-3">
+                    <div class="form-group">
+                      <label for="priority" class="text-dark">Priority</label>
+                      <select id="priority" class="form-control">
+                        <option selected value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                      </select>
+                    </div>
+                  </div> -->
+                  
+                  <div class="col-12">
+                    <div class="tab-footer">
+                      <button type="submit" class="ml-3 btn btn-primary" id="bundle_submit_btn">
+                        <i class="feather icon-save m-r-5"></i> Save
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="pricing-line"
+              role="tabpanel"
+              aria-labelledby="pricing-tab-line"
+            >
+              <form action="/api/creator/course-bundle/<%= courseBundle._id %>?_method=PUT&type=description" method="POST" enctype="multipart/form-data">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="form-group">
+                      <label class="text-dark" for="courses">Select Courses for Bundle</label>
+                      <select
+                      class="form-control select2-multi-select add_course_select"
+                      multiple="multiple"
+                      name="courses"
+                      id="courses"
+                    >
+                    <% courseBundle.courses.forEach(selCourse => { %>
+                      <% for( let i = 0; i < courses.length; i++ ) { %>
+                          <% if (courses[i]._id.toString() === selCourse.toString()) { %>
+                              <option value="<%= courses[i]._id %>" selected><%= courses[i].title %></option>
+                          <% } %> 
+                      <% } %>
+                  <% }) %>
+                    <% courses.forEach(course => { %>
+                      <% if (!courseBundle.courses.includes(course._id)) { %>
+                          <option value="<%= course._id %>" <%= courseBundle.courses.includes(course._id) ? 'selected': ''  %>>
+                            <%= course.title %>
+                          </option>
+                      <% } %>
+                  <% }) %>
+                    </select>
+                    </div>
+                  </div>
+                  <div class="form-group col-12">
+                    <label for="thumbnailVideo" class="text-dark"
+                      >Bundle Thumbnail Video</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="thumbnailVideo"
+                      name="thumbnailVideo"
+                      value="<%= courseBundle.thumbnailVideo %>"
+                    />
+                    <sub>Add youtube link, Ex: https://youtu.be/:id</sub>
+                  </div>
+              
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="description" class="text-dark"
+                        >Description</label
+                      >
+                      <textarea
+                        name="description"
+                        id="description"
+                        cols="30"
+                        rows="10"
+                        class="desc_summer"
+                      ><%= courseBundle.description %></textarea>
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="bundleThumbnailImage" class="text-dark"
+                        >Thumbnail Image</label
+                      >
+                      <input
+                        type="file"
+                        name="bundleThumbnailImage"
+                        id="bundleThumbnailImage"
+                        class="dropify"
+                        data-height="168"
+                        accept="image/*"
+                        data-show-remove="false"
+                        data-default-file="/uploads/bundle/Thumbnails/<%= courseBundle.thumbnailImage %>"
+                      />
+                    </div>
+                  </div>
+                 
+                  <div class="form-group col-md-6">
+                    <label for="benefits" class="text-dark"
+                      >Bundle Benefits</label
+                    >
+                    <textarea
+                      cols="100"
+                      rows="3"
+                      class="form-control"
+                      id="benefits"
+                      name="benefits"
+                    ><%= courseBundle.benefits.join('|') %></textarea>
+                    <sub
+                      >Add pipe separated values. Ex: (Topic 1 | Topic 2 | Topic
+                      3)</sub
+                    >
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="materialsIncludes" class="text-dark"
+                      >Materials Included</label
+                    >
+                    <textarea
+                      rows="3"
+                      cols="100"
+                      class="form-control"
+                      id="materialsIncludes"
+                      name="materialsIncludes"
+                    ><%= courseBundle.materialsIncludes.join('|') %></textarea>
+                    <sub
+                      >Add pipe separated values. Ex: (Topic 1 | Topic 2 | Topic
+                      3)</sub
+                    >
+                  </div>
+                  
+                </div>
+                <div class="tab-footer m-t-20">
+                    <button type="submit" class="btn btn-primary" id="bundle_description_submit"><i class="feather icon-save m-r-5"></i>Save</button>
+                </div>
+              </form>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="pages-line"
+              role="tabpanel"
+              aria-labelledby="pages-tab-line"
+            >
+              <div class="mt-5">
+                <form action="/api/creator/course-bundle/<%= courseBundle._id %>?_method=PUT&type=seo" method="POST">
+                  <div class="card" style="background-color: #f8f9fa" s>
+                    <div class="card-body">
+                      <div class="form-group">
+                        <label for="courseBundleUrl" class="text-dark">Bundle Page URL</label>
+                        <div class="input-group mb-3">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"
+                              ><%= process.env.CREATOR_URL %>/api/creator/course-bundle/</span
+                            >
+                          </div>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="courseBundleUrl"
+                            name="slug"
+                            aria-describedby="courseUrl"
+                            placeholder="your-course-title"
+                            value="<%= courseBundle.slug %>"
+                          />
+                        </div>
+                        <p class="mb-0">
+                          <sub
+                            >Only hyphen, space, alphabets and numbers
+                            allowed.</sub
+                          >
+                        </p>
+                        <p class="text-dark">
+                          <sub
+                            >Please make sure this is SEO Friendly. Best
+                            Practice is to include Course Bundle Name and Instructor in
+                            the URL. For Example: one-two-three.</sub
+                          >
+                        </p>
+                      </div>
+                      <div class="form-group">
+                        <label for="seoTitle" class="text-dark"
+                          >SEO Title *</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="seoTitle"
+                          name="seoTitle"
+                          placeholder="SEO Title"
+                          value="<%= courseBundle.seo.title %>"
+                        />
+                      </div>
+                      <div class="form-group">
+                        <label for="seoDescription" class="text-dark"
+                          >SEO Description</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="seoDescription"
+                          name="seoDescription"
+                          placeholder="SEO Description"
+                          value="<%= courseBundle.seo.description %>"
+                        />
+                        <p>
+                          <sub
+                            >This is copied to metadata html tag of the course
+                            detail page. This is used on Google search result
+                            page.</sub
+                          >
+                        </p>
+                      </div>
+                      <div class="form-group">
+                        <label for="seoScripts" class="text-dark"
+                          >Custom Scripts/Tags</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="seoScripts"
+                          name="seoScripts"
+                          placeholder="Custom Scripts/Tags"
+                          value="<%= courseBundle.seo.scripts %>"
+                        />
+                      </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary" id="bundle_seo_submit">
+                          <i class="feather icon-save m-r-5"></i> Save
+                        </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="advanced-line"
+              role="tabpanel"
+              aria-labelledby="advanced-tab-line"
+            >
+              <form action="/api/creator/course-bundle/<%= courseBundle._id %>?_method=PUT&type=advanced" method="POST">
+                <div class="row">
+                  <div class="col-lg-12 m-t-20">
+                    <div class="custom-control custom-checkbox m-b-10">
+                      <input
+                        type="checkbox"
+                        class="custom-control-input"
+                        id="status"
+                        name="status"
+                        value="true"
+                        <%= courseBundle.status ? 'checked' : '' %>
+                      />
+                      <label
+                        class="custom-control-label text-dark"
+                        for="status"
+                        >Set this bundle as active?</label
+                      >
+                    </div>
+                  </div>
+                  <div class="col-lg-12 m-t-20">
+                    <div class="custom-control custom-checkbox m-b-10 <%= courseBundle.status ? '' : 'non_editable' %>">
+                      <input
+                        type="checkbox"
+                        class="custom-control-input"
+                        id="popular"
+                        name="popular"
+                        value="true"
+                        <%= courseBundle.popular ? 'checked' : '' %>
+                      />
+                      <label
+                        class="custom-control-label text-dark"
+                        for="popular"
+                        >Set this bundle as popular?</label
+                      >
+                    </div>
+                  </div>
+                  <div class="col-12 mt-2">
+                    <button type="submit" class=" btn btn-primary" id="bundle_seo_submit">
+                      <i class="feather icon-save m-r-5"></i> Save
+                    </button>
+                  </div>
+                </div>
+              </form>
+              <div>
+                <div class="d-xl-flex mt-5">
+                  <div class="m-r-30 text-nowrap">
+                    <h4>Copy Course Bundle</h4>
+                  </div>
+
+                  <div class="card w-100" style="background-color: #f8f9fa">
+                    <div class="card-body">
+                      <p>This will create copy of your course bundle.</p>
+                      <button class="btn btn-primary-rgba">
+                        <i class="mdi mdi-content-copy"></i>
+                        Copy Course Bundle
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div class="d-xl-flex mt-5">
+                  <div class="m-r-30 text-nowrap">
+                    <h4>Delete Course Bundle</h4>
+                  </div>
+
+                  <div class="card w-100" style="background-color: #f8f9fa">
+                    <div class="card-body">
+                      <p>
+                        This will permanently delete your course bundle. Though
+                        Learners who have purchased it will continue to have
+                        access till their subscription ends.
+                      </p>
+                      <form id="delete-course-bundle-form" action="/api/creator/course-bundle/<%= courseBundle._id %>?_method=DELETE" method="POST">
+                        <button
+                          class="btn btn-danger-rgba"
+                          data-target="#confirmDelete"
+                          data-toggle="modal"
+                          type="button"
+                        >
+                          <i class="feather icon-trash m-r-5"></i>
+                          Delete Course Bundle
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- modal starts -->
+<div
+class="modal fade"
+id="categoryModal"
+tabindex="-1"
+role="dialog"
+aria-hidden="true"
+>
+<div
+  class="modal-dialog modal-lg"
+  role="document"
+>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title mt-0">Add Category</h5>
+      <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="row m-t-20">
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label for="title_category" class="text-dark"
+                >Category title</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="title_category"
+                name="title"
+                placeholder="Category title"
+              />
+            </div>
+            <div class="form-group">
+              <label for="excerpt_category" class="text-dark"
+                >Category Excerpt</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="excerpt_category"
+                name="excerpt"
+                placeholder="Category Excerpt"
+              />
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label for="categoryIcon" class="text-dark"
+                >Icon Image</label
+              >
+              <input
+                type="file"
+                name="categoryIcon"
+                id="categoryIcon"
+                class="dropify"
+                data-height="110"
+                accept="image/*"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end m-t-10">
+          <button type="button" class="btn btn-primary add_category_using_ajax">
+            <i class="feather icon-plus m-r-5"></i> Add
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+<!-- modal ends -->
+
+<!-- language add modal starts -->
+<div
+  class="modal fade"
+  id="languageModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Add Language</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form >
+          <div class="form-group">
+            <label for="language" class="text-dark">Language</label>
+            <input
+              type="text"
+              class="form-control"
+              id="language_input"
+              name="language"
+              placeholder="Enter Language here"
+            />
+          </div>
+          <div class="">
+            <button type="button" class="btn btn-success add_language_using_ajax">
+              <i class="feather icon-save m-r-5"></i>Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal ends -->
+
+<!-- modal starts -->
+<div
+class="modal fade"
+id="confirmDelete"
+tabindex="-1"
+role="dialog"
+aria-hidden="true"
+>
+<div
+  class="modal-dialog modal-dialog-centered modal-md"
+  role="document"
+>
+  <div class="modal-content">
+    <div class="modal-body">
+      <p class="text-muted font-18 text-center">
+        Do you really want to delete this bundle?
+      </p>
+      <div class="d-flex justify-content-center m-t-25">
+        <button
+          class="btn btn-secondary m-r-10"
+          data-dismiss="modal"
+        >
+          Cancel
+        </button>
+        <button class="btn btn-danger" id="delete_course_bundle">
+          <i class="feather icon-trash m-r-5"></i>
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- modal ends -->
+
+<!-- contentbar ends --><%- include('../partials/footer') %>
+<script>
+  document.body.classList.add("toggle-menu");
+</script>

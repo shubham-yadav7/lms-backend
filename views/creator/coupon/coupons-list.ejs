@@ -1,0 +1,590 @@
+<%- include('../partials/header') %>
+
+<!-- Start Breadcrumbbar -->
+<div class="breadcrumbbar">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <h4 class="page-title"> Coupons</h4>
+      <div class="breadcrumb-list">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/api/creator">Dashboard</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Coupons</li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-4 col-lg-4">
+      <div class="widgetbar">
+        <button
+          class="btn btn-primary"
+          data-toggle="modal"
+          data-target="#couponModal"
+        >
+          <i class="feather icon-plus"></i> Add Coupon
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- contentbar starts -->
+<div class="contentbar">
+  <!-- search-sort starts -->
+  <div class="row my-4">
+    <div class="col-xl-3 col-lg-4 col-md-7 col-6">
+      <div class="searchbar m-r-10">
+        <div class="input-group">
+          <input
+            type="search"
+            class="form-control search_input"
+            placeholder="Search"
+            aria-label="Search"
+            aria-describedby="button-addon2"
+            value="<%= search %>"
+          />
+          <div class="input-group-append">
+            <button class="btn search-data" id="button-addon2">
+              <i class="feather icon-search"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col d-flex justify-content-end">
+      <div class="dropdown">
+        <button
+          class="btn btn-outline-primary dropdown-toggle"
+          type="button"
+          id="dropdownMenuButton"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+        Filter
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item filter_data" data-filter="">All</a>
+          <a class="dropdown-item filter_data" data-filter="active">Active</a>
+          <a class="dropdown-item filter_data" data-filter="inactive">Inactive</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- search-sort ends -->
+
+  <!-- coupon list starts -->
+  <div class="row">
+    <% coupons.forEach(coupon => { %>
+      <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card">
+              <div class="card-body">
+                  <div class="d-flex justify-content-between ">
+                      <h5>
+                          <%= coupon.code %>
+                      </h5>
+                      <div>
+                        <% if (coupon.status) { %>
+                          <span class="badge badge-success">Active</span>
+                          <% } else { %>
+                            <span class="badge badge-danger">Inactive</span>
+                        <% } %>                         
+                      </div>
+                  </div>
+                  <div class="row font-12" style="border-bottom: 1px dashed #f1f1f1; margin-bottom: 15px;">
+                      <div class="col-6">
+                          <p>Created At: <span><%= moment(coupon.createdAt).format('ll') %></span></p>
+                      </div>
+                      <div class="col-6">
+                          <p class="text-right">Expiry Date: <span><%= coupon.expiredAt ? moment(coupon.expiredAt).format('ll') : 'Life-Time' %></span></p>
+                      </div>
+                      <div class="col-6">
+                          <p>Min Purchase: <span><%= coupon.minPurchaseAmount %></span></p>
+                      </div>
+                      <div class="col-6">
+                          <p class="text-right">Discount Upto: <span><%= coupon.discountUpTo %></span></p>
+                      </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-6">
+                      <p>Total Uses:  <span>123</span></p>
+                    </div>
+                    <div class="col-6">
+                      <p class="text-right">Discount Given:  <span>123</span></p>
+                    </div>
+                  </div>
+              </div>
+              <div class="card-footer">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <p class="text-dark font-15 mb-0 text-capitalize"><%= coupon.type %> </p>
+                    <p class="text-dark font-15 mb-0">Total <%= coupon.noOfUses %> </p>
+                          <div class="d-flex">
+                              <div data-toggle="tooltip" data-placement="top" title="Edit" class="mr-3">
+                                  <button class="btn btn-primary-rgba edit_coupon_btn " data-coupon="<%= JSON.stringify(coupon) %>" data-toggle="modal" data-target="#editCouponModal">
+                                      <i class="feather icon-edit"></i>
+                                  </button>
+                              </div>
+                              <div data-toggle="tooltip" data-placement="top" title="Delete">
+                                  <button class="btn btn-danger-rgba delete_coupon_btn" data-couponId="<%= coupon._id %>" data-toggle="modal" data-target="#confirmDelete">
+                                      <i class="feather icon-trash"></i>
+                                  </button>
+                              </div>
+                          </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    <% }) %>
+  </div>
+  <!-- coupon list ends -->
+
+  <% if (total > 1) { %>
+    <!-- pagination starts -->
+    <div class="d-flex justify-content-center">
+      <ul class="pagination">
+        <% if (Number(page) > 1) { %>
+          <li class="page-item">
+            <a class="page-link prev-page" data-prev="<%= Number(page) - 1 %>">«</a>
+          </li>
+        <% } %>
+        <% if (Number(page) !== 1) { %>
+          <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) - 1 %>"><%= Number(page) - 1 %></a></li>
+        <% } %>
+        <li class="page-item active">
+          <a class="page-link page-num" data-page="<%= Number(page) %>"><%= Number(page) %></a>
+        </li>
+        <% if (Number(page) < Number(total)) { %>
+          <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) + 1 %>"><%= Number(page) + 1 %></a></li>
+        <% } %>
+        <% if (Number(page) !== Number(total)) { %>
+          <li class="page-item">
+            <a class="page-link next-page" data-next="<%= Number(page) + 1 %>">»</a>
+          </li>
+        <% } %>
+      </ul>
+    </div>
+    <!-- pagination ends -->
+  <% } %>
+</div>
+<!-- contentbar starts -->
+
+     <!-- modal starts -->
+     <div
+     class="modal fade"
+     id="couponModal"
+     tabindex="-1"
+     role="dialog"
+     aria-hidden="true"
+   >
+     <div
+       class="modal-dialog modal-dialog-centered modal-xl"
+       role="document"
+     >
+       <div class="modal-content">
+         <div class="modal-header">
+           <h5 class="modal-title mt-0">Add Coupon</h5>
+           <button
+             type="button"
+             class="close"
+             data-dismiss="modal"
+             aria-label="Close"
+           >
+             <span aria-hidden="true">×</span>
+           </button>
+         </div>
+         <div class="modal-body coupon_form">
+           <form action="/api/creator/coupon/add" method="POST">
+             <div class="row m-t-20">
+              <div class="col-md-6 col-lg-4">
+                <div class="form-group">
+                  <label for="couponType">Coupon Type</label>
+                  <select class="form-control" name="couponType" id="couponType">
+                    <option value="percentage">Percentage Discount</option>
+                    <option value="fixed">Fixed Discount</option>
+                  </select>
+                </div>
+              </div>
+               <div class="col-lg-4">
+                 <div class="form-group">
+                   <label for="code" class="text-dark">Coupon Code</label>
+                   <input
+                     type="text"
+                     class="form-control"
+                     id="code"
+                     name="code"
+                   />
+                 </div>
+               </div>
+               
+               <div class="col-md-6 col-lg-4">
+                 <div class="form-group">
+                   <label for="status">Status</label>
+                   <select class="form-control" name="status" id="status">
+                     <option value="active">Active</option>
+                     <option value="inactive">Inactive</option>
+                   </select>
+                 </div>
+               </div>
+               <div class="col-lg-4 col-12">
+                 <div class="form-group">
+                   <label for="couponValue" class="text-dark number coupon_value">Percentage Amount</label>
+                   <input
+                     type="text"
+                     class="form-control validateNums"
+                     id="couponValue"
+                     name="couponValue"
+                   />
+                 </div>
+               </div>
+               <div class="col-12 col-lg-4">
+                <div class="form-group">
+                  <label for="minPurchase" class="text-dark"
+                    >Min Purchase
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control number"
+                    id="minPurchase"
+                    name="minPurchaseAmount"
+                  />
+                </div>
+              </div>
+              <div class="col-12 col-lg-4">
+                <div class="form-group">
+                  <label for="discountUpto" class="text-dark"
+                    >Discount Upto
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control number discount-upto"
+                    id="discountUpto"
+                    name="discountUpTo"
+                  />
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label for="courses">Courses</label>
+                  <select
+                      class="form-control select2-multi-select add_course_select_coupon"
+                      multiple="multiple"
+                      name="courses"
+                      id="courses"
+                    >
+                    <% courses.forEach(course => { %>
+                      <option value="<%= course._id %>">
+                        <%= course.title %>
+                      </option>
+                  <% }) %>
+                    </select>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label for="products">Products</label>
+                  <select
+                      class="form-control select2-multi-select add_course_select_coupon"
+                      multiple="multiple"
+                      name="products"
+                      id="products"
+                    >
+                    <% products.forEach(product => { %>
+                      <option value="<%= product._id %>">
+                        <%= product.title %>
+                      </option>
+                  <% }) %>
+                    </select>
+                </div>
+              </div>
+              <div class="col-md-6 col-12 col-xl-4">
+                <div class="form-group">
+                  <label for="uses" class="text-dark"
+                    >No of Uses
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control number"
+                    id="uses"
+                    name="noOfUses"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6 col-12 col-xl-4">
+                <div class="form-group">
+                  <label for="noOfUsesPerUser" class="text-dark"
+                    >No of Uses per user
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control number"
+                    id="noOfUsesPerUser"
+                    name="noOfUsesPerUser"
+                  />
+                </div>
+              </div>
+               <div class="col-lg-4 col-12">
+                 <div class="form-group">
+                     <label for="expiryDate" class="text-dark">Expiry Date</label>
+                     <input
+                       type="date"
+                       class="form-control"
+                       id="expiryDate"
+                       name="expiredAt"
+                     />
+                   </div>
+               </div>
+               <div class="col-lg-4">
+                <div class="custom-control custom-checkbox _new_user" style="margin-top: 38px;">
+                  <input type="checkbox" class="custom-control-input" id="onlyForNewUser" name="onlyForNewUser" value="true">
+                  <label class="custom-control-label text-dark" for="onlyForNewUser">Only Applicable For New Users</label>
+                </div>
+               </div>
+             </div>
+               <button type="submit" class="btn btn-success coupon_add m-t-10">
+                 <i class="feather icon-plus"></i> Add
+                 </button>
+           </form>
+         </div>
+       </div>
+     </div>
+   </div>
+   <!-- modal ends -->
+
+        <!-- modal starts -->
+        <div
+        class="modal fade"
+        id="editCouponModal"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true"
+      >
+        <div
+          class="modal-dialog modal-dialog-centered modal-xl"
+          role="document"
+        >
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title mt-0">Edit Coupon</h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="coupon_edit_form" action="" method="POST">
+                <div class="row m-t-20">
+                  <div class="col-md-6 col-lg-4">
+                    <div class="form-group">
+                      <label for="couponType_edit">Coupon Type</label>
+                      <select class="form-control" name="couponType" id="couponType_edit">
+                        <option value="percentage" selected>Percentage Discount</option>
+                        <option value="fixed">Fixed Discount</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label for="code_edit" class="text-dark">Coupon Code</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="code_edit"
+                        name="code"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-lg-4">
+                    <div class="form-group">
+                      <label for="status_edit">Status</label>
+                      <select class="form-control" name="status" id="status_edit">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-12">
+                    <div class="form-group">
+                      <label for="couponValue_edit" class="text-dark number coupon_value">Percentage Amount</label>
+                      <input
+                        type="text"
+                        class="form-control validateNums"
+                        id="couponValue_edit"
+                        name="couponValue"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-12 col-lg-4">
+                    <div class="form-group">
+                      <label for="minPurchase_edit" class="text-dark"
+                        >Min Purchase
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control number"
+                        id="minPurchase_edit"
+                        name="minPurchaseAmount"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-12 col-lg-4">
+                    <div class="form-group">
+                      <label for="discountUpto_edit" class="text-dark"
+                        >Discount Upto
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control number discount-upto"
+                        id="discountUpto_edit"
+                        name="discountUpTo"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6">
+                    <div class="form-group">
+                      <label for="courses_edit">Courses</label>
+                      <select
+                          class="form-control select2-multi-select edit_course_select_coupon"
+                          multiple="multiple"
+                          name="courses"
+                          id="courses_edit"
+                        >
+                        <% courses.forEach(course => { %>
+                          <option value="<%= course._id %>">
+                            <%= course.title %>
+                          </option>
+                      <% }) %>
+                        </select>
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-md-6">
+                    <div class="form-group">
+                      <label for="products_edit">Products</label>
+                      <select
+                          class="form-control select2-multi-select edit_course_select_coupon"
+                          multiple="multiple"
+                          name="products"
+                          id="products_edit"
+                        >
+                        <% products.forEach(product => { %>
+                          <option value="<%= product._id %>">
+                            <%= product.title %>
+                          </option>
+                      <% }) %>
+                        </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12 col-xl-4">
+                    <div class="form-group">
+                      <label for="uses_edit" class="text-dark"
+                        >No of Uses
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control number"
+                        id="uses_edit"
+                        name="noOfUses"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12 col-xl-4">
+                    <div class="form-group">
+                      <label for="noOfUsesPerUser_edit" class="text-dark"
+                        >No of Uses per user
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control number"
+                        id="noOfUsesPerUser_edit"
+                        name="noOfUsesPerUser"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-lg-4 col-12">
+                    <div class="form-group">
+                        <label for="expiryDate_edit" class="text-dark">Expiry Date</label>
+                        <input
+                          type="date"
+                          class="form-control"
+                          id="expiryDate_edit"
+                          name="expiredAt"
+                        />
+                      </div>
+                  </div>       
+                  <div class="col-lg-4">
+                    <div class="custom-control custom-checkbox _new_user" style="margin-top: 38px;">
+                      <input type="checkbox" class="custom-control-input" id="onlyForNewUser_edit" name="onlyForNewUser" value="true">
+                      <label class="custom-control-label text-dark" for="onlyForNewUser_edit">Only Applicable For New Users</label>
+                    </div>
+                   </div>           
+                </div>
+                  <button type="submit" class="btn btn-success coupon_edit m-t-10">
+                    <i class="feather icon-save"></i> Save
+                    </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- modal ends -->
+
+<!-- modal starts -->
+<div
+   class="modal fade"
+   id="confirmDelete"
+   tabindex="-1"
+   role="dialog"
+   aria-hidden="true"
+ >
+   <div
+     class="modal-dialog modal-dialog-centered modal-md"
+     role="document"
+   >
+     <div class="modal-content">
+       <div class="modal-body">
+         <p class="text-muted font-18 text-center">
+           Do you really want to delete this coupon?
+         </p>
+         <div class="d-flex justify-content-center m-t-25">
+           <button
+             class="btn btn-secondary m-r-10"
+             data-dismiss="modal"
+           >
+             Cancel
+           </button>
+           <form class="delete_coupon_form" action="" method="POST">
+             <button type="submit" class="btn btn-danger">
+               <i class="feather icon-trash m-r-5"></i>
+               Delete
+             </button>
+           </form>
+         </div>
+       </div>
+     </div>
+   </div>
+</div>
+ <!-- modal ends -->
+
+
+<%- include('../partials/footer') %>
+<script>
+  document.body.classList.add("toggle-menu");
+
+  function todayDate() {
+    var today = new Date(); 
+    var dd = today.getDate(); 
+    var mm = today.getMonth()+1; 
+    var yyyy = today.getFullYear();
+    if(dd<10) {
+        dd='0'+dd
+    }
+    if(mm<10) {
+        mm='0'+mm
+    }
+    return yyyy+'-'+mm+'-'+dd;
+}
+
+  $('#expiryDate').attr('min', todayDate())
+</script>

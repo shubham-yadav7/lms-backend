@@ -1,0 +1,275 @@
+<%- include('../partials/header') %>
+
+<!-- Start Breadcrumbbar -->
+<div class="breadcrumbbar">
+  <div>
+    <h4 class="page-title">Learner</h4>
+    <div class="breadcrumb-list">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/api/creator">Dashboard</a></li>
+        <li class="breadcrumb-item">
+          <a href="/api/creator/learner/list">Learners</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+          <%= learner.firstName%> <%= learner.lastName%>
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- contentbar starts -->
+<div class="contentbar">
+  <!-- learner list starts -->
+
+  <div class="card m-b-30">
+    <div class="card-header">
+      <h5 class="card-title mb-0">Profile</h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-12 col-md-2 col-xl-1">
+          <img
+            src="<%= learner.profileImg ? `/uploads/user/profile/${learner.profileImg}` : '/assets/images/common/avatar.png' %>"
+            style="width: 100px; object-fit: contain"
+            onerror="this.src='/assets/images/common/avatar.png'"
+            class="img-fluid"
+            alt="profile"
+          />
+        </div>
+        <div class="col-12 col-md-8 col-lg-4">
+          <%#= learner %>
+          <h3 class="d-inline-block text-lg-start">
+            <%= learner.firstName %> <%= learner.lastName %>
+          </h3>
+          <span
+            class="badge m-l-5 <%= learner.status ? 'badge-success' : 'badge-danger' %>"
+            ><%= learner.status ? 'Active' : 'Inactive' %></span
+          >
+          <a href="mailto:<%= learner.email %>" class="d-block"
+            ><%= learner.email %></a
+          >
+          <a href="tel:<%= learner.phone %>" class="d-block m-b-10"
+            ><%= learner.phone %></a
+          >
+        </div>
+        <div class="col-12 col-lg-6">
+          <p class="text-dark mb-0">
+            Created At:
+            <span class="text-secondary"
+              ><%= moment(learner.createdAt).format('ll') %></span
+            >
+          </p>
+          <p class="text-dark ml-0">
+            Updated At:
+            <span class="text-secondary"
+              ><%= moment(learner.updatedAt).format('ll') %></span
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card m-b-30">
+    <div class="card-header">
+      <h5 class="card-title mb-0">Edit Profile Information</h5>
+    </div>
+    <div class="card-body">
+      <form
+        class="edit-learner-form"
+        action="/api/creator/learner/<%= learner._id %>?_method=PUT"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        <div class="row">
+          <div class="col-12 col-lg-6">
+            <div class="form-group">
+              <label for="edit_firstName" class="text-dark">First name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="edit_firstName"
+                name="firstName"
+                value="<%= learner.firstName %>"
+              />
+            </div>
+          </div>
+          <div class="col-12 col-lg-6">
+            <div class="form-group">
+              <label for="edit_lastName" class="text-dark">Last name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="edit_lastName"
+                name="lastName"
+                value="<%= learner.lastName %>"
+              />
+            </div>
+          </div>
+          <div class="col-12 col-lg-6">
+            <div class="form-group">
+              <label for="edit_email" class="text-dark">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="edit_email"
+                name="email"
+                value="<%= learner.email %>"
+              />
+            </div>
+          </div>
+          <div class="col-12 col-lg-6">
+            <div class="form-group">
+              <label for="edit_phone" class="text-dark">Phone</label>
+              <input
+                type="tel"
+                class="form-control number"
+                id="edit_phone"
+                name="phone"
+                value="<%= learner.phone %>"
+              />
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-group">
+              <label for="edit_userProfileImg" class="text-dark"
+                >Profile Image</label
+              >
+              <input
+                type="file"
+                name="userProfileImg"
+                id="edit_userProfileImg"
+                class="dropify"
+                data-height="110"
+                accept="image/*"
+                data-default-file="<%= learner.profileImg ? `/uploads/user/profile/${learner.profileImg}` : '/assets/images/common/avatar.png' %>"
+              />
+            </div>
+          </div>
+          <div class="col-md-8">
+            <span>Inactive</span>
+            <div class="custom-control custom-switch d-inline">
+              <input type="checkbox" class="custom-control-input"
+              id="edit_status" name="status" <%= learner.status ? 'checked' : ''
+              %> value="true" />
+              <label class="custom-control-label" for="edit_status"
+                >Active</label
+              >
+            </div>
+          </div>
+          <div
+            class="col-md-4 d-md-flex mt-3 mt-md-0 justify-content-end align-items-center"
+          >
+            <button type="submit" class="btn btn-success edit_learner">
+              <i class="feather icon-save"></i> Save
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="card m-b-30">
+    <div class="card-header">
+      <h5 class="card-title mb-0">Change Password</h5>
+    </div>
+    <div class="card-body">
+      <form
+        action="/api/creator/learner/<%= learner._id %>/change-password?_method=PUT"
+        method="POST"
+        class="learner-change-password-form"
+      >
+        <div class="row">
+          <div class="col-12 col-lg-6">
+            <div class="form-group">
+              <label for="change_password" class="text-dark">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="change_password"
+                name="password"
+              />
+            </div>
+          </div>
+          <div class="col-12 col-lg-6">
+            <div class="form-group">
+              <label for="change_confirmPassword" class="text-dark"
+                >Confirm Password</label
+              >
+              <input
+                type="password"
+                class="form-control"
+                id="change_confirmPassword"
+                name="confirmPassword"
+              />
+            </div>
+          </div>
+          <div class="col-12">
+            <button
+              type="submit"
+              class="btn btn-success change_learner_password"
+            >
+              <i class="feather icon-save"></i> Save
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="card w-100 border" style="background-color: #fff6f7">
+    <div class="card-body">
+      <p>
+        This will delete learner. Though you can restore it from deleted learner
+        page.
+      </p>
+      <button
+        type="button"
+        data-toggle="modal"
+        data-target="#confirmDelete"
+        class="btn btn-danger-rgba"
+      >
+        <i class="feather icon-trash"></i> Delete Learner
+      </button>
+    </div>
+  </div>
+  <!-- learner list ends -->
+</div>
+<!-- contentbar starts -->
+
+<!-- delete modal starts -->
+<div
+  class="modal fade"
+  id="confirmDelete"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p class="text-muted font-18 text-center">
+          Do you really want to delete this Learner?
+        </p>
+        <div class="d-flex justify-content-center m-t-25">
+          <button class="btn btn-secondary m-r-10" data-dismiss="modal">
+            Cancel
+          </button>
+          <form
+            action="/api/creator/learner/<%= learner._id %>?_method=DELETE"
+            method="POST"
+          >
+            <button type="submit" class="btn btn-danger-rgba">
+              <i class="feather icon-trash"></i> Delete
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- delete modal ends -->
+
+<%- include('../partials/footer') %>
+<script>
+  document.body.classList.add("toggle-menu");
+</script>

@@ -1,0 +1,577 @@
+<%- include('../partials/header') %>
+
+<!-- Start Breadcrumbbar -->
+<div class="breadcrumbbar">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <h4 class="page-title">Banners</h4>
+      <div class="breadcrumb-list">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/api/creator">Dashboard</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Banners</li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-4 col-lg-4">
+      <div class="widgetbar">
+        <button
+          class="btn btn-primary"
+          data-toggle="modal"
+          data-target="#addBannerModal"
+        >
+          <i class="feather icon-plus"></i> Add Banners
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- contentbar starts -->
+<div class="contentbar">
+  <div class="card m-b-30">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="card-title"></h5>
+      <div class="d-flex">
+        <div class="searchbar m-r-10">
+            <div class="input-group">
+              <input
+                type="search"
+                class="form-control search_input"
+                placeholder="Search"
+                aria-label="Search"
+                aria-describedby="button-addon2"
+                value="<%= search %>"
+              />
+              <div class="input-group-append">
+                <button class="btn search-data" id="button-addon2">
+                  <i class="feather icon-search"></i>
+                </button>
+              </div>
+            </div>
+        </div>
+        <div class="dropdown">
+          <button
+            class="btn btn-outline-primary dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Filter
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item filter_data" data-filter="">All</a>
+            <a class="dropdown-item filter_data" data-filter="website">Website</a>
+            <a class="dropdown-item filter_data"data-filter="app">App</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%#= offerProducts  %>
+    <div class="card-body">
+      <div class="row">
+        <%#= offerCourses %>
+        <% banners.forEach(banner => { %>
+        <!-- card starts -->
+        <div class="col-12 col-xl-6 m-b-25">
+          <div class="card border-light">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12 col-md-4">
+                  <div class="banner-card-wrap">
+                    <div class="banner-card-icons">
+                      <span
+                      data-placement="right" 
+                      title="How to Enroll"
+                      data-toggle="tooltip" 
+                      >
+                      <button data-toggle="modal" class="banner-actions" data-target="#videoBannerModal" data-id="<%= banner.bannerLinks.enroll %>">
+                        <i class="feather icon-plus"></i>
+                      </button>
+                    </span>
+                    <span
+                    data-placement="right" 
+                    title="Trial video"
+                    data-toggle="tooltip" 
+                      >
+                      <button data-toggle="modal" class="banner-actions" data-target="#videoBannerModal" data-id="<%= banner.bannerLinks.trial %>">
+                        <i class="feather icon-video"></i>
+                      </button>
+                      </span>
+                    </div>
+                    <% if (banner.bannerImg) { %>
+                    <img
+                      class="w-100 bg-light"
+                      style="height: 150px; object-fit: contain"
+                      src="/uploads/banners/<%= banner.bannerImg %>"
+                      alt="img"
+                      onerror="this.src='/assets/images/common/image-placeholder.webp'"
+                    />
+                    <% } else { %>
+                    <img
+                      class="w-100"
+                      src="/assets/images/common/image-placeholder.webp"
+                      alt="img"
+                    />
+                    <% } %>
+                    </div>
+                </div>
+
+                  <div class="col-12 col-md-8">
+                    <h5 class="font-18 mt-3 mt-md-0"><%= banner.headingOne %></h5>
+                    <p class="font-17 text-dark"><%= banner.headingTwo %></p>
+                    <% if (banner.offerItemType) { %>
+                      <p class="text-primary text-capitalize "><%= banner?.offerItemType %> name: <%= banner?.offerItem?.title %></p>
+                    <% } %>
+                    <p class="font-15 mt-3"> <span class="text-dark">Description: </span>
+                      <%= banner.description %>
+                    </p>
+                  </div>
+
+              </div>
+   
+            </div>
+            <div
+              class="card-footer d-flex justify-content-between align-items-center flex-wrap"
+            >
+              <div class="d-flex align-items-center">
+                <div
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  class="mr-2"
+                  title="Edit"
+                >
+                  <button
+                    class="btn btn-primary-rgba edit_banner_btn"
+                    data-toggle="modal"
+                    data-target="#editBannerModal"
+                    data-banner="<%= JSON.stringify(banner) %>"
+                  >
+                    <i class="feather icon-edit"></i>
+                  </button>
+                </div>
+                <div data-toggle="tooltip" data-placement="top" title="Delete">
+                  <button
+                    class="btn btn-danger-rgba delete_banner_btn"
+                    data-toggle="modal"
+                    data-target="#confirmDelete"
+                    data-id=<%= banner._id %>
+                  >
+                    <i class="feather icon-trash"></i>
+                  </button>
+                </div>
+              </div>
+              <span class="badge badge-primary font-16 text-capitalize"><%= banner.screenType %></span>
+            </div>
+          </div>
+        </div>
+        <!-- card ends -->
+        <% }) %>
+      </div>
+
+      <% if (total > 1) { %>
+        <!-- pagination starts -->
+        <div class="d-flex justify-content-center">
+          <ul class="pagination">
+            <% if (Number(page) > 1) { %>
+              <li class="page-item">
+                <a class="page-link prev-page" data-prev="<%= Number(page) - 1 %>">«</a>
+              </li>
+            <% } %>
+            <% if (Number(page) !== 1) { %>
+              <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) - 1 %>"><%= Number(page) - 1 %></a></li>
+            <% } %>
+            <li class="page-item active">
+              <a class="page-link page-num" data-page="<%= Number(page) %>"><%= Number(page) %></a>
+            </li>
+            <% if (Number(page) < Number(total)) { %>
+              <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) + 1 %>"><%= Number(page) + 1 %></a></li>
+            <% } %>
+            <% if (Number(page) !== Number(total)) { %>
+              <li class="page-item">
+                <a class="page-link next-page" data-next="<%= Number(page) + 1 %>">»</a>
+              </li>
+            <% } %>
+          </ul>
+        </div>
+        <!-- pagination ends -->
+      <% } %>
+    </div>
+  </div>
+</div>
+<!-- contentbar starts -->
+
+<!-- video modal starts -->
+<div
+  class="modal fade"
+  id="videoBannerModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body p-0">
+        <iframe width="100%" height="450px" src="" id="youtubeVideo" title="YouTube video player" autoplay frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- video modal ends -->
+
+<!-- add modal starts -->
+<div
+  class="modal fade"
+  id="addBannerModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mt-0">Add Banner</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form
+          action="/api/creator/banner/add"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <div class="row">
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="headingOne" class="text-dark">Heading One</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="headingOne"
+                  name="headingOne"
+                />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="headingTwo" class="text-dark">Heading Two</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="headingTwo"
+                  name="headingTwo"
+                />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="screenType" class="text-dark">Banner Type</label>
+                <select class="form-control" name="screenType" id="screenType">
+                  <option value="website">Website</option>
+                  <option value="app">App</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="enrollLink" class="text-dark"
+                  >How to enroll link</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="enrollLink"
+                  name="enrollLink"
+                />
+                <small>Youtube video id</small>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="trialLink" class="text-dark"
+                  >Trial video link</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="trialLink"
+                  name="trialLink"
+                />
+                <small>Youtube video id</small>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="offerItem" class="text-dark">Offer Item</label>
+                <select class="form-control" name="offerItem" id="offerItem">
+                  <option selected="true" disabled="disabled">
+                    Select Offer item
+                  </option>
+                  <optgroup label="Courses">
+                    <% offerCourses.forEach(course => { %>
+                    <option data-type="course" value="<%= course._id %>">
+                      <%= course.title %> - <%=
+                      course.downloadable?'Downloadable':'Online' %>
+                    </option>
+                    <% }) %>
+                  </optgroup>
+                  <optgroup label="Products">
+                    <% offerProducts.forEach(course => { %>
+                    <option data-type="product" value="<%= course._id %>">
+                      <%= course.title %> - <%=
+                      course.downloadable?'Downloadable':'Online' %>
+                    </option>
+                    <% }) %>
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+            <input type="hidden" name="offerItemType" id="offerItemType" />
+            <div class="col-lg-6">
+              <label for="description" class="text-dark">Description</label>
+              <textarea
+                name="description"
+                id="description"
+                class="desc_summer"
+              ></textarea>
+            </div>
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="bannerImage" class="text-dark">Banner Image</label>
+                <input
+                  type="file"
+                  name="bannerImage"
+                  id="bannerImage"
+                  class="dropify"
+                  data-height="170"
+                  accept="image/*"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="m-t-10">
+            <button type="submit" class="btn btn-success add_banner">
+              <i class="feather icon-plus m-r-5"></i> Add
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- add modal ends -->
+
+<!-- edit modal starts -->
+<div
+  class="modal fade"
+  id="editBannerModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mt-0">Edit Banner</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="" class="edit-banner-form" method="POST" enctype="multipart/form-data">
+          <div class="row">
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="headingOne_edit" class="text-dark"
+                  >Heading One</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="headingOne_edit"
+                  name="headingOne"
+                />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="headingTwo_edit" class="text-dark"
+                  >Heading Two</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="headingTwo_edit"
+                  name="headingTwo"
+                />
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="screenType_edit" class="text-dark"
+                  >Banner Type</label
+                >
+                <select
+                  class="form-control"
+                  name="screenType"
+                  id="screenType_edit"
+                >
+                  <option value="website">Website</option>
+                  <option value="app">App</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="enrollLink_edit" class="text-dark"
+                  >How to enroll link</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="enrollLink_edit"
+                  name="enrollLink"
+                />
+                <small>Youtube video id</small>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="trialLink_edit" class="text-dark"
+                  >Trial video link</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="trialLink_edit"
+                  name="trialLink"
+                />
+                <small>Youtube video id</small>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="offerItem_edit" class="text-dark">Offer Item</label>
+                <select
+                  class="form-control"
+                  name="offerItem"
+                  id="offerItem_edit"
+                >
+                  <option selected="true" disabled="disabled">
+                    Select Offer item
+                  </option>
+                  <optgroup label="Courses">
+                    <% offerCourses.forEach(course => { %>
+                    <option data-type="course" value="<%= course._id %>">
+                      <%= course.title %> - <%=
+                      course.downloadable?'Downloadable':'Online' %>
+                    </option>
+                    <% }) %>
+                  </optgroup>
+                  <optgroup label="Products">
+                    <% offerProducts.forEach(course => { %>
+                    <option data-type="product" value="<%= course._id %>">
+                      <%= course.title %> - <%=
+                      course.downloadable?'Downloadable':'Online' %>
+                    </option>
+                    <% }) %>
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+            <input type="hidden" name="offerItemType" id="offerItemType_edit" />
+            <div class="col-lg-6">
+              <label for="description_edit" class="text-dark"
+                >Description</label
+              >
+              <textarea
+                name="description"
+                id="description_edit"
+                class="desc_summer"
+              ></textarea>
+            </div>
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="bannerImage_edit" class="text-dark">Banner Image</label>
+                <input
+                  type="file"
+                  name="bannerImage"
+                  id="bannerImage_edit"
+                  class="dropify"
+                  data-height="170"
+                  data-show-remove="false"
+                  accept="image/*"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="m-t-10">
+            <button type="submit" class="btn btn-success edit_banner">
+              <i class="feather icon-save m-r-5"></i> Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- edit modal ends -->
+
+<!-- delete modal starts -->
+<div
+  class="modal fade"
+  id="confirmDelete"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p class="text-muted font-18 text-center">
+          Do you really want to delete this Banner?
+        </p>
+        <div class="d-flex justify-content-center m-t-25">
+          <button class="btn btn-secondary m-r-10" data-dismiss="modal">
+            Cancel
+          </button>
+          <form id="delete_banner_form" action="" method="POST">
+            <button type="submit" class="btn btn-danger">
+              <i class="feather icon-trash m-r-5"></i>
+              Delete
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- delete modal ends -->
+
+<script>
+  document.body.classList.add("toggle-menu");
+</script>
+<%- include('../partials/footer') %>

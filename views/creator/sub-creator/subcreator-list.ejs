@@ -1,0 +1,553 @@
+<%- include('../partials/header') %>
+
+<!-- Start Breadcrumbbar -->
+<div class="breadcrumbbar">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <h4 class="page-title">Sub Creators</h4>
+      <div class="breadcrumb-list">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/api/creator">Dashboard</a></li>
+          <li class="breadcrumb-item active" aria-current="page">
+            Sub Creators
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-4 col-lg-4">
+      <div class="widgetbar">
+        <button
+          class="btn btn-primary"
+          data-toggle="modal"
+          data-target="#addSubCreatorModal"
+        >
+          <i class="feather icon-plus"></i> Add Sub Creators
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- contentbar starts -->
+<div class="contentbar">
+  <!-- sub creator list starts -->
+  <div class="card m-b-30">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="card-title">All Sub Creators</h5>
+      <div class="d-flex">
+        <div class="searchbar m-r-10">
+          <form>
+            <div class="input-group">
+              <input
+                type="search"
+                class="form-control"
+                placeholder="Search"
+                aria-label="Search"
+                aria-describedby="button-addon2"
+              />
+              <div class="input-group-append">
+                <button class="btn" type="submit" id="button-addon2">
+                  <i class="feather icon-search"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="dropdown">
+          <button
+            class="btn btn-outline-primary dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Sort
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#">Price - Low to high</a>
+            <a class="dropdown-item" href="#">Price - High to low</a>
+            <a class="dropdown-item" href="#">Popularity</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <!-- card starts -->
+        <% subCreators.forEach(subCreator => { %>
+        <div class="col-12 col-md-6 col-xl-4 m-b-25">
+          <div class="card border-light">
+            <div class="card-body pb-0">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h4 class="m-b-5">
+                    <%= subCreator.firstName %> <%= subCreator.lastName %>
+                  </h4>
+                  <a href="mailto:<%= subCreator.email %>" class="font-14"
+                    ><%= subCreator.email %></a
+                  >
+                </div>
+                <span
+                  class="badge <%= subCreator.status ? 'badge-success' : 'badge-danger' %>"
+                >
+                  <%= subCreator.status ? 'Active' : 'Inactive' %>
+                </span>
+              </div>
+              <div class="m-t-10">
+                <span class="font-14">Modules : </span>
+                <% subCreator.modules.forEach(mod => { %>
+                <span class="badge badge-info"><%= mod %></span>
+                <% }) %>
+              </div>
+              <div
+                class="d-flex justify-content-between align-items-center m-t-15"
+              >
+                <p class="font-13">
+                  Created At: <%= moment(subCreator.createdAt).format('ll') %>
+                </p>
+                <p class="font-13">
+                  Updated At: <%= moment(subCreator.updatedAt).format('ll') %>
+                </p>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="d-flex align-items-center">
+                <div data-toggle="tooltip" data-placement="top" title="Edit" class="mr-3">
+                  <button
+                    class="btn btn-primary-rgba edit_sub_creator_btn"
+                    data-toggle="modal"
+                    data-target="#editSubCreatorModal"
+                    data-subcreator="<%= JSON.stringify(subCreator) %>"
+                  >
+                    <i class="feather icon-edit"></i>
+                  </button>
+                </div>
+                <div
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="Reset Password"
+                  class="mr-3"
+                >
+                  <button
+                    class="btn btn-warning-rgba reset_subcreator_password_btn"
+                    data-toggle="modal"
+                    data-target="#resetPassword"
+                    data-id="<%= subCreator._id %>"
+                  >
+                    <i class="feather icon-lock"></i>
+                  </button>
+                </div>
+                <div
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="<%= subCreator.status ? 'Inactive' : 'Active' %>"
+                  class="mr-3"
+                >
+                  <button
+                    class="btn btn-dark-rgba subcreator_status_toggle_btn"
+                    data-toggle="modal"
+                    data-target="#confirmInactiveModal"
+                    data-id="<%= subCreator._id %>"
+                    data-status="<%= subCreator.status %>"
+                  >
+                    <% if (subCreator.status) { %>
+                    <i class="feather icon-user-x"></i>
+                    <% } else { %>
+                    <i class="feather icon-user-check"></i>
+                    <% } %>
+                  </button>
+                </div>
+                <div data-toggle="tooltip" data-placement="top" title="Delete">
+                  <button
+                    class="btn btn-danger-rgba delete_sub_creator_btn"
+                    data-toggle="modal"
+                    data-target="#confirmDelete"
+                    data-id="<%= subCreator._id %>"
+                  >
+                    <i class="feather icon-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+        <!-- card ends -->
+      </div>
+
+      <!-- pagination starts -->
+      <div class="d-flex justify-content-center">
+        <ul class="pagination">
+          <li class="page-item">
+            <a class="page-link" href="#" tabindex="-1">«</a>
+          </li>
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+          <li class="page-item active">
+            <a class="page-link" href="#"
+              >2 <span class="sr-only">(current)</span></a
+            >
+          </li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#">»</a>
+          </li>
+        </ul>
+      </div>
+      <!-- pagination ends -->
+    </div>
+  </div>
+  <!-- sub creator list ends -->
+</div>
+<!-- contentbar starts -->
+
+<!-- add modal starts -->
+<div
+  class="modal fade"
+  id="addSubCreatorModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mt-0">Add Sub creator</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/api/creator/sub-creator/add" method="POST">
+          <div class="row">
+            <div class="col-12 col-lg-4">
+              <div class="form-group">
+                <label for="firstName" class="text-dark">First Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="firstName"
+                  name="firstName"
+                />
+              </div>
+            </div>
+            <div class="col-12 col-lg-4">
+              <div class="form-group">
+                <label for="lastName" class="text-dark">Last Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="lastName"
+                  name="lastName"
+                />
+              </div>
+            </div>
+            <div class="col-12 col-lg-4">
+              <div class="form-group">
+                <label for="email" class="text-dark">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  name="email"
+                />
+              </div>
+            </div>
+            <div class="col-12 col-lg-4">
+              <div class="form-group">
+                <label for="phone" class="text-dark">Phone</label>
+                <input
+                  type="tel"
+                  class="form-control number"
+                  id="phone"
+                  name="phone"
+                />
+              </div>
+            </div>
+            <div class="col-12 col-lg-4">
+              <div class="form-group">
+                <label for="password" class="text-dark">Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password"
+                  name="password"
+                />
+              </div>
+            </div>
+            <div class="col-12 col-lg-4">
+              <div class="form-group">
+                <label for="confirmPassword" class="text-dark"
+                  >Confirm Password</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                />
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label class="text-dark">Modules :</label>
+                <div class="row">
+                  <% modules.forEach((mod,i) => { %>
+                  <div class="col-md-4">
+                    <div
+                      class="custom-control custom-checkbox custom-control-inline"
+                    >
+                      <input
+                        class="custom-control-input"
+                        id="module<%= i+ 1 %>"
+                        type="checkbox"
+                        value="<%= mod.value %>"
+                        name="modules"
+                      />
+                      <label
+                        class="custom-control-label"
+                        for="module<%= i+ 1 %>"
+                        ><%= mod.name %></label
+                      >
+                    </div>
+                  </div>
+                  <% }) %>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <button class="btn btn-success add-sub-creator" type="submit">
+                <i class="feather icon-plus"></i> Add
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- add modal ends -->
+
+<!-- edit modal starts -->
+<div
+  class="modal fade"
+  id="editSubCreatorModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mt-0">Edit Sub creator</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="subcreator_edit_form" method="POST">
+          <div class="row">
+            <div class="col-12 col-lg-6">
+              <div class="form-group">
+                <label for="firstName_edit" class="text-dark">First Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="firstName_edit"
+                  name="firstName"
+                />
+              </div>
+            </div>
+            <div class="col-12 col-lg-6">
+              <div class="form-group">
+                <label for="lastName_edit" class="text-dark">Last Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="lastName_edit"
+                  name="lastName"
+                />
+              </div>
+            </div>
+            <div class="col-12 col-lg-6">
+              <div class="form-group">
+                <label for="email_edit" class="text-dark">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email_edit"
+                  name="email"
+                />
+              </div>
+            </div>
+            <div class="col-12 col-lg-6">
+              <div class="form-group">
+                <label for="phone_edit" class="text-dark">Phone</label>
+                <input
+                  type="tel"
+                  class="form-control number"
+                  id="phone_edit"
+                  name="phone"
+                />
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label class="text-dark">Modules :</label>
+                <div class="row node-modules-wrap">
+                  <% modules.forEach((mod,i) => { %>
+                  <div class="col-md-4">
+                    <div
+                      class="custom-control custom-checkbox custom-control-inline"
+                    >
+                      <input
+                        class="custom-control-input"
+                        id="module<%= i+ 1 %>_edit"
+                        type="checkbox"
+                        value="<%= mod.value %>"
+                        name="modules"
+                      />
+                      <label
+                        class="custom-control-label"
+                        for="module<%= i+ 1 %>_edit"
+                        ><%= mod.name %></label
+                      >
+                    </div>
+                  </div>
+                  <% }) %>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <button class="btn btn-success edit-sub-creator" type="submit">
+                <i class="feather icon-plus"></i> Add
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- edit modal ends -->
+
+<!-- delete modal starts -->
+<div
+  class="modal fade"
+  id="confirmDelete"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p class="text-muted font-18 text-center">
+          Do you really want to delete this Sub creator?
+        </p>
+        <div class="d-flex justify-content-center m-t-25">
+          <button class="btn btn-secondary m-r-10" data-dismiss="modal">
+            Cancel
+          </button>
+          <form class="delete_sub_creator_form" action="" method="POST">
+            <button type="submit" class="btn btn-danger">
+              <i class="feather icon-trash m-r-5"></i>
+              Delete
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- delete modal ends -->
+
+<!-- Change password Modal -->
+<div
+  class="modal fade"
+  id="resetPassword"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mt-0">Reset Password</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="POST" class="reset_subcreator_password_form">
+          <div class="form-group">
+            <label for="new_pass" class="text-dark">New Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="new_pass"
+              name="newPassword"
+            />
+          </div>
+          <div class="form-group">
+            <label for="confirm_pass" class="text-dark">Confirm Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="confirm_pass"
+              name="confirmPassword"
+            />
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- confirm inactive modal starts -->
+<div
+  class="modal fade"
+  id="confirmInactiveModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p class="text-muted font-18 text-center status-toggle-tag"></p>
+        <div class="d-flex justify-content-center m-t-25">
+          <button class="btn btn-secondary m-r-10" data-dismiss="modal">
+            Cancel
+          </button>
+          <form action="" class="subcreator_status_toggle_form" method="POST">
+            <button type="submit" class="btn btn-dark">
+              <i class="feather icon-trash m-r-5"></i>
+              <span class="status_toggle_btn_text"></span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- confirm inactive modal ends -->
+
+<%- include('../partials/footer') %>

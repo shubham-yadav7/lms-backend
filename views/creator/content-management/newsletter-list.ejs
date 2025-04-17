@@ -1,0 +1,162 @@
+<%- include('../partials/header') %>
+
+<!-- Start Breadcrumbbar -->
+<div class="breadcrumbbar">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <h4 class="page-title">Newsletters</h4>
+      <div class="breadcrumb-list">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/api/creator">Dashboard</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Newsletters</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- contentbar starts -->
+<div class="contentbar">
+  <div class="card m-b-30">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="card-title"></h5>
+      <div class="d-flex">
+        <div class="searchbar m-r-10">
+          <div class="input-group">
+            <input
+              type="search"
+              class="form-control search_input"
+              placeholder="Search"
+              aria-label="Search"
+              aria-describedby="button-addon2"
+              value="<%= search %>"
+            />
+            <div class="input-group-append">
+              <button class="btn search-data" id="button-addon2">
+                <i class="feather icon-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <div
+          class="dataTables_wrapper container-fluid dt-bootstrap4"
+        >
+          <div class="row">
+            <div class="col-sm-12">
+              <table
+                class="table table-striped "
+              >
+                <thead>
+                  <tr role="row">
+                    <th>#</th>
+                    <th>Email</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if (newsLetters.length > 0) { %>
+                    <% newsLetters.forEach((newsletter, i)  => {  %>
+                        <tr>
+                            <td><%= i+1 %></td>
+                            <td><%= newsletter.email %></td>
+                            <td><%= moment(newsletter.createdAt).format('ll') %></td>
+                            <td><%= moment(newsletter.updatedAt).format('ll') %></td>
+                            <td>
+                                <button type="button" class="btn btn-danger-rgba newsletter_delete_btn" data-id="<%= newsletter._id %>" data-toggle="modal" data-target="#confirmDelete"><i class="feather icon-trash"></i></button>
+                            </td>
+                        </tr>
+                    <% }) %>
+                  <% } else { %>
+                    <tr>
+                      <td colspan="5" class="text-light text-center py-4">
+                        NO DATA FOUND
+                      </td>
+                    </tr>   
+                  <% } %>
+                </tbody>
+                <tfoot>
+                    <tr role="row">
+                        <th>#</th>
+                        <th>Email</th>
+                        <th>Created At</th>
+                        <th>Updated At</th>
+                        <th>Action</th>
+                      </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% if (total > 1) { %>
+      <!-- pagination starts -->
+      <div class="d-flex justify-content-center">
+        <ul class="pagination">
+          <% if (Number(page) > 1) { %>
+            <li class="page-item">
+              <a class="page-link prev-page" data-prev="<%= Number(page) - 1 %>">«</a>
+            </li>
+          <% } %>
+          <% if (Number(page) !== 1) { %>
+            <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) - 1 %>"><%= Number(page) - 1 %></a></li>
+          <% } %>
+          <li class="page-item active">
+            <a class="page-link page-num" data-page="<%= Number(page) %>"><%= Number(page) %></a>
+          </li>
+          <% if (Number(page) < Number(total)) { %>
+            <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) + 1 %>"><%= Number(page) + 1 %></a></li>
+          <% } %>
+          <% if (Number(page) !== Number(total)) { %>
+            <li class="page-item">
+              <a class="page-link next-page" data-next="<%= Number(page) + 1 %>">»</a>
+            </li>
+          <% } %>
+        </ul>
+      </div>
+      <!-- pagination ends -->
+    <% } %>
+  </div>
+</div>
+<!-- contentbar starts -->
+
+<!-- delete modal starts -->
+<div
+  class="modal fade"
+  id="confirmDelete"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p class="text-muted font-18 text-center">Do you really want to delete this newsletter?</p>
+        <div class="d-flex justify-content-center m-t-25">
+          <button class="btn btn-secondary m-r-10" data-dismiss="modal">
+            Cancel
+          </button>
+          <form action="" id="newsletter_delete_form" method="POST">
+              <button type="submit" class="btn btn-danger">
+                <i class="feather icon-trash m-r-5"></i>
+                Delete
+              </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- delete modal ends -->
+
+<script>
+  document.body.classList.add("toggle-menu");
+</script>
+<%- include('../partials/footer') %>

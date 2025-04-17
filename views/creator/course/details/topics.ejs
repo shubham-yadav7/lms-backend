@@ -1,0 +1,1180 @@
+<%- include('../../partials/header') %>
+
+<!-- Start Breadcrumbbar -->
+<div class="breadcrumbbar">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <h4 class="page-title text-capitalize"><%= course.title %></h4>
+      <div class="breadcrumb-list">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="/api/creator">Dashboard</a>
+          </li>
+          <li class="breadcrumb-item">
+            <a href="/api/creator/course/list">Course</a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">
+            Topics
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-4 col-lg-4">
+      <div class="widgetbar">
+        <button class="btn btn-primary">
+          <i class="feather icon-eye m-r-5"></i>
+          Preview
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- Add Section Modal -->
+<div
+  class="modal fade"
+  id="createSectionModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mt-0">Add Section</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form
+          action="/api/creator/course/<%= course._id %>/topic/add"
+          method="POST"
+        >
+          <div class="form-group m-t-10">
+            <label for="sectionTitle" class="text-dark">Title</label>
+            <input
+              type="text"
+              class="form-control"
+              id="sectionTitle"
+              name="title"
+            />
+          </div>
+          <div class="form-group">
+            <label class="mr-3" for="description">Description</label>
+            <textarea
+              name="description"
+              id="description"
+              cols="30"
+              rows="10"
+            ></textarea>
+          </div>
+          <button
+            type="submit"
+            class="btn btn-success create_section_btn m-t-10"
+          >
+            <i class="feather icon-plus m-r-5"></i> Add
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Section Modal -->
+<div
+  class="modal fade"
+  id="editSectionModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mt-0">Edit Section</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form
+          action="/api/creator/course/<%= course._id %>/topic"
+          method="POST"
+          id="section_edit_form"
+        >
+          <div class="form-group m-t-10">
+            <label for="sectionTitle" class="text-dark">Title</label>
+            <input
+              type="text"
+              class="form-control"
+              id="sectionTitle"
+              name="title"
+            />
+          </div>
+          <div class="form-group">
+            <label class="mr-3" for="description">Description</label>
+            <textarea
+              name="description"
+              id="editDescription"
+              cols="30"
+              rows="10"
+              class="desc_summer"
+            ></textarea>
+          </div>
+          <button type="submit" class="btn btn-success edit_section_btn m-t-10">
+            <i class="feather icon-save m-r-5"></i> Save
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Topic Modal -->
+<div
+  class="modal fade"
+  id="createTopicModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mt-0">Add Topic</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body overflow-auto" style="max-height: 700px">
+        <form
+          action="/api/creator/course/<%= course._id %>"
+          method="POST"
+          id="topic-add-form"
+          enctype="multipart/form-data"
+        >
+          <div class="form-group m-t-10">
+            <label for="topicTitle" class="text-dark">Title</label>
+            <input
+              type="text"
+              class="form-control"
+              name="topicTitle"
+              id="topicTitle"
+            />
+          </div>
+          <p class="text-dark">Content type</p>
+          <div class="custom-control custom-radio custom-control-inline">
+            <input
+              type="radio"
+              id="contentTypeText"
+              name="contentType"
+              class="custom-control-input"
+              value="Text"
+              checked
+            />
+            <label class="custom-control-label" for="contentTypeText"
+              >Text</label
+            >
+          </div>
+          <div class="custom-control custom-radio custom-control-inline">
+            <input
+              type="radio"
+              id="contentTypePdf"
+              name="contentType"
+              class="custom-control-input"
+              value="PDF"
+            />
+            <label class="custom-control-label" for="contentTypePdf">PDF</label>
+          </div>
+          <div class="custom-control custom-radio custom-control-inline">
+            <input
+              type="radio"
+              id="contentTypeVideo"
+              name="contentType"
+              class="custom-control-input"
+              value="Video"
+            />
+            <label class="custom-control-label" for="contentTypeVideo"
+              >Video</label
+            >
+          </div>
+
+          <div id="textForm" class="mt-4 collapse show dynamic-form">
+            <div class="form-group">
+              <label class="mr-3" for="shortDescription">Description</label>
+              <textarea
+                name="topicDescription"
+                id="shortDescription"
+                cols="30"
+                rows="10"
+                class="desc_summer"
+              ></textarea>
+            </div>
+            <div class="form-group m-t-10">
+              <label for="url" class="text-dark"
+                >Reference URL (optional)</label
+              >
+              <input
+                type="url"
+                name="referenceUrl"
+                class="form-control"
+                id="url"
+              />
+            </div>
+          </div>
+          <div id="pdfForm" class="mt-4 collapse dynamic-form">
+            <div class="form-group">
+              <label for="pdfFile" class="text-dark">PDF / Doc file </label>
+              <input
+                type="file"
+                name="pdfFile"
+                id="pdfFile"
+                class="dropify"
+                data-height="168"
+                accept=".pdf, .doc"
+                data-show-remove="false"
+              />
+            </div>
+          </div>
+          <div id="videoForm" class="collapse mt-4 dynamic-form">
+            <p class="text-dark">Platform</p>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input
+                type="radio"
+                id="sourceYoutube"
+                name="platform"
+                class="custom-control-input"
+                value="Youtube"
+                checked
+              />
+              <label class="custom-control-label" for="sourceYoutube"
+                >Youtube</label
+              >
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input
+                type="radio"
+                id="sourceVimeo"
+                name="platform"
+                value="Vimeo"
+                class="custom-control-input"
+              />
+              <label class="custom-control-label" for="sourceVimeo"
+                >Vimeo</label
+              >
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input
+                type="radio"
+                id="sourceCustom"
+                name="platform"
+                class="custom-control-input"
+                value="Custom"
+              />
+              <label class="custom-control-label" for="sourceCustom"
+                >Custom</label
+              >
+            </div>
+            <div id="video-youtube" class="collapse show">
+              <div class="form-group m-t-10">
+                <label for="ytVideoLink" class="text-dark"
+                  >Youtube video link</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ytVideoLink"
+                  name="link"
+                />
+                <sub>Add youtube link, Ex: https://youtu.be/video-id</sub>
+              </div>
+            </div>
+            <div id="video-vimeo" class="collapse">
+              <div class="form-group m-t-10">
+                <label for="videoLink" class="text-dark"
+                  >Vimeo video link</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  name="link"
+                  id="videoLink"
+                />
+                <sub>Add vimeo link, Ex: https://vimeo.com/1234</sub>
+              </div>
+            </div>
+            <div id="video-custom" class="collapse">
+              <div class="form-group">
+                <label for="customVideo" class="text-dark">Video file</label>
+                <input
+                  type="file"
+                  name="customVideo"
+                  id="customVideo"
+                  class="dropify"
+                  data-height="168"
+                  accept=".mp4"
+                  data-show-remove="false"
+                />
+                <sub>Max file size - 100mb</sub>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <div>
+                <p class="text-dark font-italic">
+                  <% if (introVideo) { %>
+                    Selected Intro Video: <a class="text-capitalize" target="_blank" href="<%= introVideo.link %>"><%= introVideo.title %> <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                  <% } else { %>
+                      Intro Video Not Selected.  
+                  <% } %>
+                </p>
+                </div>
+              <div class="custom-control custom-checkbox text-right <%= introVideo ? 'warn-for-intro-video' : '' %>">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="setAsIntro"
+                  name="setAsIntro"
+                />
+                <label class="custom-control-label" for="setAsIntro"
+                  >Set As Intro Video</label
+                >
+              </div>
+            </div>
+          </div>
+          <div>
+            <a
+              href="#resources"
+              id="toggle-practice-file"
+              data-toggle="collapse"
+            >
+              Add Practice file
+              <i class="feather icon-chevron-down"></i>
+            </a>
+            <div id="resources" class="mt-4 collapse">
+              <div class="">
+                <div class="form-group m-t-10">
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <label for="resources-link" class="text-dark"
+                      >Resource URL</label
+                    >
+                    <button
+                      type="button"
+                      class="btn text-info"
+                      id="add-practice-links"
+                    >
+                      <i class="feather icon-plus m-r-5"></i>Add More
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Enter Link"
+                    class="form-control"
+                    name="practiceLink"
+                    id="resources-link"
+                  />
+                </div>
+                <div class="form-group">
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <label for="resourses-video" class="text-dark">File</label>
+                    <button
+                      type="button"
+                      class="btn text-info"
+                      id="add-practice-file"
+                    >
+                      <i class="feather icon-plus m-r-5"></i>Add More
+                    </button>
+                  </div>
+                  <input
+                    type="file"
+                    name="practiceFiles"
+                    id="resources"
+                    data-show-remove="false"
+                    class="dropify"
+                    data-height="150"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row m-t-10 align-items-center">
+            <div class="col-lg-6">
+              <div class="custom-control custom-checkbox">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="freeLesion"
+                  name="freeLesion"
+                />
+                <label class="custom-control-label" for="freeLesion"
+                  >Labeled As Free</label
+                >
+              </div>
+            </div>
+            <div class="col-lg-6 d-flex justify-content-lg-end">
+              <button type="submit" class="btn btn-success create_topic_btn">
+                <i class="feather icon-plus m-r-5"></i> Add
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Topic Modal -->
+<div
+  class="modal fade"
+  id="editTopicModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mt-0">Edit Topic</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body overflow-auto" style="max-height: 700px">
+        <form
+          action="/api/creator/course/<%= course._id %>"
+          method="POST"
+          id="topic-edit-form"
+          enctype="multipart/form-data"
+        >
+          <div class="form-group m-t-10">
+            <label for="topicTitle" class="text-dark">Title</label>
+            <input
+              type="text"
+              class="form-control"
+              name="topicTitle"
+              id="topicTitle"
+            />
+          </div>
+          <p class="text-dark">Content type</p>
+          <div class="custom-control custom-radio custom-control-inline">
+            <input
+              type="radio"
+              id="editContentTypeText"
+              name="contentType"
+              class="custom-control-input"
+              value="Text"
+            />
+            <label class="custom-control-label" for="editContentTypeText"
+              >Text</label
+            >
+          </div>
+          <div class="custom-control custom-radio custom-control-inline">
+            <input
+              type="radio"
+              id="editContentTypePdf"
+              name="contentType"
+              class="custom-control-input"
+              value="PDF"
+            />
+            <label class="custom-control-label" for="editContentTypePdf"
+              >PDF</label
+            >
+          </div>
+          <div class="custom-control custom-radio custom-control-inline">
+            <input
+              type="radio"
+              id="editContentTypeVideo"
+              name="contentType"
+              class="custom-control-input"
+              value="Video"
+            />
+            <label class="custom-control-label" for="editContentTypeVideo"
+              >Video</label
+            >
+          </div>
+
+          <div id="editTextForm" class="mt-4 collapse dynamic-form">
+            <div class="form-group">
+              <label class="mr-3" for="shortDescription">Description</label>
+              <textarea
+                name="topicDescription"
+                id="topicDescription"
+                cols="30"
+                rows="10"
+                class="desc_summer"
+              ></textarea>
+            </div>
+            <div class="form-group m-t-10">
+              <label for="url" class="text-dark"
+                >Reference URL (optional)</label
+              >
+              <input
+                type="url"
+                name="referenceUrl"
+                class="form-control"
+                id="url"
+              />
+            </div>
+          </div>
+          <div id="editPdfForm" class="mt-4 collapse dynamic-form">
+            <div class="form-group">
+              <label for="pdfFile" class="text-dark">PDF / Doc file </label>
+              <input
+                type="file"
+                name="pdfFile"
+                id="pdfFile"
+                class="dropify"
+                data-height="168"
+                accept=".pdf, .doc"
+                data-show-remove="false"
+              />
+            </div>
+          </div>
+          <div id="editVideoForm" class="collapse mt-4 dynamic-form">
+            <p class="text-dark">Platform</p>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input
+                type="radio"
+                id="editSourceYoutube"
+                name="platform"
+                class="custom-control-input"
+                value="Youtube"
+              />
+              <label class="custom-control-label" for="editSourceYoutube"
+                >Youtube</label
+              >
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input
+                type="radio"
+                id="editSourceVimeo"
+                name="platform"
+                value="Vimeo"
+                class="custom-control-input"
+              />
+              <label class="custom-control-label" for="editSourceVimeo"
+                >Vimeo</label
+              >
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+              <input
+                type="radio"
+                id="editSourceCustom"
+                name="platform"
+                class="custom-control-input"
+                value="Custom"
+              />
+              <label class="custom-control-label" for="editSourceCustom"
+                >Custom</label
+              >
+            </div>
+            <div id="video-youtube-edit" class="collapse">
+              <div class="form-group m-t-10">
+                <label for="ytVideoLink" class="text-dark"
+                  >Youtube video link</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ytVideoLink"
+                  name="link"
+                />
+                <sub>Add youtube link, Ex: https://youtu.be/video-id</sub>
+              </div>
+            </div>
+            <div id="video-vimeo-edit" class="collapse">
+              <div class="form-group m-t-10">
+                <label for="videoLink" class="text-dark"
+                  >Vimeo video link</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  name="link"
+                  id="videoLink"
+                />
+                <sub>Add vimeo link, Ex: https://vimeo.com/1234</sub>
+              </div>
+            </div>
+            <div id="video-custom-edit" class="collapse">
+              <div class="form-group">
+                <label for="customVideo" class="text-dark">Video file</label>
+                <input
+                  type="file"
+                  name="customVideo"
+                  id="customVideo"
+                  class="dropify"
+                  data-height="168"
+                  accept=".mp4"
+                  data-show-remove="false"
+                />
+                <sub>Max file size - 100mb</sub>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center my-4">
+              <div>
+                <p class="text-dark font-italic">
+                  <% if (introVideo) { %>
+                    Selected Intro Video: <a class="text-capitalize" target="_blank" href="<%= introVideo.link %>"><%= introVideo.title %> <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                    <% } else { %>
+                      Intro Video Not Selected.  
+                      <% } %>
+                </p>
+              </div>
+              <div class="custom-control custom-checkbox text-right">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="setAsIntroEdit"
+                  name="setAsIntro"
+                />
+                <label class="custom-control-label" for="setAsIntroEdit"
+                  >Set As Intro Video</label
+                >
+              </div>
+            </div>
+          </div>
+
+          <a
+            href="#resources"
+            id="toggle-practice-file-edit"
+            data-toggle="collapse"
+          >
+            Add Practice file
+            <i class="feather icon-chevron-down"></i>
+          </a>
+
+          <div id="resources" class="mt-4 collapse">
+            <div class="">
+              <div class="form-group m-t-10 _practice_link_wrapper">
+                <div class="d-flex justify-content-between align-items-center">
+                  <label for="resources-link" class="text-dark"
+                    >Resource URL</label
+                  >
+                  <button
+                    type="button"
+                    class="btn text-info"
+                    id="edit-practice-links"
+                  >
+                    <i class="feather icon-plus m-r-5"></i>Add More
+                  </button>
+                </div>
+                <input
+                  type="text"
+                  placeholder="Enter Link"
+                  class="form-control"
+                  name="practiceLink"
+                  id="resources-link"
+                />
+              </div>
+              <div class="form-group _practice_files_wrapper">
+                <div class="d-flex justify-content-between align-items-center">
+                  <label for="resourses-video" class="text-dark">File</label>
+                  <button
+                    type="button"
+                    class="btn text-info"
+                    id="edit-practice-file"
+                  >
+                    <i class="feather icon-plus m-r-5"></i>Add More
+                  </button>
+                </div>
+                <input
+                  type="file"
+                  name="practiceFiles"
+                  id="resources"
+                  class="dropify"
+                  data-height="150"
+                  data-show-remove="false"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row m-t-10 align-items-center">
+            <div class="col-lg-6">
+              <div class="custom-control custom-checkbox">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  id="freeLesionEdit"
+                  name="freeLesion"
+                />
+                <label class="custom-control-label" for="freeLesionEdit"
+                  >Labeled As Free</label
+                >
+              </div>
+            </div>
+            <div class="col-lg-6 d-flex justify-content-lg-end">
+              <button type="submit" class="btn btn-success create_topic_btn">
+                <i class="feather icon-save m-r-5"></i> Save
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal ends -->
+
+<!-- contentbar starts -->
+<div class="contentbar">
+  <div class="row">
+    <div class="col-lg-3 col-xl-2">
+      <div class="card m-b-30">
+        <div class="card-body">
+          <div
+            class="nav flex-column nav-pills"
+            id="v-pills-tab"
+            role="tablist"
+            aria-orientation="vertical"
+          >
+            <a
+              class="nav-link mb-2"
+              id="v-pills-dashboard-tab"
+              href="/api/creator/course/<%= course._id %>"
+              role="tab"
+            >
+              <i class="feather icon-grid mr-2"></i>Information</a
+            >
+            <a
+              class="nav-link mb-2 active"
+              id="v-pills-order-tab"
+              href="/api/creator/course/<%= course._id %>/topic/list"
+              role="tab"
+            >
+              <i class="feather icon-server mr-2"></i>Topics</a
+            >
+            <a
+              class="nav-link mb-2"
+              id="v-pills-order-tab"
+              href="/api/creator/quiz/<%= course._id %>/list"
+              role="tab"
+            >
+              <i class="feather icon-award mr-2"></i>Quizzes</a
+            >
+            <a
+              class="nav-link mb-2"
+              id="v-pills-addresses-tab"
+              href="/api/creator/course/details/<%= course._id %>/learners"
+              role="tab"
+            >
+              <i class="feather icon-users mr-2"></i>Learners</a
+            >
+            <a
+              class="nav-link mb-2"
+              id="v-pills-wishlist-tab"
+              href="/api/creator/course/details/<%= course._id %>/Certificates"
+              role="tab"
+            >
+              <i class="feather icon-credit-card mr-2"></i>Certificates</a
+            >
+            <a
+              class="nav-link mb-2"
+              id="v-pills-wallet-tab"
+              href="/api/creator/course/details/<%= course._id %>/reviews"
+              role="tab"
+            >
+              <i class="feather icon-star mr-2"></i>Reviews</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-9 col-xl-10">
+      <div class="card m-b-30">
+        <div class="card-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title">Topics</h5>
+            <% if (topics.length !== 0) { %>
+              <div id="addTopics">
+                <button
+                  class="btn btn-primary-rgba"
+                  data-toggle="modal"
+                  data-target="#createSectionModal"
+                >
+                  <i class="feather icon-plus m-r-5"></i>Add Section
+                </button>
+              </div>
+            <% } %>
+          </div>
+        </div>
+        <div class="card-body">
+          <% if (topics.length === 0) { %>
+          <div
+            class="d-flex justify-content-center align-items-center"
+            style="height: 50vh"
+            id="zeroTopics"
+          >
+            <button
+              class="btn btn-primary"
+              data-toggle="modal"
+              data-target="#createSectionModal"
+            >
+              <i class="feather icon-plus m-r-5"></i>
+              Add
+            </button>
+          </div>
+          <% } else { %> <% topics.forEach((topic,i) => { %>
+          <div
+            class="accordion accordion-outline"
+            id="accordionOutline-<%= i %>"
+          >
+            <div class="card">
+              <div class="card-header" id="headingTwooutline-<%= topic._id %>">
+                <h2 class="mb-0">
+                  <div
+                    class="btn btn-link collapsed"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#collapseOneOutline-<%= i %>"
+                    aria-expanded="true"
+                    aria-controls="collapseOneOutline-<%= i %>"
+                  >
+                    <span class="section-count"></span
+                    ><span class="section-title"
+                      >Section <%= i + 1 %> : <%= topic.title %></span
+                    >
+                    <div class="topic-actions d-flex">
+                      <button
+                        class="btn btn-secondary-rgba m-r-5 edit_topic"
+                        id="editTopic"
+                        data-toggle="modal"
+                        data-target="#editSectionModal"
+                        data-topic-id="<%= topic._id %>"
+                        data-topic-title="<%= topic.title %>"
+                        data-topic-description="<%= topic.description %>"
+                      >
+                        <span
+                          data-toggle="tooltip"
+                          data-placement="top"
+                          data-offset="0,8"
+                          title="Edit"
+                        >
+                          <i class="feather icon-edit"></i>
+                        </span>
+                      </button>
+                      <div
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="Delete"
+                      >
+                        <button
+                          class="btn btn-danger-rgba delete_section_btn"
+                          data-toggle="modal"
+                          data-target="#deleteSectionModal"
+                          type="button"
+                          data-courseid="<%= course._id %>"
+                          data-topicid="<%= topic._id %>"
+                        >
+                          <i class="feather icon-trash"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </h2>
+              </div>
+              <div
+                id="collapseOneOutline-<%= i %>"
+                class="collapse"
+                aria-labelledby="headingTwooutline-<%= topic._id %>"
+                data-parent="#accordionOutline-<%= i %>"
+              >
+                <div class="card-body" style="padding-bottom: 0.75rem">
+                  <p>
+                    <sub class="topic-total-count"
+                      ><%= topic.lessons.length %> Topics</sub
+                    >
+                    <i class="mdi mdi-circle font-5 m-r-10 m-l-5"></i
+                    ><sub class="language"
+                      ><%= topic.totalDuration.inWords %></sub
+                    >
+                  </p>
+                  <div><%- topic.description %></div>
+                  <!-- topic starts -->
+                  <div class="mt-3">
+                    <% topic.lessons.forEach((lesson,i) => { %>
+                    <div class="card border-light m-b-10">
+                      <div class="card-body py-2">
+                        <div class="d-flex justify-content-between">
+                          <div class="text-dark">
+                            <span class="topic-count"></span>
+                            <!-- <div> -->
+                            <span class="m-l-5"
+                              ><%= i +1 %>. <%= lesson.title %></span
+                            >
+                            <div class="font-14 text-muted">
+                              <% if (lesson.contentType === 'PDF') { %>
+                              <i class="feather icon-file-text m-r-5"></i>
+                              <% } else if (lesson.contentType === 'Text') { %>
+                              <i class="feather icon-align-left m-r-5"></i>
+                              <% } else { %>
+                              <i class="feather icon-youtube m-r-5"></i>
+                              <% } %>
+
+                              <span><%= lesson.duration.inWords %></span>
+                            </div>
+                            <!-- </div> -->
+                          </div>
+                          <div class="my-auto d-flex align-items-center">
+                            <button
+                              class="btn btn-secondary-rgba m-r-5 edit_lesson_btn"
+                              data-target="#editTopicModal"
+                              data-toggle="modal"
+                              data-form-fields="<%= JSON.stringify(topic.lessons[i]) %>"
+                              data-backendUrl="<%= backendUrl %>"
+                              data-topic-id="<%= topic._id %>"
+                              data-introvid="<%= JSON.stringify(introVideo) %>"
+                            >
+                              <span
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="Edit"
+                                data-offset="0, 8"
+                              >
+                                <i class="feather icon-edit"> </i>
+                              </span>
+                            </button>
+
+                            <button
+                              class="btn btn-danger-rgba delete_lesson_btn"
+                              data-toggle="modal"
+                              data-target="#deleteLessonModal"
+                              data-lessonid="<%= topic.lessons[i]._id %>"
+                              data-courseid="<%= course._id %>"
+                              data-topicid="<%= topic._id %>"
+                            >
+                              <span
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="Delete"
+                                data-offset="0, 8"
+                              >
+                                <i class="feather icon-trash"> </i>
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <% }) %>
+                  </div>
+                  <!-- topic ends -->
+                  <!-- card footer -->
+                  <div class="card-footer" style="border: none">
+                    <div
+                      class="d-flex justify-content-center align-items-center"
+                    >
+                      <button
+                        class="btn btn-primary topic_add_modal_btn"
+                        data-topic-id="<%= topic._id %>"
+                        data-toggle="modal"
+                        data-target="#createTopicModal"
+                      >
+                        <i class="feather icon-plus m-r-5"></i>Add Topic
+                      </button>
+                    </div>
+                  </div>
+                  <!-- card footer -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <% }) %> <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- contentbar ends -->
+
+<!-- modal starts -->
+<div
+  class="modal fade"
+  id="deleteLessonModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p class="text-muted font-18 text-center">
+          Do you really want to delete this topic?
+        </p>
+        <div class="d-flex justify-content-center m-t-25">
+          <button class="btn btn-secondary m-r-10" data-dismiss="modal">
+            Cancel
+          </button>
+          <form class="lesson_delete_form" action="" method="POST">
+            <button type="submit" class="btn btn-danger lesson_confirm_delete">
+              <i class="feather icon-trash m-r-5"></i>
+              Delete
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal ends -->
+
+<!-- modal starts -->
+<div
+  class="modal fade"
+  id="deleteSectionModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p class="text-muted font-18 text-center">
+          Do you really want to delete this Section?
+        </p>
+        <div class="d-flex justify-content-center m-t-25">
+          <button class="btn btn-secondary m-r-10" data-dismiss="modal">
+            Cancel
+          </button>
+          <form class="section_delete_form" action="" method="POST">
+            <button type="submit" class="btn btn-danger">
+              <i class="feather icon-trash m-r-5"></i>
+              Delete
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal ends -->
+
+<!-- modal starts -->
+<div
+  class="modal fade"
+  id="introVideoWarnModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p class="text-muted font-18 text-center">
+          Intro Video Already Selected. Are You Sure You Want Change Intro Video.
+        </p>
+        <div class="d-flex justify-content-center m-t-25">
+          <button class="btn btn-secondary m-r-10 cancel-intro-check" data-dismiss="modal">
+            Cancel
+          </button>
+          <button class="btn btn-danger" type="button" class="close" data-dismiss="modal">
+            <i class="feather icon-trash m-r-5"></i>
+              Change
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal ends -->
+
+<%- include('../../partials/footer') %>
+
+<script>
+  document.body.classList.add("toggle-menu");
+
+  $(".topic-actions").on("click", function (e) {
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+  });
+
+  $(".edit_topic").on("click", function (e) {
+    let primaryLink = $("#section_edit_form").attr("action");
+    const topicId = $(this).data("topic-id");
+    const topicTitle = $(this).data("topic-title");
+    const topicDescription = $(this).data("topic-description");
+
+    $("#section_edit_form").attr(
+      "action",
+      `${primaryLink}/${topicId}?_method=PUT&editType=sectionEdit`
+    );
+    $("#section_edit_form #sectionTitle").val(topicTitle);
+    $("#section_edit_form #editDescription").summernote(
+      "code",
+      topicDescription
+    );
+    $("#editSectionModal").modal();
+  });
+
+  // $(".delete-topic").on("click", function (e) {
+  //   let isConfirm = confirm("Are you sure! You want to delete this section.");
+  //   if (isConfirm) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // });
+
+  const contentTypeInput = document.querySelectorAll(
+    '#topic-add-form [name="contentType"]'
+  );
+  contentTypeInput.forEach((el) => {
+    el.addEventListener("click", (e) => {
+      $("#textForm").removeClass("show");
+      $("#pdfForm").removeClass("show");
+      $("#videoForm").removeClass("show");
+      if (e.srcElement.id === "contentTypeText") {
+        $("#textForm").addClass("show");
+      }
+      if (e.srcElement.id === "contentTypePdf") {
+        $("#pdfForm").addClass("show");
+      }
+      if (e.srcElement.id === "contentTypeVideo") {
+        $("#videoForm").addClass("show");
+      }
+    });
+  });
+
+  const resourceTypeInput = document.querySelectorAll('[name="platform"]');
+  resourceTypeInput.forEach((el) => {
+    el.addEventListener("click", (e) => {
+      $("#video-youtube").removeClass("show");
+      $("#video-vimeo").removeClass("show");
+      $("#video-custom").removeClass("show");
+      if (e.srcElement.id === "sourceYoutube") {
+        $("#video-youtube").addClass("show");
+      }
+      if (e.srcElement.id === "sourceVimeo") {
+        $("#video-vimeo").addClass("show");
+      }
+      if (e.srcElement.id === "sourceCustom") {
+        $("#video-custom").addClass("show");
+      }
+    });
+  });
+</script>

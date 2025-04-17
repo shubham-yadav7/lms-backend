@@ -1,0 +1,256 @@
+<%- include('../partials/min-header') %>
+<body>
+  <div
+    id="containerbar"
+    class="containerbar authenticate-bg d-flex justify-content-center align-items-center"
+    style="
+      background-image: url(https://themesbox.in/admin-templates/theta/html/light-vertical/assets/images/authentication/authentication-bg.svg);
+    "
+  >
+    <!-- Start Container -->
+    <div class="container">
+      <div class="auth-box register-box">
+        <div class="card">
+          <div class="card-body">
+            <!-- Start row -->
+            <div
+              class="row no-gutters align-items-center justify-content-center"
+            >
+              <!-- Start col -->
+              <div class="col-md-6 col-lg-5">
+                <div class="auth-box-left">
+                  <h4>Go On. It's Free!</h4>
+                  <div class="auth-box-icon">
+                    <img
+                      src="https://themesbox.in/admin-templates/theta/html/light-vertical/assets/images/authentication/auth-box-icon.svg"
+                      class="img-fluid"
+                      alt="auth-box-icon"
+                    />
+                  </div>
+                  <div class="auth-box-logo">
+                    <img
+                      src="/assets/images/logos/learnr-logo.png"
+                      class="img-fluid"
+                      alt="logo"
+                    />
+                  </div>
+                </div>
+              </div>
+              <!-- end col -->
+              <!-- Start col -->
+              <div class="col-md-6 col-lg-7">
+                <!-- Start Auth Box -->
+                <div class="auth-box-right">
+                  <% if (error && error.length) { %>
+                  <div class="alert alert-danger" role="alert">
+                    <%= error %>
+                  </div>
+                  <% } %> <% if (success && success.length) { %>
+                  <div class="alert alert-success" role="alert">
+                    <%= success %>
+                  </div>
+                  <% } %>
+                  <form action="/api/creator/auth/register" id="registerForm" method="POST">
+                    <h4 class="text-primary mb-4 mt-4 mt-md-0">Sign Up</h4>
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="firstName"
+                            placeholder="First Name"
+                            name="firstName"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="lastName"
+                            placeholder="Last Name"
+                            name="lastName"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="brandName"
+                            name="brandName"
+                            placeholder="Brand Name"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="email"
+                            name="email"
+                            placeholder="Enter Email here"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <input
+                            type="tel"
+                            class="form-control"
+                            id="phone"
+                            name="phone"
+                            placeholder="Enter Phone Number here"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <input
+                            type="password"
+                            class="form-control"
+                            id="password"
+                            name="password"
+                            placeholder="Enter Password here"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <input
+                            type="password"
+                            class="form-control"
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            placeholder="Confirm Password"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-row mb-3">
+                      <div class="col-sm-12">
+                        <div class="custom-control custom-checkbox">
+                          <input
+                            type="checkbox"
+                            class="custom-control-input"
+                            id="terms"
+                          />
+                          <label
+                            class="custom-control-label font-14"
+                            for="terms"
+                            >I Agree to Terms &amp; Conditions</label
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      type="submit"
+                      id="registerBtn"
+                      class="btn btn-success btn-lg btn-block font-18"
+                    >
+                      Sign up Now
+                    </button>
+                  </form>
+                  <p class="mb-0 mt-3">
+                    Already have an account?
+                    <a href="/api/creator/auth/login">Log in</a>
+                  </p>
+                </div>
+                <!-- End Auth Box -->
+              </div>
+              <!-- End col -->
+            </div>
+            <!-- End row -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Container -->
+  </div>
+</body>
+<%- include('../partials/min-footer') %>
+
+<script>
+  
+  // register form validation
+  $('#registerForm').on( 'submit' , function(e){
+    
+    $(".err-message").remove();
+    const errMessage = `<small class='text-danger err-message'>This field is required.</small>`;
+    let error = false;
+
+    let phoneReg = /^[0-9]*$/;
+    let emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+    // let phoneReg = /^[0-9]*$/ ;  // /^(\+91|\+91\-|0)?[789]\d{9}$/ 
+
+    const firstName = $("#firstName").val().trim();
+    const lastName = $("#lastName").val().trim();
+    const brandName = $("#brandName").val().trim();
+    const email = $("#email").val().trim();
+    const phone = $("#phone").val().trim();
+    const password = $("#password").val().trim();
+    const confirmPassword = $("#confirmPassword").val().trim();
+
+    if (!firstName) {
+      error = true;
+      $("#firstName").after(errMessage);
+    }
+    if (!lastName) {
+      error = true;
+      $("#lastName").after(errMessage);
+    }
+    if (!brandName) {
+      error = true;
+      $("#brandName").after(errMessage);
+    }
+    if (!email) {
+      error = true;
+      $("#email").after(errMessage);
+    }
+    if(!emailReg.test(email)) {
+      error = true;
+      $('#email').after('<small class="err-message text-danger">Please Enter valid Email.</small>');
+    }
+    if(phone.length < 10 || !phoneReg.test(phone)) {
+      error = true;
+      $('#phone').after('<small class="err-message text-danger">Please Enter valid Phone number.</small>');
+    }
+    if (!phone) {
+      error = true;
+      $("#phone").after(errMessage);
+    }
+    if (!password) {
+      error = true;
+      $("#password").after(errMessage);
+    }
+    if (!confirmPassword) {
+      error = true;
+      $("#confirmPassword").after(errMessage);
+    }
+    if ( password != confirmPassword) {
+      error = true;
+      $("#registerBtn").before("<p class='text-center font-13 err-message text-danger'>Password doesn't match with confirm password.</p>");
+    }
+
+    if (error) {
+      return false;
+    } else {
+      return true;
+    }
+  } )
+
+  // checkbox 
+  $(function() {
+    var terms = $('#terms');
+    var registerBtn = $('#registerBtn');
+  
+    terms.on('change', function() {
+      registerBtn.prop("disabled", !this.checked);
+    }).trigger('change'); 
+  });
+
+</script>

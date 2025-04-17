@@ -1,0 +1,298 @@
+<%- include('../partials/header') %>
+
+<!-- Start Breadcrumbbar -->
+<div class="breadcrumbbar">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <h4 class="page-title">Blog Edit</h4>
+      <div class="breadcrumb-list">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/api/creator">Dashboard</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Blog</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Breadcrumbbar -->
+<div class="contentbar">
+  <div class="card">
+    <div class="card-header">
+      <h6>Edit Blog</h6>
+    </div>
+    <div class="card-body">
+      <form action="/api/creator/blog/<%= blog._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="title" class="text-dark">Title</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="title"
+                    name="title"
+                    value="<%= blog.title %>"
+                  />
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="row align-items-center">
+                  <div class="col-10 pr-0">
+                    <div class="form-group">
+                      <label for="category" class="text-dark">Category</label>
+                      <select
+                        class="form-control"
+                        name="category"
+                        id="category"
+                      >
+                        <option selected disabled>Select Category</option>
+                        <% categories.forEach(category => { %>
+                         <option <%= category._id.toString() === blog.category.toString() ? 'selected' : '' %> value="<%= category._id %>"><%= category.title %></option>
+                        <% }) %>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-2 pl-0">
+                    <button 
+                      class="btn btn-secondary-rgba w-100 mt-3 py-2"
+                      type="button"
+                      data-toggle="modal"
+                      data-target="#addBlogCategoryModal"
+                    >
+                    <i class="feather icon-plus m-r-5"></i> Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="row align-items-center">
+                  <div class="col-10 pr-0">
+                    <div class="form-group">
+                      <label for="tags" class="text-dark">Tags</label>
+                      <select
+                      id="tags"
+                      name="tags"
+                      class="form-control select2-multi-select add-blog-select"
+                      multiple
+                    >
+                    <% tags.forEach(tag => { %>
+                     <option <%= blog.tags.includes(tag._id) ? 'selected' : '' %> value="<%= tag._id %>"><%= tag.title %></option>
+                    <% }) %>
+                    </select>
+                    </div>
+                  </div>
+                  <div class="col-2 pl-0">
+                    <button 
+                      class="btn btn-secondary-rgba w-100 mt-3 py-2"
+                      type="button"
+                      data-toggle="modal"
+                      data-target="#addBlogTagModal"
+                    >
+                    <i class="feather icon-plus m-r-5"></i> Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="blogThumbImage" class="text-dark"
+                >Thumbnail Image</label
+              >
+              <input
+                type="file"
+                name="blogThumbImage"
+                id="blogThumbImage"
+                class="dropify"
+                data-height="195"
+                accept="image/*"
+                data-show-remove="false"
+                data-default-file="/uploads/blog/thumbnail/<%= blog.thumbImg %>"
+              />
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-group">
+              <div class="quote-container">
+                <label for="quote">Quote</label>
+                <textarea
+                  type="text"
+                  name="quote"
+                  id="quote"
+                  class="form-control"
+                ><%= blog.quote %></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <label for="summernote" class="text-dark">Description</label>
+            <textarea name="descp" id="summernote"><%= blog.descp %></textarea>
+          </div>
+          <div class="col-12 mt-4">
+            <div class="blog-add-fields-wrapper">
+              <div class="row align-items-center mb-4">
+                <div class="col-lg-3">
+                  <button
+                    class="add-document-field btn btn-info-rgba"
+                    type="button"
+                  >
+                    <i class="la la-x la-plus"></i>
+                    Add Documents
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <% if (blog?.documents?.length > 0) { %>
+               <label> Already uploaded documents </label>
+             
+            <% } %>
+           <div class="already-uoloaded-docs mt-3">
+               <% blog.documents.forEach(doc => { %>
+                   <li class="doc"> 
+                    <a href="/uploads/blog/documents/<%=doc.documentFile %>" target="_blank">
+                        <%= doc.name %>
+                    </a> 
+                    <i class="feather icon-x delete-doc" data-blogid="<%= blog._id %>" data-id="<%= doc._id %>" data-doc="<%= doc.documentFile %>" ></i>
+                </li>
+               <% }) %>
+           </div>
+       </div>
+          <div class="col-md-12 mt-5">
+            <div class="upload__box">
+              <div class="upload__btn-box">
+                <label class="upload__btn">
+                  <p>Upload gallery</p>
+                  <input
+                    type="file"
+                    id="gallery"
+                    name="blogGallery"
+                    multiple
+                    data-max_length="5"
+                    class="upload__inputfile"
+                    accept=".jpg, .png, .jpeg"
+                  />
+                </label>
+              </div>
+              <div class="upload__img-wrap"></div>
+            </div>
+          </div>
+          <% if (blog.gallery.length > 0) { %>
+            <div class="col-md-12">
+                <div class="row">
+                    <% blog.gallery.forEach(img => { %>
+                    <div class="col-md-4 col-xl-3">
+                        <div class="imgViewContainer">
+                            <img src="/uploads/blog/gallery/<%= img %>">
+                            <span class="delete-galley-img" data-id="<%=blog._id %>" data-img="<%= img %>"
+                                data-type="gallery">
+                                <i class="fa fa-times"></i>
+                              </span>
+                        </div>
+                    </div>
+                    <% }) %>
+                </div>
+            </div>
+            <% } %>
+            <div class="col-12 mt-4">
+              <div class="d-flex align-items-center justify-content-end">
+                <div class="custom-control custom-checkbox mr-5 <%= blog.published ? 'non_editable': '' %>">
+                    <input type="checkbox" class="custom-control-input" id="saveAsDraft" <%= blog.saveAsDraft ? 'checked' : '' %> name="saveAsDraft" value="true">
+                    <label class="custom-control-label text-dark" for="saveAsDraft">Save As Draft</label>
+                </div>
+                <div class="custom-control custom-checkbox <%= blog.saveAsDraft ? 'non_editable': '' %>">
+                  <input type="checkbox" class="custom-control-input" id="published" name="published" <%= blog.published ? 'checked' : '' %> value="true">
+                  <label class="custom-control-label text-dark" for="published">Published</label>
+                </div>
+              </div>
+            </div>
+          <div class="col-12">
+            <button class="btn btn-success mt-5 blog-edit">
+              <i class="feather icon-save"></i> Save
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- add modal starts -->
+<div
+  class="modal fade"
+  id="addBlogCategoryModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mt-0">Add Blog Category</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+            <div class="form-group">
+              <label for="categoryTitle" class="text-dark">Blog Category</label>
+              <input type="text" class="form-control" id="categoryTitle" />
+            </div>
+            <button class="btn btn-success add_blog_category_using_ajax" type="button">
+              <i class="feather icon-plus"></i> Add
+            </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- add modal ends -->
+
+<!-- add modal starts -->
+<div
+  class="modal fade"
+  id="addBlogTagModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mt-0">Add Blog Tag</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+            <div class="form-group">
+              <label for="blogTag" class="text-dark">Blog Tag</label>
+              <input type="text" class="form-control" id="blogTag" />
+            </div>
+            <button type="button" class="btn btn-success add_blog_tag_using_ajax">
+              <i class="feather icon-plus"></i> Add
+            </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- add modal ends -->
+
+<%- include('../partials/footer') %>

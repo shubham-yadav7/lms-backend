@@ -1,0 +1,226 @@
+<%- include('../partials/header') %>
+
+<!-- Start Breadcrumbbar -->
+<div class="breadcrumbbar">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <h4 class="page-title">Deleted Learners</h4>
+      <div class="breadcrumb-list">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/api/creator">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="/api/creator/learner/list">Learners</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Deleted Learners</li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-4 col-lg-4">
+      <div class="widgetbar">
+        <a href="/api/creator/learner/list">
+          <button
+            class="btn btn-primary"
+          >View learners
+          </button>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- contentbar starts -->
+<div class="contentbar">
+  <!-- User list starts -->
+  <div class="card m-b-30">
+    <div class="card-header">
+      <div class="d-flex justify-content-between align-items-center">
+        <h5 class="card-title">Deleted Learners</h5>
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="searchbar m-r-10">
+            <div class="input-group">
+              <input
+                type="search"
+                class="form-control search_input"
+                placeholder="Search"
+                aria-label="Search"
+                aria-describedby="button-addon2"
+                value="<%= search %>"
+              />
+              <div class="input-group-append">
+                <button class="btn search-data" id="button-addon2">
+                  <i class="feather icon-search"></i>
+                </button>
+              </div>
+            </div>
+        </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <!-- learners card starts -->
+      <div class="row">
+        <% learners.forEach(learner => { %>
+        <div class="col-12 col-md-6 col-xl-4 m-b-25">
+          <div class="card border-light">
+              <div class="card-body">
+                <div>
+                  <div class="row">
+                    <div class="col-3">
+                      <figure
+                        style="
+                          width: 60px;
+                          height: 60px;
+                          border-radius: 50%;
+                          overflow: hidden;
+                          object-fit: contain;
+                        "
+                      >
+                        <img
+                          src="/uploads/user/profile/<%= learner.profileImg %>"
+                          class="w-100"
+                          alt=""
+                          onerror="this.src='/assets/images/common/avatar.png'"
+                        />
+                      </figure>
+                    </div>
+                    <div class="col-9">
+                      <div
+                        class="d-flex justify-content-between m-b-5 align-items-center"
+                      >
+                        <p class="text-dark font-18 m-0">
+                          <%= learner.firstName %> <%= learner.lastName %>
+                        </p>
+                        <span
+                          class="badge badge-danger"
+                          >Deleted</span
+                        >
+                      </div>
+                      <span class="d-block font-14"><%= learner.email %></span>
+                      <span class="font-14"
+                        ><%= learner.phone %></span
+                      >
+                    </div>
+                  </div>
+                  <div class="row font-12 text-muted m-t-10">
+                    <div class="col-6">
+                      <p class="m-0">
+                        Created At :
+                        <span class="d-block font-13 text-secondary"
+                          ><%= moment(learner.createdAt).format('ll') %></span
+                        >
+                      </p>
+                    </div>
+                    <div class="col-6">
+                      <p class="m-0">
+                        Updated At:
+                        <span class="d-block font-13 text-secondary"
+                          ><%= moment(learner.updatedAt).format('ll') %></span
+                        >
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <div class="card-footer">
+                <span
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="Restore"
+                  data-offset="0,6"
+                >
+                  <button
+                    class="btn btn-success-rgba restore_learner_btn"
+                    data-toggle="modal"
+                    data-target="#confirmRestore"
+                    data-id="<%= learner._id %>"
+                  >
+                    <i class="feather icon-refresh-ccw"></i>
+                  </button>
+                </span>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+      <!-- learners card ends -->
+      <% if (total > 1) { %>
+        <!-- pagination starts -->
+        <div class="d-flex justify-content-center">
+          <ul class="pagination">
+            <% if (Number(page) > 1) { %>
+              <li class="page-item">
+                <a class="page-link prev-page" data-prev="<%= Number(page) - 1 %>">«</a>
+              </li>
+            <% } %>
+            <% if (Number(page) !== 1) { %>
+              <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) - 1 %>"><%= Number(page) - 1 %></a></li>
+            <% } %>
+            <li class="page-item active">
+              <a class="page-link page-num" data-page="<%= Number(page) %>"><%= Number(page) %></a>
+            </li>
+            <% if (Number(page) < Number(total)) { %>
+              <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) + 1 %>"><%= Number(page) + 1 %></a></li>
+            <% } %>
+            <% if (Number(page) !== Number(total)) { %>
+              <li class="page-item">
+                <a class="page-link next-page" data-next="<%= Number(page) + 1 %>">»</a>
+              </li>
+            <% } %>
+          </ul>
+        </div>
+        <!-- pagination ends -->
+      <% } %>
+      
+    </div>
+  </div>
+  <!-- user list ends -->
+</div>
+<!-- contentbar starts --><!-- delete modal starts -->
+<div
+class="modal fade"
+id="confirmRestore"
+tabindex="-1"
+role="dialog"
+aria-hidden="true"
+>
+<div
+  class="modal-dialog modal-dialog-centered modal-md"
+  role="document"
+>
+  <div class="modal-content">
+    <div class="modal-body">
+      <p class="text-muted font-18 text-center">
+        Do you really want to restore this Learner?
+      </p>
+      <div class="d-flex justify-content-center m-t-25">
+        <button
+          class="btn btn-secondary m-r-10"
+          data-dismiss="modal"
+        >
+          Cancel
+        </button>
+        <form action="" class="restore_learner_form" method="post">
+          <button type="submit" class="btn btn-success" id="restore_learner">
+            <i class="feather icon-refresh-cw m-r-5"></i>
+            Restore
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- delete modal ends -->
+
+<%- include('../partials/footer') %>
+
+<script>
+  $(".summernote").summernote({
+    placeholder: "Learner Description",
+    toolbar: [
+      ["style", ["bold", "italic", "underline", "clear"]],
+      ["fontsize", ["fontsize"]],
+      ["color", ["color"]],
+      ["para", ["ul", "ol", "paragraph"]],
+    ],
+  });
+</script>

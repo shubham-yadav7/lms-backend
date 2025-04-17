@@ -1,0 +1,145 @@
+<%- include('../../partials/header') %>
+
+<!-- Start Breadcrumbbar -->
+<div class="breadcrumbbar">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <h4 class="page-title">Certificates</h4>
+      <div class="breadcrumb-list">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="/api/creator">Dashboard</a>
+          </li>
+          <li class="breadcrumb-item">
+            <a href="/api/creator/course-bundle/list">Course Bundle</a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">
+            Certificates
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-4 col-lg-4">
+      <div class="widgetbar">
+        <button class="btn btn-primary">
+          <i class="feather icon-eye m-r-5"></i>
+          Preview
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- contentbar starts -->
+<div class="contentbar">
+  <div class="row">
+    <div class="col-lg-3 col-xl-2">
+      <div class="card m-b-30">
+        <div class="card-body">
+          <div
+          class="nav flex-column nav-pills"
+          id="v-pills-tab"
+          role="tablist"
+          aria-orientation="vertical"
+        >
+          <a
+            class="nav-link mb-2"
+            id="v-pills-dashboard-tab"
+            href="/api/creator/course-bundle/<%= bundleId %>"
+            role="tab"
+          >
+            <i class="feather icon-grid mr-2"></i>Information</a
+          >
+          <a
+          class="nav-link mb-2"
+          id="v-pills-order-tab"
+          href="/api/creator/diploma/<%= bundleId %>/list"
+          role="tab"
+        >
+            <i class="feather icon-award mr-2"></i>Diploma</a
+          >
+          <a
+            class="nav-link mb-2"
+            id="v-pills-addresses-tab"
+            href="/api/creator/course-bundle/details/<%= bundleId %>/learners"
+            role="tab"
+          >
+            <i class="feather icon-users mr-2"></i>Learners</a
+          >
+          <a
+            class="nav-link mb-2 active"
+            id="v-pills-wishlist-tab"
+            href="/api/creator/course-bundle/details/<%= bundleId %>/Certificates"
+            role="tab"
+          >
+            <i class="feather icon-credit-card mr-2"></i>Certificates</a
+          >
+          <a
+            class="nav-link mb-2"
+            id="v-pills-wallet-tab"
+            href="/api/creator/course-bundle/details/<%= bundleId %>/reviews"
+            role="tab"
+          >
+            <i class="feather icon-star mr-2"></i>Reviews</a
+          >
+        </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-9 col-xl-10">
+      <div class="card m-b-30">
+        <div class="card-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title">Certificates</h5>
+          </div>
+        </div>
+        <div class="card-body">
+          <form action="#">
+            <div
+              class="d-lg-flex justify-content-around align-items-center"
+              style="height: 50vh"
+            >
+              <div>
+                <!-- <h5>Preview</h5> -->
+                <div class="d-flex justify-content-center align-items-center">
+                  <a
+                    class="sample-certificate"
+                    data-fancybox="images"
+                    href="https://www.coursepe.com/assets/images/common/sample-certificate.jpeg"
+                  >
+                    <figure style="width: 250px" class="m-0">
+                      <img
+                        src="https://www.coursepe.com/assets/images/common/sample-certificate.jpeg"
+                        class="w-100"
+                        alt=""
+                      />
+                    </figure>
+                  </a>
+                </div>
+              </div>
+              <div class="form-group col-lg-4">
+                <input
+                  type="file"
+                  name="sampleCertificate"
+                  id="sampleCertificate"
+                  class="dropify"
+                  data-height="168"
+                />
+                <div class="d-flex justify-content-between align-items-center">
+                  <sub>Max file size - 100mb</sub>
+                  <button class="btn btn-primary m-t-5 py-1 px-2">Save</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- contentbar ends --><%- include('../../partials/footer') %>
+<script>
+  document.body.classList.add("toggle-menu");
+  $(".dropify").dropify();
+</script>

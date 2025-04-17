@@ -1,0 +1,7 @@
+node_modules
+.vscode
+**.DS_Store
+**.zip
+dump
+logs/access.log
+developers-guide.txt

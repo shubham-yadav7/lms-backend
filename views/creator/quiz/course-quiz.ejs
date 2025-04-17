@@ -1,0 +1,357 @@
+<%- include('../partials/header') %>
+
+<!-- Start Breadcrumbbar -->
+<div class="breadcrumbbar">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <h4 class="page-title">Quizzes</h4>
+      <div class="breadcrumb-list">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="/api/creator">Dashboard</a>
+          </li>
+          <li class="breadcrumb-item"><a href="/api/creator/course/list">Course</a></li>
+          <li class="breadcrumb-item active" aria-current="page">
+            Quizzes
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-4 col-lg-4">
+      <div class="widgetbar">
+        <button class="btn btn-primary">
+          <i class="feather icon-eye m-r-5"></i>
+         Preview
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- contentbar starts -->
+<div class="contentbar">
+  <div class="row">
+    <div class="col-lg-3">
+      <div class="card m-b-30">
+        <div class="card-body">
+          <div
+          class="nav flex-column nav-pills"
+          id="v-pills-tab"
+          role="tablist"
+          aria-orientation="vertical"
+        >
+          <a
+            class="nav-link mb-2"
+            id="v-pills-dashboard-tab"
+            href="/api/creator/course/<%= courseId %>"
+            role="tab"
+          >
+            <i class="feather icon-grid mr-2"></i>Information</a
+          >
+          <a
+            class="nav-link mb-2"
+            id="v-pills-order-tab"
+            href="/api/creator/course/<%= courseId %>/topic/list"
+            role="tab"
+          >
+            <i class="feather icon-server mr-2"></i>Topics</a
+          >
+          <a
+            class="nav-link mb-2 active"
+            id="v-pills-order-tab"
+            href="/api/creator/quiz/<%= courseId %>/list"
+            role="tab"
+          >
+            <i class="feather icon-award mr-2"></i>Quizzes</a
+          >
+          <a
+            class="nav-link mb-2"
+            id="v-pills-addresses-tab"
+            href="/api/creator/course/details/<%= courseId %>/learners"
+            role="tab"
+          >
+            <i class="feather icon-users mr-2"></i>Learners</a
+          >
+          <a
+            class="nav-link mb-2"
+            id="v-pills-wishlist-tab"
+            href="/api/creator/course/details/<%= courseId %>/Certificates"
+            role="tab"
+          >
+            <i class="feather icon-credit-card mr-2"></i>Certificates</a
+          >
+          <a
+            class="nav-link mb-2"
+            id="v-pills-wallet-tab"
+            href="/api/creator/course/details/<%= courseId %>/reviews"
+            role="tab"
+          >
+            <i class="feather icon-star mr-2"></i>Reviews</a
+          >
+        </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-9">
+      <div class="card m-b-30">
+        <div class="card-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title">Quiz</h5>
+            <button
+            class="btn btn-primary-rgba"
+            data-toggle="modal"
+            data-target="#quizModal"
+          >
+            <i class="feather icon-plus m-r-5"></i>Add Quiz
+          </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive m-b-30">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Quiz Title</th>
+                  <th>No of Questions</th>
+                  <th>Created At</th>
+                  <th>Updated At</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>#</th>
+                  <th>Quiz Title</th>
+                  <th>No of Questions</th>
+                  <th>Created At</th>
+                  <th>Updated At</th>
+                  <th>Action</th>
+                </tr>
+              </tfoot>
+              <tbody>
+                <% quizzes.forEach((quiz, i) => { %>
+                  <tr>
+                    <th scope="row"><%= i+1 %></th>
+                    <td class="text-capitalize"><%= quiz.title %></td>
+                    <td class="text-capitalize"><%= quiz.noOfQuestions %></td>
+                    <td><%= moment(quiz.createdAt).format('ll') %></td>
+                    <td><%= moment(quiz.updatedAt).format('ll') %></td>
+                    <td>
+                      <div class="d-flex">
+                        <div data-toggle="tooltip" data-placement="top" title="Edit">
+                          <button
+                          data-quiz="<%= JSON.stringify(quiz) %>"
+                          data-courseid="<%= courseId %>"
+                          class="btn btn-primary-rgba edit_quiz_btn" data-toggle="modal" data-target="#editQuizModal"
+                          >
+                          <i class="feather icon-edit"></i>
+                        </button>
+                      </div>
+                        <a href="/api/creator/quiz/<%= quiz._id %>/question/list" class="btn btn-info-rgba d-flex justify-content-center align-items-center m-l-5 m-r-5" data-toggle="tooltip" data-placement="top" title="Add Question">
+                          <i class="feather icon-help-circle"></i>
+                        </a>
+                      <div data-toggle="tooltip" data-placement="top" title="Delete">
+                        <button type="button" data-courseid="<%= courseId %>" data-quizid="<%= quiz._id %>" class="btn btn-danger-rgba delete_quiz_btn" data-toggle="modal" data-target="#confirmDelete">
+                          <i class="feather icon-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+          <% if (total > 1) { %>
+            <!-- pagination starts -->
+            <div class="d-flex justify-content-center">
+              <ul class="pagination">
+                <% if (Number(page) > 1) { %>
+                  <li class="page-item">
+                    <a class="page-link prev-page" data-prev="<%= Number(page) - 1 %>">«</a>
+                  </li>
+                <% } %>
+                <% if (Number(page) !== 1) { %>
+                  <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) - 1 %>"><%= Number(page) - 1 %></a></li>
+                <% } %>
+                <li class="page-item active">
+                  <a class="page-link page-num" data-page="<%= Number(page) %>"><%= Number(page) %></a>
+                </li>
+                <% if (Number(page) < Number(total)) { %>
+                  <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) + 1 %>"><%= Number(page) + 1 %></a></li>
+                <% } %>
+                <% if (Number(page) !== Number(total)) { %>
+                  <li class="page-item">
+                    <a class="page-link next-page" data-next="<%= Number(page) + 1 %>">»</a>
+                  </li>
+                <% } %>
+              </ul>
+            </div>
+            <!-- pagination ends -->
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- contentbar ends -->
+
+   <!-- modal starts -->
+   <div
+   class="modal fade"
+   id="quizModal"
+   tabindex="-1"
+   role="dialog"
+   aria-hidden="true"
+ >
+   <div class="modal-dialog modal-dialog-centered" role="document">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title" id="exampleModalCenterTitle">
+           Add Quiz
+         </h5>
+         <button
+           type="button"
+           class="close"
+           data-dismiss="modal"
+           aria-label="Close"
+         >
+           <span aria-hidden="true">×</span>
+         </button>
+       </div>
+       <div class="modal-body">
+         <form action="/api/creator/quiz/<%= courseId %>/add" method="POST">
+           <div class="form-group">
+             <label for="title" class="text-dark">Quiz Title</label>
+             <input
+               type="text"
+               class="form-control"
+               id="title"
+               name="title"
+               placeholder="Enter title here"
+             />
+           </div>
+           <div class="form-group">
+            <label for="description" class="text-dark"
+              >Description</label
+            >
+            <textarea
+              class="form-control"
+              id="description"
+              name="description"
+              cols="100"
+              rows="2"
+            ></textarea>
+          </div>
+           <div class="d-flex justify-content-end">
+             <button type="submit" class="btn btn-success add_quiz">
+               <i class="feather icon-plus"></i>Add
+             </button>
+           </div>
+         </form>
+       </div>
+     </div>
+   </div>
+ </div>
+ <!-- modal ends -->
+
+   <!-- modal starts -->
+   <div
+   class="modal fade"
+   id="confirmDelete"
+   tabindex="-1"
+   role="dialog"
+   aria-hidden="true"
+ >
+   <div
+     class="modal-dialog modal-dialog-centered modal-md"
+     role="document"
+   >
+     <div class="modal-content">
+       <div class="modal-body">
+         <p class="text-muted font-18 text-center">
+           Do you really want to delete this Quiz?
+         </p>
+         <div class="d-flex justify-content-center m-t-25">
+           <button
+             class="btn btn-secondary m-r-10"
+             data-dismiss="modal"
+           >
+             Cancel
+           </button>
+           <form class="delete_quiz_form" action="" method="POST">
+             <button type="submit" class="btn btn-danger">
+               <i class="feather icon-trash m-r-5"></i>
+               Delete
+             </button>
+           </form>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+ <!-- modal ends -->
+
+<!-- Edit Language modal -->
+<div
+  class="modal fade"
+  id="editQuizModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Quiz</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="quiz-edit-form" action="" method="POST">
+          <div class="form-group">
+            <label for="quizTitle" class="text-dark">Title</label>
+            <input
+              type="text"
+              class="form-control"
+              id="quizTitle"
+              name="title"
+              placeholder="Enter Quiz Title here"
+            />
+          </div>
+          <div class="form-group">
+            <label for="quizDescription" class="text-dark"
+              >Description</label
+            >
+            <textarea
+              class="form-control desc_summer"
+              id="quizDescription"
+              name="description"
+              cols="100"
+              rows="2"
+            ></textarea>
+          </div>
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-success edit_quiz">
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+<script>
+  document.body.classList.add("toggle-menu");
+
+  $(".dropify").dropify();
+</script>

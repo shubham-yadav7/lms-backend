@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui"
+    />
+    <title>Admin Dashboard | <%= brandName %></title>
+    <!-- Fevicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logos/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/logos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/logos/favicon-16x16.png">
+    <!-- Start css -->
+    <!-- Switchery css -->
+    <link href="/assets/plugins/switchery/switchery.min.css" rel="stylesheet" />
+    <!-- Dropzone css -->
+    <link
+      href="/assets/plugins/dropify/dist/css/dropify.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!-- DataTables css -->
+    <link
+      href="/assets/plugins/datatables/dataTables.bootstrap4.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="/assets/plugins/datatables/buttons.bootstrap4.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!-- Responsive Datatable css -->
+    <link
+      href="/assets/plugins/datatables/responsive.bootstrap4.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!-- jvectormap css -->
+    <link
+      href="/assets/plugins/jvectormap/jquery-jvectormap-2.0.2.css"
+      rel="stylesheet"
+    />
+    <!-- Datepicker css -->
+    <link
+      href="/assets/plugins/datepicker/datepicker.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!-- Pnotify css -->
+    <link
+      href="/assets/plugins/pnotify/css/pnotify.custom.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="/assets/css/bootstrap.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link href="/assets/css/icons.css" rel="stylesheet" type="text/css" />
+    <link
+      href="/assets/css/flag-icon.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!-- Select2 css -->
+    <link
+      href="/assets/plugins/select2/select2.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!-- Tagsinput css -->
+    <link
+      href="/assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!-- tostify -->
+    <link
+      href="/assets/plugins/pnotify/css/pnotify.custom.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!-- Fancy Box -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css"
+      rel="stylesheet"
+    />
+    <!-- Summernote css -->
+    <link
+      href="/assets/plugins/summernote/summernote-bs4.css"
+      rel="stylesheet"
+    />
+    <!-- Daterange Picker -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"
+    />
+    <link href="/assets/css/style.css" rel="stylesheet" type="text/css" />
+    <!-- End css -->
+  </head>
+
+  <body class="vertical-layout">
+    <!-- Start Containerbar -->
+    <div id="containerbar">
+      <!-- Start Leftbar -->
+      <div class="leftbar">
+        <!-- Start Sidebar -->
+        <div class="sidebar">
+          <!-- Start Logobar -->
+          <div class="logobar">
+            <a href="/api/creator/dashboard" class="logo logo-large"
+              ><img
+                src="/assets/images/logos/learnr-logo.png"
+                class="img-fluid"
+                alt="logo"
+            /></a>
+            <a href="/api/creator/dashboard" class="logo logo-small"
+              ><img
+                src="/assets/images/logos/learnr-logo-icon.png"
+                class="img-fluid"
+                alt="logo"
+            /></a>
+          </div>
+          <!-- End Logobar -->
+          <!-- Start Profilebar -->
+          <div class="profilebar text-center">
+            <img
+              src="/assets/images/users/profile.svg"
+              class="img-fluid"
+              alt="profile"
+            />
+            <div class="profilename">
+              <h5><%#= currentUser.name %></h5>
+              <p class="text-uppercase"><%#= currentUser.type %></p>
+            </div>
+            <div class="userbox">
+              <ul class="list-inline mb-0">
+                <li class="list-inline-item">
+                  <a
+                    href="/api/creator/setting/profile"
+                    class="profile-icon"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="Profile"
+                    ><img
+                      src="/assets/images/svg-icon/user.svg"
+                      class="img-fluid"
+                      alt="user"
+                  /></a>
+                </li>
+                <li class="list-inline-item"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Logout"           
+                >
+                  <button
+                    class="profile-icon"
+                    style="border:none"
+                    data-toggle="modal"
+                    data-target="#confirmLogoutModal"
+                    ><img
+                      src="/assets/images/svg-icon/logout.svg"
+                      class="img-fluid"
+                      alt="logout"
+                  /></button>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!-- End Profilebar -->
+          <!-- Start Navigationbar -->
+          <div class="navigationbar">
+            <ul class="vertical-menu">
+              <li class="vertical-header">Modules</li>
+              <li>
+                <a href="javaScript:void();">
+                  <i class="feather icon-book-open"></i>
+                  <span>Courses</span>
+                  <i class="feather icon-chevron-right pull-right"></i>
+                </a>
+                <ul class="vertical-submenu">
+                  <li>
+                    <a href="/api/creator/course/list">All Courses</a>
+                  </li>
+                  <li>
+                    <a href="/api/creator/course/categories/list"
+                      >Course Category</a
+                    >
+                  </li>
+                  <li>
+                    <a href="/api/creator/course/languages/list">Language</a>
+                  </li>
+                  <li>
+                    <a href="/api/creator/course/deleted">Deleted Courses</a>
+                  </li>
+                </ul>
+              </li>
+              <!-- <li>
+                <a href="javaScript:void();">
+                  <i class="feather icon-layers"></i>
+                  <span>Course Bundles</span>
+                  <i class="feather icon-chevron-right pull-right"></i>
+                </a>
+                <ul class="vertical-submenu">
+                  <li>
+                    <a href="/api/creator/course-bundle/list">All Bundles</a>
+                  </li>
+                
+                  <li>
+                    <a href="/api/creator/course-bundle/deleted"
+                      >Deleted Bundles</a
+                    >
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a href="javaScript:void();">
+                  <i class="feather icon-archive"></i>
+                  <span>Products</span>
+                  <i class="feather icon-chevron-right pull-right"></i>
+                </a>
+                <ul class="vertical-submenu">
+                  <li>
+                    <a href="/api/creator/product/list">All Products</a>
+                  </li>
+                  <li>
+                    <a href="/api/creator/product/category/list"
+                      >Product Category</a
+                    >
+                  </li>
+                  <li>
+                    <a href="/api/creator/product/deleted">Deleted Products</a>
+                  </li>
+                </ul>
+              </li> -->
+              <!--  -->
+              <li>
+                <a href="javaScript:void();">
+                  <i class="feather icon-tag"></i>
+                  <span>Coupons</span>
+                  <i class="feather icon-chevron-right pull-right"></i>
+                </a>
+                <ul class="vertical-submenu">
+                  <li>
+                    <a href="/api/creator/coupon/list">All Coupons</a>
+                  </li>
+                  <li>
+                    <a href="/api/creator/coupon/deleted">Deleted Coupons</a>
+                  </li>
+                </ul>
+              </li>
+              <!-- <li>
+                <a href="javaScript:void();">
+                  <i class="feather icon-user"></i>
+                  <span>Instructor</span>
+                  <i class="feather icon-chevron-right pull-right"></i>
+                </a>
+                <ul class="vertical-submenu">
+                  <li>
+                    <a href="/api/creator/instructor/list">All Instructors</a>
+                  </li>
+                  <li>
+                    <a href="/api/creator/instructor/deleted"
+                      >Deleted Instructors</a
+                    >
+                  </li>
+                </ul>
+              </li> -->
+              <!-- <li>
+                <a href="javaScript:void();">
+                  <i class="feather icon-user"></i>
+                  <span>Sub Creators</span>
+                  <i class="feather icon-chevron-right pull-right"></i>
+                </a>
+                <ul class="vertical-submenu">
+                  <li>
+                      <a href="/api/creator/sub-creator/list">All Sub-Creators</a>
+                  </li>
+                  <li>
+                      <a href="/api/creator/sub-creator/deleted">Deleted Sub-Creators</a>
+                  </li>
+                </ul>
+              </li> -->
+              <!-- <li>
+                <a href="javaScript:void();">
+                  <i class="feather icon-user-check"></i>
+                  <span>Learner</span>
+                  <i class="feather icon-chevron-right pull-right"></i>
+                </a>
+                <ul class="vertical-submenu">
+                  <li>
+                    <a href="/api/creator/learner/list">All learners</a>
+                  </li>
+                  <li>
+                    <a href="/api/creator/learner/deleted">Deleted learners</a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a href="javaScript:void();">
+                  <i class="feather icon-globe"></i>
+                  <span>CMS</span>
+                  <i class="feather icon-chevron-right pull-right"></i>
+                </a>
+                <ul class="vertical-submenu">
+                  <li>
+                    <a href="/api/creator/announcement/list">Announcement</a>
+                  </li>
+                  <li>
+                    <a href="/api/creator/banner/list">Banner</a>
+                  </li>
+                  <li>
+                    <a href="/api/creator/contact/list">Contact</a>
+                  </li>
+                  <li>
+                    <a href="/api/creator/faq/list">Faq</a>
+                  </li>
+                  <li>
+                    <a href="/api/creator/feedback/list">Feedback</a>
+                  </li>
+                  <li>
+                    <a href="/api/creator/help/list">Help</a>
+                  </li>
+                  <li>
+                    <a href="/api/creator/newsletter/list">Newsletter</a>
+                  </li>
+                  <li>
+                    <a href="/api/creator/testimonial/list">Testimonials</a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a href="javaScript:void();">
+                  <i class="feather icon-sidebar"></i>
+                  <span>Blog</span>
+                  <i class="feather icon-chevron-right pull-right"></i>
+                </a>
+                <ul class="vertical-submenu">
+                  <li>
+                    <a href="/api/creator/blog/add">Add Posts</a>
+                  </li>
+                  <li>
+                    <a href="/api/creator/blog/list">All Posts</a>
+                  </li>
+                  <li>
+                    <a href="/api/creator/blog/category/list">Category</a>
+                  </li>
+                  <li>
+                    <a href="/api/creator/blog/tag/list">Tag</a>
+                  </li>
+                </ul>
+              </li> -->
+            </ul>
+          </div>
+          <!-- End Navigationbar -->
+        </div>
+        <!-- End Sidebar -->
+      </div>
+      <!-- End Leftbar -->
+      <!-- Start Rightbar -->
+      <div class="rightbar">
+        <!-- Alerts -->
+        <% if (error && error.length) { %>
+        <div
+          class="session-alert text-center alert alert-danger alert-dismissible fade show mb-0"
+          role="alert"
+        >
+          <%= error %>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="alert"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <% } %> <% if (success && success.length) { %>
+        <div
+          class="session-alert text-center alert alert-success alert-dismissible fade show mb-0"
+          role="alert"
+        >
+          <%= success %>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="alert"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <% } %>
+        <!-- Start Topbar Mobile -->
+        <div class="topbar-mobile">
+          <div class="row align-items-center">
+            <div class="col-md-12">
+              <div class="mobile-logobar">
+                <a href="/api/creator/dashboard" class="mobile-logo"
+                  ><img
+                    src="/assets/images/logos/lms-logo.png"
+                    class="img-fluid"
+                    alt="logo"
+                /></a>
+              </div>
+              <div class="mobile-togglebar">
+                <ul class="list-inline mb-0">
+                  <li class="list-inline-item">
+                    <div class="topbar-toggle-icon">
+                      <a
+                        class="topbar-toggle-hamburger"
+                        href="javascript:void();"
+                      >
+                        <img
+                          src="/assets/images/svg-icon/horizontal.svg"
+                          class="img-fluid menu-hamburger-horizontal"
+                          alt="horizontal"
+                        />
+                        <img
+                          src="/assets/images/svg-icon/verticle.svg"
+                          class="img-fluid menu-hamburger-vertical"
+                          alt="verticle"
+                        />
+                      </a>
+                    </div>
+                  </li>
+                  <li class="list-inline-item">
+                    <div class="menubar">
+                      <a class="menu-hamburger" href="javascript:void();">
+                        <img
+                          src="/assets/images/svg-icon/collapse.svg"
+                          class="img-fluid menu-hamburger-collapse"
+                          alt="collapse"
+                        />
+                        <img
+                          src="/assets/images/svg-icon/close.svg"
+                          class="img-fluid menu-hamburger-close"
+                          alt="close"
+                        />
+                      </a>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Start Topbar -->
+        <div class="topbar">
+          <!-- Start row -->
+          <div class="row align-items-center">
+            <!-- Start col -->
+            <div class="col-md-12 align-self-center">
+              <div class="togglebar">
+                <ul class="list-inline mb-0">
+                  <li class="list-inline-item">
+                    <div class="menubar">
+                      <a class="menu-hamburger" href="javascript:void();">
+                        <img
+                          src="/assets/images/svg-icon/collapse.svg"
+                          class="img-fluid menu-hamburger-collapse"
+                          alt="collapse"
+                        />
+                        <img
+                          src="/assets/images/svg-icon/close.svg"
+                          class="img-fluid menu-hamburger-close"
+                          alt="close"
+                        />
+                      </a>
+                    </div>
+                  </li>
+                  <!-- <li class="list-inline-item">
+                                    <div class="searchbar">
+                                        <form>
+                                            <div class="input-group">
+                                                <input type="search" class="form-control" placeholder="Search"
+                                                    aria-label="Search" aria-describedby="button-addon2">
+                                                <div class="input-group-append">
+                                                    <button class="btn" type="submit" id="button-addon2"><img
+                                                            src="/assets/images/svg-icon/search.svg" class="img-fluid"
+                                                            alt="search"></button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </li> -->
+                </ul>
+              </div>
+            </div>
+            <!-- End col -->
+          </div>
+          <!-- End row -->
+        </div>
+        <!-- End Topbar -->

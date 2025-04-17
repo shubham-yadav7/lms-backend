@@ -1,0 +1,234 @@
+<%- include('../partials/header') %>
+
+<!-- Start Breadcrumbbar -->
+<div class="breadcrumbbar">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <h4 class="page-title">Blog tags</h4>
+      <div class="breadcrumb-list">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/api/creator">Dashboard</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Blog tags</li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-4 col-lg-4">
+      <div class="widgetbar">
+        <button
+          class="btn btn-primary"
+          data-toggle="modal"
+          data-target="#addBlogTagModal"
+        >
+          <i class="feather icon-plus"></i> Add Blog Tag
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- contentbar starts -->
+<div class="contentbar">
+  <div class="card m-b-30">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="card-title"></h5>
+      <div class="d-flex">
+        <div class="searchbar m-r-10">
+          <div class="input-group">
+            <input
+              type="search"
+              class="form-control search_input"
+              placeholder="Search"
+              aria-label="Search"
+              aria-describedby="button-addon2"
+              value="<%= search %>"
+            />
+            <div class="input-group-append">
+              <button class="btn search-data" id="button-addon2">
+                <i class="feather icon-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <% tags.forEach(tag => { %>
+          <!-- card starts -->
+          <div class="col-12 col-md-6 col-xl-4 m-b-25">
+            <div class="card border-light">
+              <div class="card-body d-lg-flex justify-content-between align-items-center">
+                <p class="font-20 m-b text-dark text-capitalize"><%= tag.title %></p>
+         
+                <div class="d-flex">
+                  <div
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  class="mr-2"
+                  title="Edit">
+                  <button 
+                    class="btn btn-primary-rgba edit-blog-tag-btn" 
+                    data-toggle="modal" 
+                    data-target="#editBlogTagModal"
+                    data-tag="<%= JSON.stringify((({_id, title})=>({_id, title}))(tag)) %>"
+                  >
+                    <i class="feather icon-edit"></i>
+                  </button>
+                </div>
+                <div
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Delete">
+                    <button class="btn btn-danger-rgba delete-blog-tag-btn" data-id="<%= tag._id %>" data-toggle="modal" data-target="#confirmDelete">
+                      <i class="feather icon-trash"></i>
+                    </button>
+              </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- card ends -->
+        <% }) %>
+      </div>
+      
+      <% if (total > 1) { %>
+        <!-- pagination starts -->
+        <div class="d-flex justify-content-center">
+          <ul class="pagination">
+            <% if (Number(page) > 1) { %>
+              <li class="page-item">
+                <a class="page-link prev-page" data-prev="<%= Number(page) - 1 %>">«</a>
+              </li>
+            <% } %>
+            <% if (Number(page) !== 1) { %>
+              <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) - 1 %>"><%= Number(page) - 1 %></a></li>
+            <% } %>
+            <li class="page-item active">
+              <a class="page-link page-num" data-page="<%= Number(page) %>"><%= Number(page) %></a>
+            </li>
+            <% if (Number(page) < Number(total)) { %>
+              <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) + 1 %>"><%= Number(page) + 1 %></a></li>
+            <% } %>
+            <% if (Number(page) !== Number(total)) { %>
+              <li class="page-item">
+                <a class="page-link next-page" data-next="<%= Number(page) + 1 %>">»</a>
+              </li>
+            <% } %>
+          </ul>
+        </div>
+        <!-- pagination ends -->
+      <% } %>
+    </div>
+  </div>
+</div>
+<!-- contentbar starts -->
+
+<!-- add modal starts -->
+<div
+  class="modal fade"
+  id="addBlogTagModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mt-0">Add Blog Tag</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/api/creator/blog/tag/add" method="POST">
+            <div class="form-group">
+              <label for="title" class="text-dark">Blog Tag</label>
+              <input type="text" class="form-control" id="title" name="title" />
+            </div>
+            <button type="submit" class="btn btn-success add_blog_tag">
+              <i class="feather icon-plus"></i> Add
+            </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- add modal ends -->
+
+<!-- edit modal starts -->
+<div
+  class="modal fade"
+  id="editBlogTagModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mt-0">Edit Blog Tag</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="" class="edit-blog-tag-form" method="POST">
+            <div class="form-group">
+              <label for="edit_title" class="text-dark">Tag Title</label>
+              <input type="text" class="form-control" id="edit_title" name="title" />
+            </div>
+            <button class="btn btn-success m-t-10 edit-blog-tag">
+              <i class="feather icon-save"></i> Save
+            </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- edit modal ends -->
+
+<!-- delete modal starts -->
+<div
+  class="modal fade"
+  id="confirmDelete"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p class="text-muted font-18">
+          Do you really want to delete this Blog tag?
+        </p>
+        <div class="d-flex justify-content-center m-t-25">
+          <button class="btn btn-secondary m-r-10" data-dismiss="modal">
+            Cancel
+          </button>
+          <form action="" class="delete-blog-tag-form" method="POST">
+            <button type="submit" class="btn btn-danger">
+              <i class="feather icon-trash m-r-5"></i>
+              Delete
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- delete modal ends -->
+
+<%- include('../partials/footer') %>
+
+<script>

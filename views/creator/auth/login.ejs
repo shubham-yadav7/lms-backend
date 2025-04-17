@@ -1,0 +1,111 @@
+<%- include('../partials/min-header') %>
+<body>
+  <div
+    id="containerbar"
+    class="containerbar authenticate-bg d-flex justify-content-center align-items-center"
+    style="
+      background-image: url(https://themesbox.in/admin-templates/theta/html/light-vertical/assets/images/authentication/authentication-bg.svg);
+    "
+  >
+    <!-- Start Container -->
+    <div class="container">
+      <div class="auth-box login-box">
+
+        <div class="card">
+          <div class="card-body">
+            <!-- Start row -->
+            <div class="row no-gutters align-items-center justify-content-center">
+              <!-- Start col -->
+              <div class="col-md-6 col-lg-5">
+                <div class="auth-box-left">
+                      <h4>Your community awaits.</h4>
+                      <div class="auth-box-icon">
+                        <img
+                          src="https://themesbox.in/admin-templates/theta/html/light-vertical/assets/images/authentication/auth-box-icon.svg"
+                          class="img-fluid"
+                          alt="auth-box-icon"
+                        />
+                      </div>
+                      <div class="auth-box-logo">
+                        <img
+                          src="/assets/images/logos/learnr-logo.png"
+                          class="img-fluid"
+                          alt="logo"
+                        />
+                      </div>
+                </div>
+              </div>
+              <!-- Start end -->
+              <!-- Start col -->
+              <div class="col-md-6 col-lg-5">
+                <!-- Start Auth Box -->
+                <div class="auth-box-right">
+                      <% if (error && error.length) { %>
+                      <div class="alert alert-danger" role="alert">
+                        <%= error %>
+                      </div>
+                      <% } %> <% if (success && success.length) { %>
+                      <div class="alert alert-success" role="alert">
+                        <%= success %>
+                      </div>
+                      <% } %>
+                      <form action="/api/creator/auth/login" method="POST">
+                        <h4 class="text-primary mb-4">Login</h4>
+                        <div class="form-group">
+                          <input
+                            type="email"
+                            name="username"
+                            class="form-control"
+                            id="username"
+                            placeholder="Enter Email here"
+                            required=""
+                          />
+                        </div>
+                        <div class="form-group">
+                          <input
+                            type="password"
+                            name="password"
+                            class="form-control"
+                            id="password"
+                            placeholder="Enter Password here"
+                            required=""
+                          />
+                        </div>
+                        <div class="form-row mb-3">
+                          <div class="col-12">
+                            <div class="forgot-psw">
+                              <a
+                                id="forgot-psw"
+                                href="/api/creator/auth/forget-password"
+                                class="font-14"
+                                >Forgot Password?</a
+                              >
+                            </div>
+                          </div>
+                        </div>
+                        <button
+                          type="submit"
+                          class="btn btn-success btn-lg btn-block font-18"
+                        >
+                          Log in Now
+                        </button>
+                      </form>
+                      <p class="mb-0 mt-3">
+                        Don't have a account?
+                        <a href="/api/creator/auth/register">Sign up</a>
+                      </p>
+                </div>
+                <!-- End Auth Box -->
+              </div>
+              <!-- End col -->
+            </div>
+            <!-- End row -->
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- End Container -->
+  </div>
+</body>
+<%- include('../partials/min-footer') %>

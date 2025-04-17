@@ -1,0 +1,350 @@
+<%- include('../partials/header') %>
+
+<!-- Start Breadcrumbbar -->
+<div class="breadcrumbbar">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <h4 class="page-title">Diploma</h4>
+      <div class="breadcrumb-list">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="/api/creator">Dashboard</a>
+          </li>
+          <li class="breadcrumb-item">
+            <a href="/api/creator/course-bundle/list">Course Bundles</a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">
+            Diploma
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-4 col-lg-4">
+      <div class="widgetbar">
+        <button class="btn btn-primary">
+          <i class="feather icon-eye m-r-5"></i>
+          Preview
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- contentbar starts -->
+<div class="contentbar">
+  <div class="row">
+    <div class="col-lg-3">
+      <div class="card m-b-30">
+        <div class="card-body">
+          <div
+            class="nav flex-column nav-pills"
+            id="v-pills-tab"
+            role="tablist"
+            aria-orientation="vertical"
+          >
+            <a
+              class="nav-link mb-2"
+              id="v-pills-dashboard-tab"
+              href="/api/creator/course-bundle/<%= bundleId %>"
+              role="tab"
+            >
+              <i class="feather icon-grid mr-2"></i>Information</a
+            >
+
+            <a
+              class="nav-link mb-2 active"
+              id="v-pills-order-tab"
+              href="/api/creator/diploma/<%= bundleId %>/list"
+              role="tab"
+            >
+              <i class="feather icon-award mr-2"></i>Diploma</a
+            >
+            <a
+              class="nav-link mb-2"
+              id="v-pills-addresses-tab"
+              href="/api/creator/course-bundle/details/<%= bundleId %>/learners"
+              role="tab"
+            >
+              <i class="feather icon-users mr-2"></i>Learners</a
+            >
+            <a
+              class="nav-link mb-2"
+              id="v-pills-wishlist-tab"
+              href="/api/creator/course-bundle/details/<%= bundleId %>/Certificates"
+              role="tab"
+            >
+              <i class="feather icon-credit-card mr-2"></i>Certificates</a
+            >
+            <a
+              class="nav-link mb-2"
+              id="v-pills-wallet-tab"
+              href="/api/creator/course-bundle/details/<%= bundleId %>/reviews"
+              role="tab"
+            >
+              <i class="feather icon-star mr-2"></i>Reviews</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-9">
+      <div class="card m-b-30">
+        <div class="card-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title">Diploma</h5>
+            <button class="btn btn-primary-rgba" data-toggle="modal" data-target="#diplomaModal"><i class="feather icon-plus m-r-5"></i> Add Diploma</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive m-b-30">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Diploma Title</th>
+                  <th>No of questions</th>
+                  <th>Created At</th>
+                  <th>Updated At</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>#</th>
+                  <th>Diploma Title</th>
+                  <th>No of questions</th>
+                  <th>Created At</th>
+                  <th>Updated At</th>
+                  <th>Action</th>
+                </tr>
+              </tfoot>
+              <tbody>
+                <% diplomas.forEach((diploma, i) => { %>
+                  <tr>
+                    <th><%= i+1 %></th>
+                    <td><%= diploma.title %></td>
+                    <td><%= diploma.noOfQuestions %></td>
+                    <td><%= diploma.createdAt.toLocaleDateString() %></td>
+                    <td><%= diploma.updatedAt.toLocaleDateString() %></td>
+                    <td>
+                      <div class="d-flex">
+                        <div data-toggle="tooltip" data-placement="top" title="Edit">
+                          <button
+                          class="btn btn-primary-rgba diploma_edit_modal_open_btn" 
+                          data-toggle="modal" 
+                          data-target="#editDiplomaModal"
+                          data-diploma="<%= JSON.stringify(diploma) %>"
+                          >
+                          <i class="feather icon-edit"></i>
+                        </button>
+                      </div>
+                      <a href="/api/creator/diploma/<%= diploma._id %>/question/list" class="btn btn-info-rgba d-flex justify-content-center align-items-center m-l-5 m-r-5" data-toggle="tooltip" data-placement="top" title="Add Questions">
+                        <i class="feather icon-help-circle"></i>
+                      </a>
+                      <div data-toggle="tooltip" data-placement="top" title="Delete">
+                        <button class="btn btn-danger-rgba diploma_delete_modal_open_btn" 
+                        data-toggle="modal" 
+                        data-target="#confirmDelete"
+                        data-bundleid="<%= bundleId %>"
+                        data-diplomaid="<%= diploma._id %>"
+                        >
+                          <i class="feather icon-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+          <% if (total > 1) { %>
+            <!-- pagination starts -->
+            <div class="d-flex justify-content-center">
+              <ul class="pagination">
+                <% if (Number(page) > 1) { %>
+                  <li class="page-item">
+                    <a class="page-link prev-page" data-prev="<%= Number(page) - 1 %>">«</a>
+                  </li>
+                <% } %>
+                <% if (Number(page) !== 1) { %>
+                  <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) - 1 %>"><%= Number(page) - 1 %></a></li>
+                <% } %>
+                <li class="page-item active">
+                  <a class="page-link page-num" data-page="<%= Number(page) %>"><%= Number(page) %></a>
+                </li>
+                <% if (Number(page) < Number(total)) { %>
+                  <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) + 1 %>"><%= Number(page) + 1 %></a></li>
+                <% } %>
+                <% if (Number(page) !== Number(total)) { %>
+                  <li class="page-item">
+                    <a class="page-link next-page" data-next="<%= Number(page) + 1 %>">»</a>
+                  </li>
+                <% } %>
+              </ul>
+            </div>
+            <!-- pagination ends -->
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- contentbar ends -->
+
+   <!-- modal starts -->
+   <div
+   class="modal fade"
+   id="diplomaModal"
+   tabindex="-1"
+   role="dialog"
+   aria-hidden="true"
+ >
+   <div class="modal-dialog modal-dialog-centered" role="document">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title" id="exampleModalCenterTitle">
+           Add Diploma
+         </h5>
+         <button
+           type="button"
+           class="close"
+           data-dismiss="modal"
+           aria-label="Close"
+         >
+           <span aria-hidden="true">×</span>
+         </button>
+       </div>
+       <div class="modal-body">
+         <form action="/api/creator/diploma/<%= bundleId %>/add" method="POST">
+           <div class="form-group">
+             <label for="title" class="text-dark">Diploma Title</label>
+             <input
+               type="text"
+               class="form-control"
+               id="title"
+               name="title"
+               placeholder="Enter title here"
+             />
+           </div>
+           <div class="form-group">
+            <label for="description" class="text-dark"
+              >Description</label
+            >
+            <textarea
+              class="form-control"
+              id="description"
+              name="description"
+              cols="100"
+              rows="2"
+            ></textarea>
+          </div>
+             <button type="submit" class="btn btn-success add_diploma">
+               <i class="feather icon-plus m-r-5"></i>Add
+             </button>
+         </form>
+       </div>
+     </div>
+   </div>
+ </div>
+ <!-- modal ends -->
+
+   <!-- modal starts -->
+   <div
+   class="modal fade"
+   id="confirmDelete"
+   tabindex="-1"
+   role="dialog"
+   aria-hidden="true"
+ >
+   <div
+     class="modal-dialog modal-dialog-centered modal-md"
+     role="document"
+   >
+     <div class="modal-content">
+       <div class="modal-body">
+         <p class="text-muted font-18 text-center">
+           Do you really want to delete this Diploma?
+         </p>
+         <div class="d-flex justify-content-center m-t-25">
+           <button
+             class="btn btn-secondary m-r-10"
+             data-dismiss="modal"
+           >
+             Cancel
+           </button>
+           <form class="diploma_delete_form" action="/api/creator/course?_method=DELETE" method="POST">
+             <button type="submit" class="btn btn-danger">
+               <i class="feather icon-trash m-r-5"></i>
+               Delete
+             </button>
+           </form>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+ <!-- modal ends -->
+
+<!-- Edit Language modal -->
+<div
+  class="modal fade"
+  id="editDiplomaModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Diploma</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="diploma-edit-form" action="" method="POST">
+          <div class="form-group">
+            <label for="title_edit" class="text-dark">Title</label>
+            <input
+              type="text"
+              class="form-control"
+              id="title_edit"
+              name="title"
+              placeholder="Enter Diploma Title here"
+            />
+          </div>
+          <div class="form-group">
+            <label for="description_edit" class="text-dark"
+              >Description</label
+            >
+            <textarea
+              class="form-control desc_summer"
+              id="description_edit"
+              name="description"
+              cols="100"
+              rows="2"
+            ></textarea>
+          </div>
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-success edit_diploma">
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+<script>
+  document.body.classList.add("toggle-menu");
+
+  $(".dropify").dropify();
+</script>

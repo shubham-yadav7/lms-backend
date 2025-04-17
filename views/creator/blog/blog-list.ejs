@@ -1,0 +1,193 @@
+<%- include('../partials/header') %>
+
+<!-- Start Breadcrumbbar -->
+<div class="breadcrumbbar">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <h4 class="page-title">Blogs</h4>
+      <div class="breadcrumb-list">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/api/creator">Dashboard</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Blogs</li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-4 col-lg-4">
+      <div class="widgetbar">
+        <a
+          href="/api/creator/blog/add"
+          class="btn btn-primary"
+        >
+          <i class="feather icon-plus"></i> Add Blog
+      </a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- contentbar starts -->
+<div class="contentbar">
+  <div class="card m-b-30">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="card-title"></h5>
+      <div class="d-flex">
+        <div class="searchbar m-r-10">
+          <div class="input-group">
+            <input
+              type="search"
+              class="form-control search_input"
+              placeholder="Search"
+              aria-label="Search"
+              aria-describedby="button-addon2"
+              value="<%= search %>"
+            />
+            <div class="input-group-append">
+              <button class="btn search-data" id="button-addon2">
+                <i class="feather icon-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="dropdown">
+          <button
+            class="btn btn-outline-primary dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            filter
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item filter_data" href="#" data-filter="">All</a>
+            <a class="dropdown-item filter_data" href="#" data-filter="published">Published</a>
+            <a class="dropdown-item filter_data" href="#" data-filter="draft">Draft</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <% blogs.forEach(blog => { %>
+          <!-- card starts -->
+          <div class="col-12 col-md-6 col-xl-4 m-b-25">
+            <div class="card border-light">
+              <div class="card-body pb-0">
+                <div class="">
+                    <figure>
+                      <img
+                      class="w-100 bg-light"
+                      style="object-fit: contain; max-height: 250px;"
+                      src="/uploads/blog/thumbnail/<%= blog.thumbImg %>"
+                      alt="img"
+                      onerror="this.src='/assets/images/common/image-placeholder.webp'"
+                    />
+                    </figure>
+                    <p class="font-20 text-dark"><%= blog.title %></p>
+                </div>
+                <div class="m-t-10">
+                  <span class="font-14">Tags : </span>
+                  <% blog.tags.forEach(tag => { %>
+                    <span class="badge badge-info"><%= tag.title %></span>
+                  <% }) %>
+                </div>
+                <div class="d-flex justify-content-between align-items-start m-t-15 flex-wrap">
+                  <p class="font-13">Created At: <%= moment(blog.createdAt).format('ll') %></p>
+                  <p class="font-13">Updated At: <%= moment(blog.updatedAt).format('ll') %></p>
+                </div>
+              </div>
+              <div class="card-footer d-flex justify-content-between align-items-center flex-wrap">
+                <div class="d-flex align-items-center">
+                  <div
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  class="mr-2"
+                  title="Edit">
+                  <a class="btn btn-primary-rgba" href="/api/creator/blog/<%= blog._id %>">
+                    <i class="feather icon-edit"></i>
+                  </a>
+                </div>
+                <div
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Delete">
+                  <button class="btn btn-danger-rgba delete-blog-btn" data-id="<%= blog._id %>" data-toggle="modal" data-target="#confirmDelete">
+                    <i class="feather icon-trash"></i>
+                  </button>
+              </div>
+                </div>
+                <span class="badge badge-info-inverse font-17 mt-lg-0 mt-2"><%= blog.category.title %></span>
+              </div>
+            </div>
+          </div>
+          <!-- card ends -->
+        <% }) %>
+      </div>
+      <% if (total > 1) { %>
+        <!-- pagination starts -->
+        <div class="d-flex justify-content-center">
+          <ul class="pagination">
+            <% if (Number(page) > 1) { %>
+              <li class="page-item">
+                <a class="page-link prev-page" data-prev="<%= Number(page) - 1 %>">«</a>
+              </li>
+            <% } %>
+            <% if (Number(page) !== 1) { %>
+              <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) - 1 %>"><%= Number(page) - 1 %></a></li>
+            <% } %>
+            <li class="page-item active">
+              <a class="page-link page-num" data-page="<%= Number(page) %>"><%= Number(page) %></a>
+            </li>
+            <% if (Number(page) < Number(total)) { %>
+              <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) + 1 %>"><%= Number(page) + 1 %></a></li>
+            <% } %>
+            <% if (Number(page) !== Number(total)) { %>
+              <li class="page-item">
+                <a class="page-link next-page" data-next="<%= Number(page) + 1 %>">»</a>
+              </li>
+            <% } %>
+          </ul>
+        </div>
+        <!-- pagination ends -->
+      <% } %>
+    </div>
+  </div>
+</div>
+<!-- contentbar starts -->
+
+<!-- delete modal starts -->
+<div
+  class="modal fade"
+  id="confirmDelete"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p class="text-muted text-center font-18">
+          Do you really want to delete this Blog?
+        </p>
+        <div class="d-flex justify-content-center m-t-25">
+          <button class="btn btn-secondary m-r-10" data-dismiss="modal">
+            Cancel
+          </button>
+          <form action="" class="delete-blog-form" method="POST">
+            <button class="btn btn-danger">
+              <i class="feather icon-trash m-r-5"></i>
+              Delete
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- delete modal ends -->
+
+<%- include('../partials/footer') %>
+
+<script>

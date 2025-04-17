@@ -1,0 +1,374 @@
+<%- include('../../partials/header') %>
+
+<!-- Start Breadcrumbbar -->
+<div class="breadcrumbbar">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <h4 class="page-title">Categories</h4>
+      <div class="breadcrumb-list">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/api/creator">Home</a></li>
+          <li class="breadcrumb-item">
+            <a href="/api/creator/course/list">Courses</a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">Category</li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-4 col-lg-4">
+      <div class="widgetbar">
+        <button
+          data-target="#categoryModal"
+          data-toggle="modal"
+          class="btn btn-primary"
+        >
+          <i class="feather icon-plus m-r-5"></i> Add Category
+        </button>
+      </div>
+      <!-- modal starts -->
+      <div
+        class="modal fade"
+        id="categoryModal"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true"
+      >
+        <div
+          class="modal-dialog modal-dialog-centered modal-lg"
+          role="document"
+        >
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title mt-0">Add Category</h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form
+                action="/api/creator/course/category/add"
+                method="POST"
+                enctype="multipart/form-data"
+              >
+                <div class="row m-t-20">
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="title" class="text-dark"
+                        >Category title</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="title"
+                        name="title"
+                        placeholder="Category title"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="excerpt" class="text-dark"
+                        >Category Excerpt</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="excerpt"
+                        name="excerpt"
+                        placeholder="Category Excerpt"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label for="categoryIcon" class="text-dark"
+                        >Icon Image</label
+                      >
+                      <input
+                        type="file"
+                        name="categoryIcon"
+                        id="categoryIcon"
+                        class="dropify"
+                        data-height="110"
+                        accept="image/*"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-end m-t-10">
+                  <button type="submit" class="btn btn-primary add_category">
+                    <i class="feather icon-plus m-r-5"></i> Add
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- modal ends -->
+    </div>
+  </div>
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- contentbar starts -->
+<div class="contentbar">
+  <!-- search-sort starts -->
+  <div class="row my-4 justify-content-end">
+    <div class="col-xl-3 col-lg-4 col-md-7 col-6">
+      <div class="searchbar m-r-10">
+        <div class="input-group">
+          <input
+            type="search"
+            class="form-control search_input"
+            placeholder="Search"
+            aria-label="Search"
+            aria-describedby="button-addon2"
+            value="<%= search %>"
+          />
+          <div class="input-group-append">
+            <button class="btn search-data" id="button-addon2">
+              <i class="feather icon-search"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- search-sort ends -->
+
+  <!-- category list starts -->
+  <div class="row">
+    <!-- category cards starts -->
+    <% courseCategories.forEach(category => { %>
+    <div class="col-md-6 col-lg-4 col-xl-3">
+      <div class="card border-primary m-b-30">
+        <a href="#">
+          <div class="card-body">
+            <div class="d-flex">
+              <!-- <div class=""> -->
+              <figure style="width: 50px" class="border">
+                <img
+                  class="w-100"
+                  src="/uploads/category/<%= category.icon %>"
+                  alt=""
+                />
+              </figure>
+              <!-- </div>
+              <div class="col-8"> -->
+              <h4 class="card-title font-20 m-l-15"><%= category.title %></h4>
+              <!-- </div> -->
+            </div>
+            <p class="card-text mb-3 card-subtitle"><%= category.excerpt %></p>
+          </div>
+        </a>
+        <div class="card-footer">
+          <div class="row">
+            <div class="col-8"></div>
+            <div class="col-2 d-flex justify-content-center">
+              <div
+                title="Edit"
+                data-toggle="tooltip"
+                data-placement="top"
+              >
+                <button
+                  type="button"
+                  class="btn btn-primary-rgba font-18 edit_category_btn"
+                  title="Edit"
+                  data-id="<%= category._id %>"
+                  data-title="<%= category.title %>"
+                  data-excerpt="<%= category.excerpt %>"
+                  data-category-icon="/uploads/category/<%= category.icon %>"
+                >
+                  <i class="feather icon-edit"></i>
+                </button>
+              </div>
+            </div>
+            <div class="col-2 d-flex justify-content-center" 
+            >
+            <span
+               title="Delete"
+            data-toggle="tooltip"
+            data-placement="top">
+            <button
+              type="button"
+              class="btn btn-danger-rgba font-18 delete_course_category_btn"
+              data-toggle="modal"
+              data-target="#confirmDelete"
+              data-id="<%= category._id %>"
+            >
+              <i class="feather icon-trash"></i>
+            </button>
+          </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% }) %>
+    <!-- category cards ends -->
+  </div>
+  <!-- category list ends -->
+
+  <% if (total > 1) { %>
+    <!-- pagination starts -->
+    <div class="d-flex justify-content-center">
+      <ul class="pagination">
+        <% if (Number(page) > 1) { %>
+          <li class="page-item">
+            <a class="page-link prev-page" data-prev="<%= Number(page) - 1 %>">«</a>
+          </li>
+        <% } %>
+        <% if (Number(page) !== 1) { %>
+          <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) - 1 %>"><%= Number(page) - 1 %></a></li>
+        <% } %>
+        <li class="page-item active">
+          <a class="page-link page-num" data-page="<%= Number(page) %>"><%= Number(page) %></a>
+        </li>
+        <% if (Number(page) < Number(total)) { %>
+          <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) + 1 %>"><%= Number(page) + 1 %></a></li>
+        <% } %>
+        <% if ((Number(page)+1) < Number(total)) { %>
+          <li class="page-item">
+            <a class="page-link next-page" data-next="<%= Number(page) + 1 %>">»</a>
+          </li>
+        <% } %>
+      </ul>
+    </div>
+    <!-- pagination ends -->
+  <% } %>
+</div>
+<!-- contentbar starts -->
+
+<!-- Edit Course category -->
+<div
+  class="modal fade"
+  id="editCategoryModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mt-0">Edit Category</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form
+          class="edit_category_form"
+          action=""
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <div class="row m-t-20">
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="title" class="text-dark">Category title</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="title"
+                  name="title"
+                  placeholder="Category title"
+                />
+              </div>
+              <div class="form-group">
+                <label for="excerpt" class="text-dark">Category Excerpt</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="excerpt"
+                  name="excerpt"
+                  placeholder="Category Excerpt"
+                />
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="categoryIcon" class="text-dark">Icon Image</label>
+                <input
+                  type="file"
+                  name="categoryIcon"
+                  id="categoryIcon"
+                  class="dropify"
+                  data-height="110"
+                  accept="image/*"
+                />
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="form-group">
+                <label for="">Uploaded Icon</label>
+                <figure class="mb-0">
+                  <img
+                    width="200"
+                    id="category-image"
+                    src=""
+                    alt="category-image"
+                  />
+                </figure>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end m-t-10">
+            <button type="submit" class="btn btn-primary edit_category">
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- modal starts -->
+<div
+  class="modal fade"
+  id="confirmDelete"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p class="text-muted font-18 text-center">
+          Do you really want to delete this course category?
+        </p>
+        <div class="d-flex justify-content-center m-t-25">
+          <button class="btn btn-secondary m-r-10" data-dismiss="modal">
+            Cancel
+          </button>
+          <form
+            id="delete_course_category_form"
+            action=""
+            method="POST"
+          >
+            <button type="submit" class="btn btn-danger" id="delete_course_category_confirm">
+              <i class="feather icon-trash m-r-5"></i>
+              Delete
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal ends -->
+
+<%- include('../../partials/footer') %>
+<script>
+  document.body.classList.add("toggle-menu");
+</script>

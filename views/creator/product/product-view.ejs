@@ -1,0 +1,780 @@
+<%- include('../partials/header') %>
+
+<!-- Start Breadcrumbbar -->
+<div class="breadcrumbbar">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <h4 class="page-title text-capitalize"><%= product.title %></h4>
+      <div class="breadcrumb-list">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="/api/creator">Dashboard</a>
+          </li>
+          <li class="breadcrumb-item">
+            <a href="/api/creator/product/list">Products</a>
+          </li>
+          <li class="breadcrumb-item active text-capitalize" aria-current="page">
+            <%= product.title %>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-4 col-lg-4">
+      <div class="widgetbar">
+        <button class="btn btn-primary">
+          <i class="feather icon-eye m-r-5"></i>
+          Preview
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- contentbar starts -->
+<div class="contentbar">
+  <div class="row">
+    <!-- <div class="col-lg-3">
+      <div class="card m-b-30">
+        <div class="card-body">
+          <div
+            class="nav flex-column nav-pills"
+            id="v-pills-tab"
+            role="tablist"
+            aria-orientation="vertical"
+          >
+            <a
+              class="nav-link mb-2 active"
+              id="v-pills-dashboard-tab"
+              href="/api/creator/course/123"
+              role="tab"
+            >
+              <i class="feather icon-grid mr-2"></i>Information</a
+            >
+            <a
+              class="nav-link mb-2"
+              id="v-pills-order-tab"
+              href="/api/creator/course/topic/list"
+              role="tab"
+            >
+              <i class="feather icon-server mr-2"></i>Topics</a
+            >
+            <a
+              class="nav-link mb-2"
+              id="v-pills-order-tab"
+              href="/api/creator/course/details/quizzes"
+              role="tab"
+            >
+              <i class="feather icon-award mr-2"></i>Quizzes</a
+            >
+            <a
+              class="nav-link mb-2"
+              id="v-pills-addresses-tab"
+              href="/api/creator/course/details/learners"
+              role="tab"
+            >
+              <i class="feather icon-users mr-2"></i>Learners</a
+            >
+            <a
+              class="nav-link mb-2"
+              id="v-pills-wishlist-tab"
+              href="/api/creator/course/details/Certificates"
+              role="tab"
+            >
+              <i class="feather icon-credit-card mr-2"></i>Certificates</a
+            >
+            <a
+              class="nav-link mb-2"
+              id="v-pills-wallet-tab"
+              href="/api/creator/course/details/reviews"
+              role="tab"
+            >
+              <i class="feather icon-star mr-2"></i>Reviews</a
+            >
+          </div>
+        </div>
+      </div>
+    </div> -->
+    <div class="col-lg-12">
+      <div class="card m-b-30">
+        <div class="card-header">
+          <h5 class="card-title">Information</h5>
+        </div>
+        <div class="card-body">
+          <ul
+            class="nav nav-tabs custom-tab-line mb-3 justify-content-around"
+            id="defaultTabLine"
+            role="tablist"
+          >
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                id="details-tab-line"
+                data-toggle="tab"
+                href="#details-line"
+                role="tab"
+                aria-controls="details-line"
+                aria-selected="false"
+              >
+                <i class="feather icon-home mr-2"></i>Details</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="pricing-tab-line"
+                data-toggle="tab"
+                href="#pricing-line"
+                role="tab"
+                aria-controls="pricing-line"
+                aria-selected="false"
+              >
+                <i class="feather icon-file-text mr-2"></i>Description</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="pages-tab-line"
+                data-toggle="tab"
+                href="#pages-line"
+                role="tab"
+                aria-controls="pages-line"
+                aria-selected="true"
+              >
+                <i class="feather icon-globe mr-2"></i>SEO</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="advanced-tab-line"
+                data-toggle="tab"
+                href="#advanced-line"
+                role="tab"
+                aria-controls="advanced-line"
+                aria-selected="false"
+              >
+                <i class="feather icon-settings mr-2"></i>Advanced</a
+              >
+            </li>
+          </ul>
+          <div class="tab-content" id="defaultTabContentLine">
+            <div
+              class="tab-pane fade active show"
+              id="details-line"
+              role="tabpanel"
+              aria-labelledby="details-tab-line"
+            >
+              <form
+                action="/api/creator/product/<%= product._id %>?_method=PUT&type=basic-info"
+                method="POST"
+              >
+                <div class="row">
+                  <div class="col-12 col-lg-6">
+                    <div class="form-group">
+                      <label for="productTitle" class="text-dark"
+                        >Product Title</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="productTitle"
+                        name="title"
+                        value="<%= product.title %>"
+                      />
+                    </div>
+                    <div class="">
+                      <label for="category" class="text-dark">Category</label>
+                      <div class="row">
+                        <div class="col-10 pr-0">
+                          <div class="input-group mb-3">
+                            <select
+                              class="form-control"
+                              name="category"
+                              id="category"
+                            >
+                              <% productCategories.forEach(c => { %>
+                              <option <%= product.category.toString() === c._id.toString() ? 'selected' : '' %> value="<%= c._id %>"><%= c.title %></option>
+                              <% }) %>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-2 pl-0">
+                          <button
+                            class="btn btn-secondary-rgba py-2"
+                            type="button"
+                            data-toggle="modal"
+                            data-target="#categoryModal"
+                          >
+                            <i class="feather icon-plus m-r-5"></i> Add
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group col-12 col-lg-6">
+                    <label for="productExcerpt" class="text-dark"
+                      >Product Excerpt</label
+                    >
+                    <textarea
+                      class="form-control"
+                      id="productExcerpt"
+                      name="excerpt"
+                      style="min-height: 125px"
+                    ><%= product.excerpt %></textarea>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="level" class="text-dark">Level</label>
+                      <select
+                        class="form-control"
+                        name="levels"
+                        id="level"
+                      >
+                        <% courseLevels.forEach(lvl => { %>
+                        <option <%= product.levels.includes(lvl.value) ? 'selected' : '' %> value="<%= lvl.value %>">
+                          <%= lvl.name %>
+                        </option>
+                        <% }) %>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="language" class="text-dark">Language</label>
+                      <div class="row">
+                        <div class="col-10 pr-0">
+                          <select
+                            class="form-control select2-multi-select add_language_select"
+                            multiple="multiple"
+                            name="language"
+                            id="language"
+                          >
+                            <% courseLanguages.forEach(lang => { %>
+                            <option <%= product.language.includes(lang._id.toString()) ? 'selected' : '' %> value="<%= lang._id %>">
+                              <%= lang.name %>
+                            </option>
+                            <% }) %>
+                          </select>
+                        </div>
+                        <div class="col-2 pl-0">
+                          <button
+                            class="btn btn-secondary-rgba h-100"
+                            type="button"
+                            data-toggle="modal"
+                            data-target="#languageModal"
+                          >
+                            <i class="feather icon-plus m-r-5"></i> Add
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="form-group">
+                      <label for="price" class="text-dark">Actual Price</label>
+                      <input
+                        type="text"
+                        class="form-control number"
+                        id="price"
+                        name="price"
+                        value="<%= product.price %>"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="form-group">
+                      <label for="discountedPrice" class="text-dark"
+                        >Discounted Price</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control number"
+                        id="discountedPrice"
+                        name="discountedPrice"
+                        value="<%= product.discountedPrice %>"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-12">
+                    <div class="form-group">
+                      <label for="quantity" class="text-dark"
+                        >Quantity in Stocks</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control number"
+                        id="quantity"
+                        name="quantityInStock"
+                        value="<%= product.quantityInStock %>"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-12">
+                    <div class="form-group">
+                      <label for="hsn" class="text-dark">HSN</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="hsn"
+                        name="HSN"
+                        value="<%= product.HSN %>"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-4 col-12">
+                    <div class="form-group">
+                      <label for="skuNumber" class="text-dark">SKU</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="skuNumber"
+                        name="skuNumber"
+                        value="<%= product.SKU %>"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="tab-footer">
+                      <button
+                        type="submit"
+                        class="ml-3 btn btn-primary product_basic_details"
+                      >
+                       <i class="feather icon-save m-r-5"></i> Save
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="pricing-line"
+              role="tabpanel"
+              aria-labelledby="pricing-tab-line"
+            >
+              <form
+                action="/api/creator/product/<%= product._id %>?_method=PUT&type=description-info"
+                method="POST"
+                enctype="multipart/form-data"
+              >
+                <div class="row">
+                  <div class="col-lg-8">
+                    <div class="form-group">
+                      <label class="mr-3" for="description">Description</label>
+                      <textarea
+                        name="description"
+                        id="description"
+                        cols="30"
+                        rows="10"
+                      ><%= product.description %></textarea>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label for="thumbnail" class="text-dark"
+                        >Thumbnail Image</label
+                      >
+                      <input
+                        type="file"
+                        name="thumbnail"
+                        id="thumbnail"
+                        class="dropify"
+                        data-height="168"
+                        accept="image/*"
+                        data-show-remove="false"
+                        data-default-file="<%= product.thumbnailImage ? `/uploads/products/thumbnails/${product.thumbnailImage}` : '' %>" />
+                    </div>
+                  </div>
+                  <div class="form-group col-12">
+                    <label for="thumbnailVideo" class="text-dark"
+                      >Product Thumbnail Video</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="thumbnailVideo"
+                      name="thumbnailVideo"
+                      value="<%= product.thumbnailVideo %>"
+                    />
+                    <sub>Add youtube link, Eg: https://youtu.be/:id</sub>
+                  </div>
+                  <div class="form-group col-12">
+                    <label for="productBenefits" class="text-dark"
+                      >Product Benefits</label
+                    >
+                    <textarea
+                      cols="100"
+                      rows="3"
+                      class="form-control"
+                      id="productBenefits"
+                      name="benefits"
+                    ><%= product.benefits.join('|') %></textarea>
+                    <sub
+                      >Add pipe separated values. Eg: (Topic 1 | Topic 2 | Topic
+                      3)</sub
+                    >
+                  </div>
+                  
+                  <div class="col-md-12 mt-4">
+                    <div class="upload__box">
+                        <div class="upload__btn-box">
+                            <label class="upload__btn">
+                                <p>Upload gallery</p>
+                                <input type="file"  name="productGallery" id="gallery" multiple data-max_length="5"
+                                    class="upload__inputfile" accept="image/*">
+                            </label>
+                        </div>
+                        <div class="upload__img-wrap">
+                        </div>
+                    </div>
+                </div>
+                <% if (product.productGallery && product.productGallery.length > 0) { %>
+                  <div class="col-md-12">
+                      <div class="row">
+                          <% product.productGallery.forEach(img => { %>
+                          <div class="col-md-4 col-xl-3">
+                              <div class="imgViewContainer">
+                                  <img src="/uploads/products/gallery/<%= img %>">
+                                  <span class="deleteProductImg" data-id="<%=product._id %>" data-img="<%= img %>"
+                                      data-type="gallery"><i class="fa fa-times"></i></span>
+                              </div>
+                          </div>
+                          <% }) %>
+                      </div>
+                  </div>
+                  <% } %>
+                </div>
+                <div class="tab-footer m-t-20">
+                    <button
+                      type="submit"
+                      class="btn btn-primary product_description_details"
+                    >
+                    <i class="feather icon-save m-r-5"></i> Save
+                    </button>
+                </div>
+              </form>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="pages-line"
+              role="tabpanel"
+              aria-labelledby="pages-tab-line"
+            >
+              <div class="mt-5">
+                <form
+                  action="/api/creator/product/<%= product._id %>?_method=PUT&type=seo-info"
+                  method="POST"
+                >
+                  <div class="card" style="background-color: #f8f9fa" s>
+                    <div class="card-body">
+                      <div class="form-group">
+                        <label for="productPageUrl" class="text-dark">Product Page URL</label>
+                        <div class="input-group mb-3">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text" id="courseUrl"
+                              ><%= process.env.LEARNER_URL %>/api/product</span
+                            >
+                          </div>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="productPageUrl"
+                            name="slug"
+                            aria-describedby="productUrl"
+                            placeholder="your-product-title"
+                            value="<%= product.slug %>"
+                          />
+                        </div>
+                        <p class="mb-0">
+                          <sub
+                            >Only hyphen, space, alphabets and numbers
+                            allowed.</sub
+                          >
+                        </p>
+                        <p class="text-dark">
+                          <sub
+                            >Please make sure this is SEO Friendly. Best
+                            Practice is to include Product Name and Instructor
+                            in the URL. For Example: one-two-three.</sub
+                          >
+                        </p>
+                      </div>
+                      <div class="form-group">
+                        <label for="seoTitle" class="text-dark"
+                          >SEO Title *</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="seoTitle"
+                          name="seoTitle"
+                          placeholder="SEO Title"
+                          value="<%= product.seo.title %>"
+                        />
+                      </div>
+                      <div class="form-group">
+                        <label for="seoDescription" class="text-dark"
+                          >SEO Description</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="seoDescription"
+                          name="seoDescription"
+                          placeholder="SEO Description"
+                          value="<%= product.seo.description %>"
+                        />
+                        <p>
+                          <sub
+                            >This is copied to metadata html tag of the product
+                            detail page. This is used on Google search result
+                            page.</sub
+                          >
+                        </p>
+                      </div>
+                      <div class="form-group">
+                        <label for="seoScripts" class="text-dark"
+                          >Custom Scripts/Tags</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="seoScripts"
+                          name="seoScripts"
+                          placeholder="Custom Scripts/Tags"
+                          value="<%= product.seo.scripts %>"
+                        />
+                      </div>
+                    </div>
+                    <div class="card-footer">
+                        <button
+                          type="submit"
+                          class="btn btn-primary product_seo_details"
+                        >
+                        <i class="feather icon-save m-r-5"></i> Save
+                        </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="advanced-line"
+              role="tabpanel"
+              aria-labelledby="advanced-tab-line"
+            >
+              <form
+                action="/api/creator/product/<%= product._id %>?_method=PUT&type=advanced-info"
+                method="POST"
+              >
+                <div class="row">
+                  <div class="col-12 m-t-20">
+                    <div class="custom-control custom-checkbox m-b-10">
+                      <input
+                        type="checkbox"
+                        class="custom-control-input"
+                        id="activeProduct"
+                        name="status"
+                        <%= product.status === true ? 'checked' : '' %>
+                        />
+                        <label
+                        class="custom-control-label text-dark"
+                        for="activeProduct"
+                        >Set this product as active?</label
+                        >
+                      </div>
+                    </div>
+                  
+                  <div class="col-12 mt-4">
+                    <button type="submit" class="btn btn-primary"><i class="feather icon-save m-r-5"></i> Save</button>
+                  </div>
+                </div>
+              </form>
+              <div>
+                <div class="d-xl-flex mt-5">
+                  <div class="m-r-30 text-nowrap">
+                    <h4>Copy Product</h4>
+                  </div>
+
+                  <div class="card w-100" style="background-color: #f8f9fa">
+                    <div class="card-body">
+                      <p>This will create copy of your Product.</p>
+                      <button class="btn btn-primary-rgba">
+                        <i class="mdi mdi-content-copy"></i>
+                        Copy Product
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div class="d-xl-flex mt-5">
+                  <div class="m-r-30 text-nowrap">
+                    <h4>Delete Product</h4>
+                  </div>
+
+                  <div class="card w-100" style="background-color: #f8f9fa">
+                    <div class="card-body">
+                      <p>
+                        This will permanently delete your Product. Though
+                        Learners who have purchased it will continue to have
+                        access till their subscription ends.
+                      </p>
+                      <form id="delete_product_form" action="/api/creator/product/<%= product._id %>?_method=DELETE" method="POST">
+                        <button
+                          class="btn btn-danger-rgba"
+                          data-target="#confirmDelete"
+                          data-toggle="modal"
+                          type="button"
+                        >
+                          <i class="feather icon-trash m-r-5"></i>
+                          Delete Product
+                        </button>
+                      </form>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- contentbar ends -->
+
+      <!-- modal starts -->
+      <div
+        class="modal fade"
+        id="categoryModal"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">
+                Add Category
+              </h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label for="category" class="text-dark">category</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="category_product"
+                    name="title"
+                    placeholder="Enter category here"
+                  />
+                </div>
+                <div class="d-flex justify-content-end">
+                  <button type="button" class="btn btn-success add_product_category_using_ajax">
+                    <i class="feather icon-plus"></i>Add
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- modal ends -->
+
+<!-- modal starts -->
+<div
+class="modal fade"
+id="confirmDelete"
+tabindex="-1"
+role="dialog"
+aria-hidden="true"
+>
+<div
+  class="modal-dialog modal-dialog-centered modal-md"
+  role="document"
+>
+  <div class="modal-content">
+    <div class="modal-body">
+      <p class="text-muted font-18 text-center">
+        Do you really want to delete this product?
+      </p>
+      <div class="d-flex justify-content-center m-t-25">
+        <button
+          class="btn btn-secondary m-r-10"
+          data-dismiss="modal"
+        >
+          Cancel
+        </button>
+        <button
+            type="button"
+            class="btn btn-danger delete_product_btn"
+          >
+            <i class="feather icon-trash m-r-5"></i>
+            Delete
+          </button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- modal ends -->
+
+      <!-- language add modal starts -->
+      <div
+      class="modal fade"
+      id="languageModal"
+      tabindex="-1"
+      role="dialog"
+      aria-hidden="true"
+      >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalCenterTitle">Add Language</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form >
+              <div class="form-group">
+                <label for="language" class="text-dark">Language</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="language_input"
+                  name="language"
+                  placeholder="Enter Language here"
+                />
+              </div>
+              <div class="">
+                <button type="button" class="btn btn-success add_language_using_ajax">
+                  <i class="feather icon-save m-r-5"></i>Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      </div>
+      <!-- modal ends -->
+<%- include('../partials/footer') %>

@@ -1,0 +1,541 @@
+<%- include('../partials/header') %>
+
+<!-- Start Breadcrumbbar -->
+<div class="breadcrumbbar">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <a
+        href="/api/creator/quiz/<%= courseId %>/list"
+        class="btn btn-primary text-white"
+      >
+        <i class="feather icon-arrow-left m-r-5"></i>
+        Back
+      </a>
+    </div>
+    <div class="col-md-4 col-lg-4">
+      <div class="widgetbar">
+        <button class="btn btn-primary-rgba">
+          <i class="feather icon-eye m-r-5"></i>
+          Preview
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- contentbar starts -->
+<div class="contentbar">
+  <div class="card m-b-30">
+    <div class="card-header">
+      <div class="d-flex justify-content-between align-items-center">
+        <h5 class="card-title">Question Sheet</h5>
+        <div>
+          <button
+            data-toggle="modal"
+            data-target="#addQuestionModal"
+            class="btn btn-outline-info"
+          >
+            Add Question
+          </button>
+          <a href="/assets/quiz/sample-quizsheet.xlsx" download>
+            <button class="btn btn-outline-info">Download Sample</button>
+          </a>
+          <button
+            data-toggle="modal"
+            data-target="#importQuestionModal"
+            class="btn btn-info"
+          >
+            Import Questions
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <!-- TODO: add export question functionality  -->
+      <!-- <div
+        class="d-flex justify-content-between align-items-center font-15 mb-3"
+      >
+      <button class="btn btn-warning-rgba">
+        Export data to Copy, CSV, Excel & Note
+      </button>
+
+      </div> -->
+      <div class="table-responsive m-b-30">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Question</th>
+              <th scope="col">Question Type</th>
+              <th scope="col">Option One</th>
+              <th scope="col">Option Two</th>
+              <th scope="col">Option Three</th>
+              <th scope="col">Option Four</th>
+              <th scope="col">Answer</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Question</th>
+              <th scope="col">Question Type</th>
+              <th scope="col">Option One</th>
+              <th scope="col">Option Two</th>
+              <th scope="col">Option Three</th>
+              <th scope="col">Option Four</th>
+              <th scope="col">Answer</th>
+              <th scope="col">Action</th>
+            </tr>
+          </tfoot>
+          <tbody>
+            <% if (!quizQuestions || quizQuestions.items.length === 0) { %>
+            <tr>
+              <th colspan="9" class="text-center py-5">Questions not added</th>
+            </tr>
+            <% } else { %> <% quizQuestions?.items.forEach((elem, ind) => { %>
+            <tr>
+              <th scope="row"><%= elem.questionNumber %></th>
+              <td><%= elem.question %></td>
+              <td class="text-capitalize"><%= elem.typeOfQuestion.replace(/([a-z])([A-Z])/g, '$1 $2') %></td>
+              <% if (elem.typeOfQuestion !== 'yesOrNo') { %>
+                <td><%= elem.choice[0] %></td>
+                <td><%= elem.choice[1] %></td>
+                <td><%= elem.choice[2] %></td>
+                <td><%= elem.choice[3] %></td>
+                <% } else { %>
+                  <td>Yes</td>
+                  <td>No</td>
+                  <td>-</td>
+                  <td>-</td>
+              <% } %>
+              <% if (elem.typeOfQuestion === 'singleSelect') { %>
+                <td><%= elem.singleSelect %></td>
+              <% } %>
+              <% if (elem.typeOfQuestion === 'multiSelect') { %>
+                <td><%= elem.multiSelect %></td>
+              <% } %>
+              <% if (elem.typeOfQuestion === 'yesOrNo') { %>
+                <td><%= elem.yesOrNo ? 'Yes' : 'No' %></td>
+              <% } %>
+              <td>
+                <div class="d-flex">
+                  <div data-toggle="tooltip" class="m-r-5" data-placement="top" title="Edit">
+                    <button
+                      class="btn btn-primary-rgba edit_question_btn"
+                      data-toggle="modal"
+                      data-target="#editQuestionModal"
+                      data-question="<%= JSON.stringify(elem) %>"
+                      data-quizid="<%= quizId %>"
+                      data-quizquestionid="<%= quizQuestions._id %>"
+                      data-questionNumber="<%= ind %>"
+                    >
+                      <i class="feather icon-edit"></i>
+                    </button>
+                  </div>
+                  <div data-toggle="tooltip" data-placement="top" title="Delete">
+                    <button
+                      type="button"
+                      class="btn btn-danger-rgba quiz_question_delete_btn"
+                      data-toggle="modal"
+                      data-target="#confirmDelete"
+                      data-quizid="<%= quizId %>"
+                      data-quizquestionid="<%= quizQuestions._id %>"
+                      data-questionId="<%= elem._id %>"
+                    >
+                      <i class="feather icon-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <% }) %> <% } %>
+          </tbody>
+        </table>
+      </div>
+      <% if (total > 1) { %>
+        <!-- pagination starts -->
+        <div class="d-flex justify-content-center">
+          <ul class="pagination">
+            <% if (Number(page) > 1) { %>
+              <li class="page-item">
+                <a class="page-link prev-page" data-prev="<%= Number(page) - 1 %>">«</a>
+              </li>
+            <% } %>
+            <% if (Number(page) !== 1) { %>
+              <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) - 1 %>"><%= Number(page) - 1 %></a></li>
+            <% } %>
+            <li class="page-item active">
+              <a class="page-link page-num" data-page="<%= Number(page) %>"><%= Number(page) %></a>
+            </li>
+            <% if (Number(page) < Number(total)) { %>
+              <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) + 1 %>"><%= Number(page) + 1 %></a></li>
+            <% } %>
+            <% if (Number(page) !== Number(total)) { %>
+              <li class="page-item">
+                <a class="page-link next-page" data-next="<%= Number(page) + 1 %>">»</a>
+              </li>
+            <% } %>
+          </ul>
+        </div>
+        <!-- pagination ends -->
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<!-- modal starts -->
+<div
+  class="modal fade"
+  id="confirmDelete"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p class="text-muted font-18 text-center">
+          Do you really want to delete this question?
+        </p>
+        <div class="d-flex justify-content-center m-t-25">
+          <button class="btn btn-secondary m-r-10" data-dismiss="modal">
+            Cancel
+          </button>
+          <form class="quiz_question_delete_form" action="" method="POST">
+            <button type="submit" class="btn btn-danger">
+              <i class="feather icon-trash m-r-5"></i>
+              Delete
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal ends -->
+
+<!-- modal starts -->
+<div
+  class="modal fade"
+  id="addQuestionModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mt-0">Add Question</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form
+          action="/api/creator/quiz/<%= quizId %>/question/add"
+          method="POST"
+          class="quiz-add-form"
+        >
+          <div class="row m-t-20">
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="questionNumber">Question Number</label>
+                <input class="form-control number" placeholder="Number" type="text" name="questionNumber" id="questionNumber">
+              </div>
+            </div>
+            <div class="col-sm-8">
+              <label for="typeOfQuestion">Select Type</label>
+              <select class="form-control" name="typeOfQuestion" id="typeOfQuestion">
+                <option selected value="singleSelect">Single Select</option>
+                <option value="multiSelect">Multi-Select</option>
+                <option value="yesOrNo">Yes Or No</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="question" class="text-dark">Question</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="question"
+                  name="question"
+                  placeholder="Question"
+                />
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="option-wrap">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="form-group">
+                        <label for="optionOne" class="text-dark">Option 1</label>
+                        <input
+                          type="text"
+                          class="form-control _option"
+                          id="optionOne"
+                          name="optionOne"
+                          placeholder="Option 1"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="form-group">
+                        <label for="optionTwo" class="text-dark">Option 2</label>
+                        <input
+                          type="text"
+                          class="form-control _option"
+                          id="optionTwo"
+                          name="optionTwo"
+                          placeholder="Option 2"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="form-group">
+                        <label for="optionThree" class="text-dark">Option 3</label>
+                        <input
+                          type="text"
+                          class="form-control _option"
+                          id="optionThree"
+                          name="optionThree"
+                          placeholder="Option 3"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="form-group">
+                        <label for="optionFour" class="text-dark">Option 4</label>
+                        <input
+                          type="text"
+                          class="form-control _option"
+                          id="optionFour"
+                          name="optionFour"
+                          placeholder="Option 4"
+                        />
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="answer-wrap">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="form-group">
+                      <label for="answer" class="text-dark">Answer</label>
+                      <select class="form-control" name="answer" id="answer">
+                        <option value=""></option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end m-t-10">
+            <button type="submit" class="btn btn-primary add_quiz_question">
+              <i class="feather icon-plus m-r-5"></i> Add
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal ends -->
+
+<!-- modal starts -->
+<div
+  class="modal fade"
+  id="editQuestionModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mt-0">Edit Question</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="edit_quiz_question_form" action="" method="POST">
+          <div class="row m-t-20">
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="questionNumber_edit">Question Number</label>
+                <input class="form-control number" placeholder="Number" type="text" name="questionNumber" id="questionNumber_edit">
+              </div>
+            </div>
+            <div class="col-sm-8">
+              <label for="typeOfQuestion_edit">Select Type</label>
+              <select class="form-control" name="typeOfQuestion" id="typeOfQuestion_edit">
+                <option selected value="singleSelect">Single Select</option>
+                <option value="multiSelect">Multi-Select</option>
+                <option value="yesOrNo">Yes Or No</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="question_edit" class="text-dark">Question</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="question_edit"
+                  name="question"
+                  placeholder="Question"
+                />
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="option-wrap-edit">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="form-group">
+                        <label for="optionOne_edit" class="text-dark">Option 1</label>
+                        <input
+                          type="text"
+                          class="form-control _option_edit"
+                          id="optionOne_edit"
+                          name="optionOne"
+                          placeholder="Option 1"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="form-group">
+                        <label for="optionTwo_edit" class="text-dark">Option 2</label>
+                        <input
+                          type="text"
+                          class="form-control _option_edit"
+                          id="optionTwo_edit"
+                          name="optionTwo"
+                          placeholder="Option 2"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="form-group">
+                        <label for="optionThree_edit" class="text-dark">Option 3</label>
+                        <input
+                          type="text"
+                          class="form-control _option_edit"
+                          id="optionThree_edit"
+                          name="optionThree"
+                          placeholder="Option 3"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="form-group">
+                        <label for="optionFour_edit" class="text-dark">Option 4</label>
+                        <input
+                          type="text"
+                          class="form-control _option_edit"
+                          id="optionFour_edit"
+                          name="optionFour"
+                          placeholder="Option 4"
+                        />
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="answer-wrap-edit">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="form-group">
+                      <label for="answer_edit" class="text-dark">Answer</label>
+                      <select class="form-control" name="answer" id="answer_edit">
+                        <option value=""></option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end m-t-10">
+            <button type="submit" class="btn btn-primary edit_quiz_question">
+              <i class="feather icon-save m-r-5"></i> Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal ends -->
+
+<!-- bulk import modal start -->
+
+<div
+  class="modal fade"
+  id="importQuestionModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mt-0">import Questions</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form
+          action="/api/creator/quiz/<%= quizId %>/question/import"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <div class="row m-t-20">
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label for="quizSheet">Upload Quiz Excel File</label>
+                <input
+                  type="file"
+                  name="quizSheet"
+                  id="quizSheet"
+                  class="dropify"
+                  data-height="168"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end m-t-10">
+            <button type="submit" class="btn btn-primary">
+              <i class="feather icon-save m-r-5"></i> Import
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- bulk import modal ends -->
+
+<!-- contentbar ends -->
+<%- include('../partials/footer') %>

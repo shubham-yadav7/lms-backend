@@ -1,0 +1,340 @@
+<%- include('../partials/header') %>
+
+<!-- Start Breadcrumbbar -->
+<div class="breadcrumbbar">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <h4 class="page-title">My Account</h4>
+      <div class="breadcrumb-list">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="/api/creator">Dashboard</a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">
+            My Account
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-4 col-lg-4">
+      <div class="widgetbar">
+        <button class="btn btn-primary">
+          <i class="feather icon-eye m-r-5"></i>
+          Preview
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- contentbar starts -->
+<div class="contentbar">
+    <div class="row">
+        <!-- Start col -->
+        <div class="col-lg-5 col-xl-3">
+            <div class="card m-b-30">
+                <div class="card-header">                                
+                    <h5 class="card-title mb-0">My Account</h5>                                       
+                </div>
+                <div class="card-body">
+                    <div class="nav flex-column nav-pills" id="v-pills-tab" >
+                        <a class="nav-link mb-2" id="v-pills-dashboard-tab" data-toggle="pill" href="#v-pills-dashboard" ><i class="feather icon-grid mr-2"></i>Dashboard</a>
+                        <a class="nav-link active mb-2" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" ><i class="feather icon-user mr-2"></i>My Profile</a>
+                        <a class="nav-link mb-2" id="v-pills-notifications-tab" data-toggle="pill" href="#v-pills-notifications" ><i class="feather icon-bell mr-2"></i>Notifications</a>
+                        <a class="nav-link mb-2" id="v-pills-order-tab" data-toggle="pill" href="#v-pills-order" ><i class="feather icon-unlock mr-2"></i>Change Password</a>
+                        <a class="nav-link" id="v-pills-logout-tab" data-toggle="pill" href="#v-pills-logout" ><i class="feather icon-log-out mr-2"></i>Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End col -->
+        <!-- Start col -->
+        <div class="col-lg-7 col-xl-9">
+            <div class="tab-content" id="v-pills-tabContent">
+                <!-- Dashboard Start -->
+                <div class="tab-pane fade" id="v-pills-dashboard" >
+                    <div class="card m-b-30">
+                        <div class="card-header">                                
+                            <h5 class="card-title mb-0">Dashboard</h5>                                       
+                        </div>
+                        <div class="card-body">
+                            <div class="profilebox py-4 text-center">
+                                <img src="https://themesbox.in/admin-templates/theta/html/light-vertical/assets/images/users/profile.svg" class="img-fluid" alt="profile">
+                                <div class="profilename">
+                                    <h5>Shourya Kumar</h5>
+                                    <p class="text-muted"><a href="my-account.html"><i class="feather icon-edit-2 mr-2"></i>Edit Profile</a></p>
+                                </div>
+                                <div class="button-list mt-3">
+                                    <a href="#" class="btn btn-primary-rgba font-18"><i class="feather icon-facebook"></i></a>
+                                    <a href="#" class="btn btn-info-rgba font-18"><i class="feather icon-twitter"></i></a>
+                                    <a href="#" class="btn btn-danger-rgba font-18"><i class="feather icon-instagram"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Start row -->
+                    <div class="row">
+                        <!-- Start col -->
+                        <div class="col-sm-6 col-xl-3">
+                            <div class="card m-b-20">
+                                <div class="card-body">
+                                    <div class="ecom-dashboard-widget">
+                                        <div class="media">
+                                            <i class="feather icon-book-open"></i>
+                                            <div class="media-body">
+                                                <h5>My Courses</h5>
+                                                <p>112</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End col -->
+                        <!-- Start col -->
+                        <div class="col-sm-6 col-xl-3">
+                            <div class="card m-b-20">
+                                <div class="card-body">
+                                    <div class="ecom-dashboard-widget">
+                                        <div class="media">
+                                            <i class="feather icon-layers"></i>
+                                            <div class="media-body">
+                                                <h5>My Bundles</h5>
+                                                <p>13</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End col -->
+                        <!-- Start col -->
+                        <div class="col-sm-6 col-xl-3">
+                            <div class="card m-b-20">
+                                <div class="card-body">
+                                    <div class="ecom-dashboard-widget">
+                                        <div class="media">
+                                            <i class="feather icon-archive"></i>
+                                            <div class="media-body">
+                                                <h5>My Products</h5>
+                                                <p>4</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End col -->
+                        <!-- Start col -->
+                        <div class="col-sm-6 col-xl-3">
+                            <div class="card m-b-20">
+                                <div class="card-body">
+                                    <div class="ecom-dashboard-widget">
+                                        <div class="media">
+                                            <i class="feather icon-user"></i>
+                                            <div class="media-body">
+                                                <h5>My Learners</h5>
+                                                <p>4,560</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End col -->
+                    </div>  
+                    <!-- End row -->
+                </div>
+                <!-- Dashboard End -->
+                <!-- change password Start -->
+                <div class="tab-pane fade" id="v-pills-order" >
+                    <div class="card m-b-30">
+                        <div class="card-header">                                
+                            <h5 class="card-title mb-0">Change Password</h5>                                       
+                        </div>
+                       <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-4 d-flex justify-content-center align-items-center">
+                                <figure>
+                                    <img src="https://themesbox.in/admin-templates/theta/html/light-vertical/assets/images/authentication/auth-box-icon-forgot.svg" alt="">
+                                </figure>
+                            </div>
+                            <div class="col-lg-6">
+                                <form action="/api/creator/auth/change-password?_method=PUT" method="POST">
+                                    <div class="form-group">
+                                        <label for="current_password">Current Password</label>
+                                        <input type="password" name="currentPassword" class="form-control" id="current_password">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="new_password">New Password</label>
+                                        <input type="password" name="newPassword" class="form-control" id="new_password">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="confirm_password">Confirmed Password</label>
+                                        <input type="password" name="confirmPassword" class="form-control" id="confirm_password">
+                                    </div>
+                                    <div class="d-flex justify-content-start">
+                                        <button type="submit" id="change_password_btn" class="btn btn-primary-rgba font-16"><i class="feather icon-save mr-2"></i>Update</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                       </div>
+                    </div>
+                </div>
+                <!-- change password End -->
+                <!-- My Notifications Start -->
+                <div class="tab-pane fade" id="v-pills-notifications" >
+                    <div class="card m-b-30">
+                        <div class="card-header">                                
+                            <h5 class="card-title mb-0">Notifications</h5>                                       
+                        </div>
+                        <div class="card-body">
+                            <div class="ecom-notification-box">
+                                <ul class="list-unstyled">
+                                    <li class="media">
+                                        <span class="mr-3 action-icon badge badge-success-inverse"><i class="feather icon-check"></i></span>
+                                        <div class="media-body">
+                                            <h5 class="action-title">Payment Success !!!</h5>
+                                            <p class="my-3">We have received your payment toward ad Account : 9876543210. Your Ad is Running.</p>
+                                            <p><span class="badge badge-danger-inverse">INFO</span><span class="badge badge-info-inverse">STATUS</span><span class="timing">Today, 09:39 PM</span></p>                            
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <span class="mr-3 action-icon badge badge-primary-inverse"><i class="feather icon-calendar"></i></span>
+                                        <div class="media-body">
+                                            <h5 class="action-title">Nobita Applied for Leave.</h5>
+                                            <p class="my-3">Nobita applied for leave due to personal reasons on 22nd Feb.</p>
+                                            <p><span class="badge badge-success">APPROVE</span><span class="badge badge-danger">REJECT</span><span class="timing">Yesterday, 05:25 PM</span></p>                            
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <span class="mr-3 action-icon badge badge-danger-inverse"><i class="feather icon-alert-triangle"></i></span>
+                                        <div class="media-body">
+                                            <h5 class="action-title">Alert</h5>
+                                            <p class="my-3">There has been new Log in fron your account at Melbourne. Mark it safe or report.</p>
+                                            <p><i class="feather icon-check text-success mr-3"></i><a href="#" class="mr-2">Report Now</a><span class="timing">5 Jan 2019, 02:13 PM</span></p>                            
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <span class="mr-3 action-icon badge badge-warning-inverse"><i class="feather icon-award"></i></span>
+                                        <div class="media-body">
+                                            <h5 class="action-title">Congratulations !!!</h5>
+                                            <p class="my-3">Your role in the organization has been changed from Editor to Chief Strategist.</p>
+                                            <p><span class="badge badge-danger-inverse">ACTIVITY</span><span class="timing">10 Jan 2019, 08:49 PM</span></p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- My Notifications End -->
+                <!-- My Profile Start -->
+                <div class="tab-pane fade active show" id="v-pills-profile">
+                    <div class="card m-b-30">
+                        <div class="card-header">                                
+                            <h5 class="card-title mb-0">My Profile</h5>                                       
+                        </div>
+                        <div class="card-body">
+                            <div class="profilebox pt-4 text-center">
+                                <ul class="list-inline">
+                                    <li class="list-inline-item">
+                                        <a href="#" class="btn btn-success-rgba font-18"><i class="feather icon-edit"></i></a>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <img src="https://themesbox.in/admin-templates/theta/html/light-vertical/assets/images/users/profile.svg" class="img-fluid" alt="profile">
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <a href="#" class="btn btn-danger-rgba font-18"><i class="feather icon-trash"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card m-b-30">
+                        <div class="card-header">                                
+                            <h5 class="card-title mb-0">Edit Profile Information</h5>                                       
+                        </div>
+                        <div class="card-body">
+                            <form action="/api/creator/setting/profile/update-profile?_method=PUT" method="POST">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="firstName">First Name</label>
+                                        <input type="text" class="form-control" value="<%= creator.firstName %>" id="firstName" name="firstName">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="lastName">Last Name</label>
+                                        <input type="text" class="form-control" id="lastName" value="<%= creator.lastName %>" name="lastName">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control" id="email" value="<%= creator.email %>" name="email">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="phone">Mobile Number</label>
+                                        <input type="text" class="form-control" id="phone" value="<%= creator.phone %>" name="phone">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="brandName">Brand Name</label>
+                                        <input type="text" class="form-control" id="brandName" value="<%= creator.brandName %>" name="brandName">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="dob">Date of Birth</label>
+                                        <input type="date" class="form-control" id="dob" name="dob" value="<%= moment(creator.dob).format('YYYY-MM-DD') %>">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="male" value="male" name="gender" class="custom-control-input" <%= creator.gender === 'male' ? 'checked' : '' %>>
+                                        <label class="custom-control-label" for="male">Male</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="female" name="gender" value="female" class="custom-control-input" <%= creator.gender === 'female' ? 'checked' : '' %>>
+                                        <label class="custom-control-label" for="female">Female</label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="other" name="gender" value="other" class="custom-control-input" <%= creator.gender === 'other' ? 'checked' : '' %>>
+                                        <label class="custom-control-label" for="other">Other</label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary-rgba font-16 update_profile mt-3"><i class="feather icon-save mr-2"></i>Update</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- My Profile End -->
+                <!-- My Logout Start -->
+                <div class="tab-pane fade" id="v-pills-logout">
+                    <div class="card m-b-30">
+                        <div class="card-header">                                
+                            <h5 class="card-title mb-0">Logout</h5>                                       
+                        </div>
+                        <div class="card-body">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-6 col-xl-4">
+                                    <div class="logout-content text-center my-5">
+                                        <img src="https://themesbox.in/admin-templates/theta/html/light-vertical/assets/images/ecommerce/logout.svg" class="img-fluid mb-5" alt="logout">
+                                        <h2 class="text-success">Logout ?</h2>
+                                        <p class="my-4">Are you sure to want to Log out? You will miss your instant checkout deal.</p>
+                                        <div class="button-list">
+                                            <a href="/api/creator/auth/logout"><button type="button" class="btn btn-danger font-16"><i class="feather icon-check mr-2"></i>Yes, I'm sure</button></a>
+                                            <a href="/api/creator/profile"><button type="button" class="btn btn-success-rgba font-16"><i class="feather icon-x mr-2"></i>Cancel</button></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- My Logout End -->                            
+            </div>                        
+        </div>
+        <!-- End col -->
+    </div>
+</div>
+<!-- contentbar ends --><%- include('../partials/footer') %>
+<script>
+  document.body.classList.add("toggle-menu");
+</script>

@@ -1,0 +1,256 @@
+<%- include('../partials/header') %>
+
+<!-- Start Breadcrumbbar -->
+<div class="breadcrumbbar">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <h4 class="page-title">Feedback Videos</h4>
+      <div class="breadcrumb-list">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/api/creator">Dashboard</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Feedback video</li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-4 col-lg-4">
+      <div class="widgetbar">
+        <button
+          class="btn btn-primary"
+          data-toggle="modal"
+          data-target="#addFeedbackModal"
+        >
+          <i class="feather icon-plus"></i> Add Feedback
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- contentbar starts -->
+<div class="contentbar">
+  <div class="card m-b-30">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="card-title"></h5>
+      <div class="d-flex">
+        <div class="searchbar m-r-10">
+          <div class="input-group">
+            <input
+              type="search"
+              class="form-control search_input"
+              placeholder="Search"
+              aria-label="Search"
+              aria-describedby="button-addon2"
+              value="<%= search %>"
+            />
+            <div class="input-group-append">
+              <button class="btn search-data" id="button-addon2">
+                <i class="feather icon-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+    
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <% feedbackVideos.forEach(feedback => { %>
+          <!-- card starts -->
+          <div class="col-12 col-md-6 col-xl-4 m-b-25">
+            <div class="card border-light">
+              <div class="card-body pb-0">
+                <h5 class="m-b-5"><%= feedback.title %></h5>
+                <p class="text-secondary m-0 font-15"><span class="text-dark">Video ID: </span><%= feedback.videoId  %></p>
+                <div class="d-flex justify-content-end m-t-10">
+                  <p class="font-13 font-italic">Last Update: <%= moment(feedback.updatedAt).format('ll') %></p>
+                </div>
+              </div>
+              <div class="card-footer">
+                <div class="d-flex align-items-center">
+                  <div
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  class="mr-3"
+                  title="Edit">
+                  <button 
+                    class="btn btn-primary-rgba edit-feedback-btn" 
+                    data-toggle="modal" 
+                    data-target="#editFeedbackModal"
+                    data-feedback="<%= JSON.stringify(feedback) %>"
+                  >
+                    <i class="feather icon-edit"></i>
+                  </button>
+                </div>
+                <div
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Delete">
+                <button 
+                class="btn btn-danger-rgba delete-feedback-btn" 
+                data-toggle="modal" 
+                data-target="#confirmDelete"
+                data-id="<%= feedback._id %>"
+                >
+                  <i class="feather icon-trash"></i>
+                </button>
+              </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- card ends -->
+        <% }) %>
+      </div>
+      
+      <% if (total > 1) { %>
+        <!-- pagination starts -->
+        <div class="d-flex justify-content-center">
+          <ul class="pagination">
+            <% if (Number(page) > 1) { %>
+              <li class="page-item">
+                <a class="page-link prev-page" data-prev="<%= Number(page) - 1 %>">«</a>
+              </li>
+            <% } %>
+            <% if (Number(page) !== 1) { %>
+              <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) - 1 %>"><%= Number(page) - 1 %></a></li>
+            <% } %>
+            <li class="page-item active">
+              <a class="page-link page-num" data-page="<%= Number(page) %>"><%= Number(page) %></a>
+            </li>
+            <% if (Number(page) < Number(total)) { %>
+              <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) + 1 %>"><%= Number(page) + 1 %></a></li>
+            <% } %>
+            <% if (Number(page) !== Number(total)) { %>
+              <li class="page-item">
+                <a class="page-link next-page" data-next="<%= Number(page) + 1 %>">»</a>
+              </li>
+            <% } %>
+          </ul>
+        </div>
+        <!-- pagination ends -->
+      <% } %>
+    </div>
+  </div>
+</div>
+<!-- contentbar starts -->
+
+<!-- add modal starts -->
+<div
+  class="modal fade"
+  id="addFeedbackModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mt-0">Add Feedback</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/api/creator/feedback/add" method="POST">
+            <div class="form-group">
+              <label for="title" class="text-dark">Name</label>
+              <input type="text" class="form-control" id="title" name="title" />
+            </div>
+            <div class="form-group">
+              <label for="videoId" class="text-dark">Video Id</label>
+              <input type="text" class="form-control" id="videoId" name="videoId" />
+              <small>Provide youtube video id here</small>
+            </div>
+            <button type="submit" class="btn btn-success add-feedback">
+              <i class="feather icon-plus"></i> Add
+            </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- add modal ends -->
+
+<!-- edit modal starts -->
+<div
+  class="modal fade"
+  id="editFeedbackModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mt-0">Edit Feedback</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="" class="edit-feedback-form" method="POST">
+          <div class="form-group">
+          <label for="title_edit" class="text-dark">Name</label>
+          <input type="text" class="form-control" id="title_edit" name="title" />
+        </div>
+        <div class="form-group">
+          <label for="videoId_edit" class="text-dark">Video Id</label>
+          <input type="text" class="form-control" id="videoId_edit" name="videoId" />
+          <small>Provide youtube video id here</small>
+        </div>
+            <button class="btn btn-success m-t-10 edit-feedback" type="submit">
+              <i class="feather icon-save"></i> Save
+            </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- edit modal ends -->
+
+
+<!-- delete modal starts -->
+<div
+  class="modal fade"
+  id="confirmDelete"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p class="text-muted text-center font-18">
+          Do you really want to delete this Feedback?
+        </p>
+        <div class="d-flex justify-content-center m-t-25">
+          <button class="btn btn-secondary m-r-10" data-dismiss="modal">
+            Cancel
+          </button>
+          <form action="" method="POST" class="delete-feedback-form">
+            <button type="submit" class="btn btn-danger">
+              <i class="feather icon-trash m-r-5"></i>
+              Delete
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- delete modal ends -->
+
+<%- include('../partials/footer') %>
+
+<script>

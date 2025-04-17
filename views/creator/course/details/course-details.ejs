@@ -1,0 +1,806 @@
+<%- include('../../partials/header.ejs') %>
+
+<!-- Start Breadcrumbbar -->
+<div class="breadcrumbbar">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <h4 class="page-title text-capitalize"><%= course.title %></h4>
+      <div class="breadcrumb-list">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="/api/creator">Dashboard</a>
+          </li>
+          <li class="breadcrumb-item">
+            <a href="/api/creator/course/list">Course</a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">
+            <%= course.title %>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-4 col-lg-4">
+      <div class="widgetbar">
+        <button class="btn btn-primary">
+          <i class="feather icon-eye m-r-5"></i>
+          Preview
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- contentbar starts -->
+<div class="contentbar">
+  <div class="row">
+    <div class="col-lg-3">
+      <div class="card m-b-30">
+        <div class="card-body">
+          <div
+            class="nav flex-column nav-pills"
+            id="v-pills-tab"
+            role="tablist"
+            aria-orientation="vertical"
+          >
+            <a
+              class="nav-link mb-2 active"
+              id="v-pills-dashboard-tab"
+              href="/api/creator/course/<%= course._id %>"
+              role="tab"
+            >
+              <i class="feather icon-grid mr-2"></i>Information</a
+            >
+            <a
+              class="nav-link mb-2"
+              id="v-pills-order-tab"
+              href="/api/creator/course/<%= course._id %>/topic/list"
+              role="tab"
+            >
+              <i class="feather icon-server mr-2"></i>Topics</a
+            >
+            <a
+              class="nav-link mb-2"
+              id="v-pills-order-tab"
+              href="/api/creator/quiz/<%= course._id %>/list"
+              role="tab"
+            >
+              <i class="feather icon-award mr-2"></i>Quizzes</a
+            >
+            <a
+              class="nav-link mb-2"
+              id="v-pills-addresses-tab"
+              href="/api/creator/course/details/<%= course._id %>/learners"
+              role="tab"
+            >
+              <i class="feather icon-users mr-2"></i>Learners</a
+            >
+            <a
+              class="nav-link mb-2"
+              id="v-pills-wishlist-tab"
+              href="/api/creator/course/details/<%= course._id %>/Certificates"
+              role="tab"
+            >
+              <i class="feather icon-credit-card mr-2"></i>Certificates</a
+            >
+            <a
+              class="nav-link mb-2"
+              id="v-pills-wallet-tab"
+              href="/api/creator/course/details/<%= course._id %>/reviews"
+              role="tab"
+            >
+              <i class="feather icon-star mr-2"></i>Reviews</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-9">
+      <div class="card m-b-30">
+        <div class="card-header">
+          <h5 class="card-title">Information</h5>
+        </div>
+        <div class="card-body">
+          <ul
+            class="nav nav-tabs custom-tab-line mb-3 justify-content-around"
+            id="defaultTabLine"
+            role="tablist"
+          >
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                id="details-tab-line"
+                data-toggle="tab"
+                href="#details-line"
+                role="tab"
+                aria-controls="details-line"
+                aria-selected="false"
+              >
+                <i class="feather icon-home mr-2"></i>Details</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="pricing-tab-line"
+                data-toggle="tab"
+                href="#pricing-line"
+                role="tab"
+                aria-controls="pricing-line"
+                aria-selected="false"
+              >
+                <i class="feather icon-file-text mr-2"></i>Description</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="pages-tab-line"
+                data-toggle="tab"
+                href="#pages-line"
+                role="tab"
+                aria-controls="pages-line"
+                aria-selected="true"
+              >
+                <i class="feather icon-globe mr-2"></i>SEO</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                id="advanced-tab-line"
+                data-toggle="tab"
+                href="#advanced-line"
+                role="tab"
+                aria-controls="advanced-line"
+                aria-selected="false"
+              >
+                <i class="feather icon-settings mr-2"></i>Advanced</a
+              >
+            </li>
+          </ul>
+          <div class="tab-content" id="defaultTabContentLine">
+            <div
+              class="tab-pane fade active show"
+              id="details-line"
+              role="tabpanel"
+              aria-labelledby="details-tab-line"
+            >
+              <form action="/api/creator/course/<%= course._id %>?_method=PUT&type=basic-info" method="POST">
+                <div class="row">
+                  <div class="col-12 col-lg-6">
+                    <div class="form-group">
+                      <label for="courseTitle" class="text-dark"
+                        >Course Title</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="courseTitle"
+                        name="title"
+                        value="<%= course.title %>"
+                      />
+                    </div>
+                    <div class="">
+                      <label for="category" class="text-dark">Category</label>
+                      <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <button
+                            class="btn btn-secondary-rgba"
+                            type="button"
+                            id="addCategory"
+                            data-toggle="modal"
+                            data-target="#categoryModal"
+                          >
+                            <i class="feather icon-plus m-r-5"></i> Add
+                          </button>
+                        </div>
+                        <select
+                          id="category"
+                          name="category"
+                          class="form-control"
+                          aria-describedby="addCategory"
+                        >
+                          <option selected disabled>Choose category</option>
+                          <% courseCategories.forEach(cat => { %>
+                          <option value="<%= cat._id %>" <%= course.category.toString() === cat._id.toString() ? 'selected' : '' %>>
+                            <%= cat.title %>
+                          </option>
+                          <% }) %>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group col-12 col-lg-6">
+                    <label for="courseExcerpt" class="text-dark"
+                      >Course Excerpt</label
+                    >
+                    <textarea
+                      class="form-control"
+                      id="courseExcerpt"
+                      name="excerpt"
+                      style="min-height: 125px;"
+                    ><%= course.excerpt %></textarea>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="form-group">
+                      <label for="price" class="text-dark">Actual Price</label>
+                      <input
+                        type="text"
+                        class="form-control number"
+                        id="price"
+                        name="price"
+                        value="<%= course.price %>"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-12">
+                    <div class="form-group">
+                      <label for="discountedPrice" class="text-dark"
+                        >Discounted Price</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control number"
+                        id="discountedPrice"
+                        name="discountedPrice"
+                        value="<%= course.discountedPrice %>"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-lg-6">
+                    <div class="form-group">
+                      <label for="level" class="text-dark">Level</label>
+                      <select id="level" name="level" class="form-control">
+                        <option selected disabled>Select Level</option>
+                        <% courseLevels.forEach(level => { %>
+                          <option <%= course.level === level.value ? 'selected' : '' %> value="<%= level.value %>"><%= level.name %></option>
+                        <% }) %>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-lg-6">
+                    <div class="form-group">
+                      <label for="language" class="text-dark">Language</label>
+                      <div class="row">
+                        <div class="col-lg-10 pr-0">
+                          <select id="language" name="language" multiple class="form-control select2-multi-select course-edit-select">
+                            <% courseLanguages.forEach(lang => { %>
+                              <option <%= course?.language?.includes(lang._id)?'selected':''  %> value="<%= lang._id %>"><%= lang.name %></option>
+                            <% }) %>
+                          </select>
+                        </div>
+                        <div class="col-2 pl-0">
+                          <button
+                            class="btn btn-secondary-rgba h-100"
+                            type="button"
+                            data-toggle="modal"
+                            data-target="#languageModal"
+                          >
+                            <i class="feather icon-plus m-r-5"></i> Add
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-lg-6">
+                    <div class="form-group">
+                      <label for="access" class="text-dark">Access</label>
+                      <select id="access" name="access" class="form-control">
+                        <% courseAccess.forEach(access => { %>
+                          <option <%= course.access === access.value ? 'selected' : '' %> value="<%= access.value %>"><%= access.name %></option>
+                        <% }) %>
+                      </select>
+                    </div>
+                  </div>
+                  <!-- <div class="col-md-6 col-lg-4">
+                    <div class="form-group">
+                      <label for="priority" class="text-dark">Priority</label>
+                      <select id="priority" name="priority" class="form-control" disabled>
+                        <option selected value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                      </select>
+                    </div>
+                  </div> -->
+                  <div class="col-12">
+                    <div class="tab-footer">
+                      <button type="submit" class="ml-3 btn btn-primary course_basic_details">
+                      <i class="feather icon-save m-r-5"></i>Save
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="pricing-line"
+              role="tabpanel"
+              aria-labelledby="pricing-tab-line"
+            >
+              <form action="/api/creator/course/<%= course._id %>?_method=PUT&type=description-info" method="POST" enctype="multipart/form-data">
+                <div class="row">
+                  <div class="col-lg-8">
+                    <div class="form-group">
+                      <label class="mr-3 text-dark" for="description">Description</label>
+                      <textarea name="description" id="description" cols="30" rows="10"><%= course.description %></textarea>
+                  </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label for="thumbnailImage" class="text-dark"
+                        >Thumbnail Image</label
+                      >
+                      <input
+                        type="file"
+                        name="thumbnailImage"
+                        id="thumbnailImage"
+                        class="dropify"
+                        data-height="168"
+                        data-show-remove="false"
+                        accept="image/*"
+                        data-default-file="/uploads/courses/thumbnails/<%= course.thumbnailImage %>"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group col-12">
+                    <label for="thumbnailVideo" class="text-dark"
+                      >Course Thumbnail Video</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="thumbnailVideo"
+                      name="thumbnailVideo"
+                      value="<%= course.thumbnailVideo %>"
+                    />
+                    <sub>Add youtube link, Eg: https://youtu.be/:id</sub>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="courseBenefits" class="text-dark"
+                      >Course Benefits</label
+                    >
+                    <textarea
+                      cols="100"
+                      rows="3"
+                      class="form-control"
+                      id="courseBenefits"
+                      name="benefits"
+                    ><%= course.benefits.join('|') %></textarea>
+                    <sub
+                      >Add pipe separated values. Eg: (Topic 1 | Topic 2 | Topic
+                      3)</sub
+                    >
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="materialsIncludes" class="text-dark"
+                      >Materials Included</label
+                    >
+                    <textarea
+                      rows="3"
+                      cols="100"
+                      class="form-control"
+                      id="materialsIncludes"
+                      name="materialsIncludes"
+                    ><%= course.materialsIncludes.join('|') %></textarea>
+                    <sub
+                      >Add pipe separated values. Eg: (Topic 1 | Topic 2 | Topic
+                      3)</sub
+                    >
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="instructorName" class="text-dark"
+                      >Instructor</label
+                    >
+                    <select id="instructorName" name="instructor" class="form-control select2-multi-select related-course-select" multiple>
+                      <% instructors.forEach(instructor => { %>
+                        <option value="<%= instructor._id %>" <%= course.instructor.includes(instructor._id) ? 'selected' : '' %>>
+                          <%= instructor.name %>
+                        </option>
+                      <% }) %>
+                    </select>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group">
+                      <label for="relatedCourses" class="text-dark"
+                        >Related Courses</label
+                      >
+                      <select class="form-control select2-multi-select related-course-select" multiple="multiple" id="relatedCourses" name="relatedCourses">
+                        <% relatedCourses.forEach(rCourse => { %>
+                          <option <%= course.relatedCourses.includes(rCourse._id) ? 'selected' : '' %> value="<%= rCourse._id %>">
+                            <%= rCourse.title %>
+                          </option>
+                        <% }) %>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="tab-footer m-t-20">
+                    <button type="submit" class="btn btn-primary course_description_details"><i class="feather icon-save m-r-5"></i>Save</button>
+                </div>
+              </form>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="pages-line"
+              role="tabpanel"
+              aria-labelledby="pages-tab-line"
+            >
+              <div class="mt-5">
+                <form action="/api/creator/course/<%= course._id %>?_method=PUT&type=seo-info" method="POST">
+                  <div class="card" style="background-color: #f8f9fa" s>
+                    <div class="card-body">
+                      <div class="form-group">
+                        <label for="coursePageUrl" class="text-dark">Course Page URL</label>
+                        <div class="input-group mb-3">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text" id="courseUrl"
+                              ><%= process.env.LEARNER_URL %>/api/v1/course/</span
+                            >
+                          </div>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="coursePageUrl"
+                            name="courseSlug"
+                            aria-describedby="courseUrl"
+                            placeholder="your-course-title"
+                            value="<%= course.slug %>"
+                          />
+                        </div>
+                        <p class="mb-0">
+                          <sub
+                            >Only hyphen, space, alphabets and numbers
+                            allowed.</sub
+                          >
+                        </p>
+                        <p class="text-dark">
+                          <sub
+                            >Please make sure this is SEO Friendly. Best
+                            Practice is to include Course Name and Instructor in
+                            the URL. For Example: one-two-three.</sub
+                          >
+                        </p>
+                      </div>
+                      <div class="form-group">
+                        <label for="coursePageTitle" class="text-dark"
+                          >SEO Title *</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="coursePageTitle"
+                          name="seoTitle"
+                          placeholder="SEO Title"
+                          value="<%= course.seo.title %>"
+                        />
+                      </div>
+                      <div class="form-group">
+                        <label for="coursePageDescription" class="text-dark"
+                          >SEO Description</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="coursePageDescription"
+                          name="seoDescription"
+                          placeholder="SEO Description"
+                          value="<%= course.seo.description %>"
+                        />
+                        <p>
+                          <sub
+                            >This is copied to metadata html tag of the course
+                            detail page. This is used on Google search result
+                            page.</sub
+                          >
+                        </p>
+                      </div>
+                      <div class="form-group">
+                        <label for="customTags" class="text-dark"
+                          >Custom Scripts/Tags</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="customTags"
+                          name="seoScripts"
+                          placeholder="Custom Scripts/Tags"
+                          value="<%= course.seo.scripts %>"
+                        />
+                      </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary course_seo_details">
+                          <i class="feather icon-save m-r-5"></i>Save
+                        </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="advanced-line"
+              role="tabpanel"
+              aria-labelledby="advanced-tab-line"
+            >
+              <form action="/api/creator/course/<%= course._id %>?_method=PUT&type=advanced-info" method="POST">
+                <div class="row">
+                  <div class="col-12 m-t-20">
+                    <div class="custom-control custom-checkbox m-b-10">
+                      <input
+                        type="checkbox"
+                        class="custom-control-input"
+                        id="activeCourse"
+                        name="status"
+                        value="true"
+                        <%= course.status ? 'checked' : '' %>
+                        />
+                      <label
+                        class="custom-control-label text-dark"
+                        for="activeCourse"
+                        >Set this course as active?</label
+                      >
+                    </div>
+                  </div>
+                  <div class="col-12 m-t-20">
+                    <div class="custom-control custom-checkbox m-b-10 <%= course.status ? '' : 'non_editable' %>">
+                      <input
+                        type="checkbox"
+                        class="custom-control-input"
+                        id="popularCourse"
+                        name="popular"
+                        value="true"
+                        <%= course.popular ? 'checked' : '' %>
+                      />
+                      <label
+                        class="custom-control-label text-dark"
+                        for="popularCourse"
+                        >Set this course as popular?</label
+                      >
+                    </div>
+                  </div>
+                  <div class="col-12 m-t-20">
+                    <div class="custom-control custom-checkbox <%= course.status ? '' : 'non_editable' %>">
+                      <input
+                        type="checkbox"
+                        class="custom-control-input"
+                        id="downloadableCourse"
+                        name="downloadable"
+                        value="true"
+                        <%= course.downloadable ? 'checked' : '' %>
+                      />
+                      <label
+                        class="custom-control-label text-dark"
+                        for="downloadableCourse"
+                        >Set this course as downloadable?</label
+                      >
+                    </div>
+                  </div>
+                  <div class="col-12 mt-4">
+                      <button type="submit" class="btn btn-primary">
+                        <i class="feather icon-save m-r-5"></i>Save
+                      </button>
+                  </div>
+                </div>
+              </form>
+              <div>
+                <div class="d-xl-flex mt-5">
+                  <div class="m-r-30 text-nowrap">
+                    <h4>Copy Course</h4>
+                  </div>
+
+                  <div class="card w-100" style="background-color: #f8f9fa">
+                    <div class="card-body">
+                      <p>This will create copy of your course.</p>
+                      <button class="btn btn-primary-rgba">
+                        <i class="mdi mdi-content-copy"></i>
+                        Copy Course
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div class="d-xl-flex mt-5">
+                  <div class="m-r-30 text-nowrap">
+                    <h4>Delete Course</h4>
+                  </div>
+
+                  <div class="card w-100" style="background-color: #f8f9fa">
+                    <div class="card-body">
+                      <p>
+                        This will permanently delete your course. Though
+                        Learners who have purchased it will continue to have
+                        access till their subscription ends.
+                      </p>
+                      <button
+                        class="btn btn-danger-rgba"
+                        data-target="#confirmDelete"
+                        data-toggle="modal"
+                      >
+                        <i class="feather icon-trash m-r-5"></i>
+                        Delete Course
+                      </button>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- contentbar ends -->
+
+<!-- modal starts -->
+<div
+class="modal fade"
+id="confirmDelete"
+tabindex="-1"
+role="dialog"
+aria-hidden="true"
+>
+<div
+  class="modal-dialog modal-dialog-centered modal-md"
+  role="document"
+>
+  <div class="modal-content">
+    <div class="modal-body">
+      <p class="text-muted font-18 text-center">
+        Do you really want to delete this course?
+      </p>
+      <div class="d-flex justify-content-center m-t-25">
+        <button
+          class="btn btn-secondary m-r-10"
+          data-dismiss="modal"
+        >
+          Cancel
+        </button>
+        <form class="" action="/api/creator/course/<%= course._id %>?_method=DELETE" method="POST">
+          <button type="submit" class="btn btn-danger">
+            <i class="feather icon-trash m-r-5"></i>
+            Delete
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- modal ends -->
+
+<!-- modal starts -->
+<div
+class="modal fade"
+id="categoryModal"
+tabindex="-1"
+role="dialog"
+aria-hidden="true"
+>
+<div
+  class="modal-dialog modal-dialog-centered modal-lg"
+  role="document"
+>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title mt-0">Add Category</h5>
+      <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="row m-t-20">
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label for="title_category" class="text-dark"
+                >Category title</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="title_category"
+                name="title"
+                placeholder="Category title"
+              />
+            </div>
+            <div class="form-group">
+              <label for="excerpt_category" class="text-dark"
+                >Category Excerpt</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="excerpt_category"
+                name="excerpt"
+                placeholder="Category Excerpt"
+              />
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label for="categoryIcon" class="text-dark"
+                >Icon Image</label
+              >
+              <input
+                type="file"
+                name="categoryIcon"
+                id="categoryIcon"
+                class="dropify"
+                data-height="110"
+                accept="image/*"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end m-t-10">
+          <button type="button" class="btn btn-primary add_category_using_ajax">
+            <i class="feather icon-plus m-r-5"></i> Add
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+<!-- modal ends -->
+
+<!-- language add modal starts -->
+<div
+  class="modal fade"
+  id="languageModal"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Add Language</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form >
+          <div class="form-group">
+            <label for="language" class="text-dark">Language</label>
+            <input
+              type="text"
+              class="form-control"
+              id="language_input"
+              name="language"
+              placeholder="Enter Language here"
+            />
+          </div>
+          <div class="">
+            <button type="button" class="btn btn-success add_language_using_ajax">
+              <i class="feather icon-save m-r-5"></i>Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal ends -->
+<%- include('../../partials/footer') %>
+

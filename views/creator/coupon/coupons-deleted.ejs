@@ -1,0 +1,176 @@
+<%- include('../partials/header') %>
+
+<!-- Start Breadcrumbbar -->
+<div class="breadcrumbbar">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <h4 class="page-title">Deleted Coupons</h4>
+      <div class="breadcrumb-list">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/api/creator">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="/api/creator/coupon/list">Coupon</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Deleted Coupons</li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-4 col-lg-4">
+      <div class="widgetbar">
+        <a
+          href="/api/creator/coupon/list"
+          class="btn btn-primary"
+        >
+          View Coupons
+      </a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Breadcrumbbar -->
+
+<!-- contentbar starts -->
+<div class="contentbar">
+  <!-- search-sort starts -->
+  <div class="row my-4">
+    <div class="col-xl-3 col-lg-4 col-md-7 col-6">
+      <div class="searchbar m-r-10">
+        <div class="input-group">
+          <input
+            type="search"
+            class="form-control search_input"
+            placeholder="Search"
+            aria-label="Search"
+            aria-describedby="button-addon2"
+            value="<%= search %>"
+          />
+          <div class="input-group-append">
+            <button class="btn search-data" id="button-addon2">
+              <i class="feather icon-search"></i>
+            </button>
+          </div>
+        </div>
+    </div>
+    </div>
+  </div>
+  <!-- search-sort ends -->
+
+  <!-- coupon list starts -->
+  <div class="row">
+    <% coupons.forEach(coupon => { %>
+      <div class="col-md-6 col-lg-4">
+          <div class="card m-b-30">
+              <div class="card-body">
+                  <div class="d-flex justify-content-between ">
+                      <h4>
+                          <%= coupon.code %>
+                      </h4>
+                      <div>
+                          <span class="badge badge-danger">Deleted</span>
+                      </div>
+                  </div>
+                  <div class="row font-12">
+                      <div class="col-6">
+                          <p>Created At: <span><%= moment(coupon.createdAt).format('ll') %></span></p>
+                      </div>
+                      <div class="col-6">
+                          <p class="text-right">Expiry Date: <span><%= moment(coupon.expiredAt).format('ll') %></span></p>
+                      </div>
+                      <div class="col-6">
+                          <p>Min Purchase: <span><%= coupon.minPurchaseAmount %></span></p>
+                      </div>
+                      <div class="col-6">
+                          <p class="text-right">Discount Upto: <span><%= coupon.discountUpTo %></span></p>
+                      </div>
+                  </div>
+              </div>
+              <div class="card-footer">
+                  <div class="d-flex justify-content-between align-items-center">
+                          <p class="text-dark font-18 mb-0"><%= coupon.type %></p>
+                          <p class="text-dark font-15 mb-0"><%= coupon.noOfUses %> Uses</p>
+                          <div class="d-flex">
+                              <div data-toggle="tooltip" data-placement="top" title="Restore">
+                                <button data-id="<%= coupon._id %>" type="button" class="btn btn-success-rgba restore_coupon_btn" data-toggle="modal"
+                                  data-target="#confirmRestore">
+                                    <i class="feather icon-refresh-cw"></i>
+                                </button>
+                              </div>
+                          </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    <% }) %>
+  </div>
+  <!-- coupon list ends -->
+
+  <% if (total > 1) { %>
+    <!-- pagination starts -->
+    <div class="d-flex justify-content-center">
+      <ul class="pagination">
+        <% if (Number(page) > 1) { %>
+          <li class="page-item">
+            <a class="page-link prev-page" data-prev="<%= Number(page) - 1 %>">«</a>
+          </li>
+        <% } %>
+        <% if (Number(page) !== 1) { %>
+          <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) - 1 %>"><%= Number(page) - 1 %></a></li>
+        <% } %>
+        <li class="page-item active">
+          <a class="page-link page-num" data-page="<%= Number(page) %>"><%= Number(page) %></a>
+        </li>
+        <% if (Number(page) < Number(total)) { %>
+          <li class="page-item"><a class="page-link page-num" data-page="<%= Number(page) + 1 %>"><%= Number(page) + 1 %></a></li>
+        <% } %>
+        <% if (Number(page) !== Number(total)) { %>
+          <li class="page-item">
+            <a class="page-link next-page" data-next="<%= Number(page) + 1 %>">»</a>
+          </li>
+        <% } %>
+      </ul>
+    </div>
+    <!-- pagination ends -->
+  <% } %>
+
+</div>
+<!-- contentbar starts -->
+
+<!-- restore modal starts -->
+<div
+class="modal fade"
+id="confirmRestore"
+tabindex="-1"
+role="dialog"
+aria-hidden="true"
+>
+<div
+  class="modal-dialog modal-dialog-centered modal-md"
+  role="document"
+>
+  <div class="modal-content">
+    <div class="modal-body">
+      <p class="text-muted font-18 text-center">
+        Do you really want to restore this coupon?
+      </p>
+      <div class="d-flex justify-content-center m-t-25">
+        <button
+          class="btn btn-secondary m-r-10"
+          data-dismiss="modal"
+        >
+          Cancel
+        </button>
+        <form class="restore_coupon_form" action="" method="POST">
+          <button class="btn btn-success">
+            <i class="feather icon-refresh-cw m-r-5"></i>
+            Restore
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- restore modal ends -->
+
+<%- include('../partials/footer') %>
+<script>
+  document.body.classList.add("toggle-menu");
+</script>
