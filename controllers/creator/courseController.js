@@ -376,7 +376,7 @@ export const editCourse = catchAsyncError(async (req, res, next) => {
     thumbnailVideo,
     benefits,
     materialsIncludes,
-    instructor,
+    // instructor,
     relatedCourses,
 
     courseSlug,
@@ -433,8 +433,7 @@ export const editCourse = catchAsyncError(async (req, res, next) => {
         !description ||
         !thumbnailVideo ||
         !benefits ||
-        !materialsIncludes ||
-        !instructor
+        !materialsIncludes 
       ) {
         return next(new ErrorHandler("All fields are required", 400));
       }
@@ -443,7 +442,7 @@ export const editCourse = catchAsyncError(async (req, res, next) => {
       _course.thumbnailVideo = thumbnailVideo;
       _course.benefits = benefits.split("|");
       _course.materialsIncludes = materialsIncludes.split("|");
-      _course.instructor = instructor;
+      // _course.instructor = instructor;
       _course.relatedCourses = relatedCourses;
 
       if (req.files.thumbnailImage) {
