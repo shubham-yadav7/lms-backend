@@ -5,7 +5,8 @@ import {
   fetchCart,
   fetchCoupons,
   removeFromCart,
-  createOrder
+  createOrder,
+  verifyPayment
 } from "../../controllers/learner/inventoryController.js";
 import { Cashfree } from "cashfree-pg"; 
 
@@ -42,8 +43,14 @@ router
 router
   .route("/create-order")
   .post(
-    passport.authenticate("jwt", { session: false }),
+
     createOrder
+  );
+router
+  .route("/verify-payment")
+  .post(
+
+    verifyPayment
   );
   
 

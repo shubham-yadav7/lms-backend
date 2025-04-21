@@ -84,6 +84,10 @@ const schema = new mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: "topic"
     }],
+    learners: [{
+      type: Schema.Types.ObjectId,
+      ref: "learner"
+    }],
     ratings: [
       {
         type: Schema.Types.ObjectId,

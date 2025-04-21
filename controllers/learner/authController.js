@@ -4,6 +4,7 @@ import ErrorHandler from "../../utils/ErrorHandler.js";
 import { sendToken } from "../../utils/sendToken.js";
 import crypto from "crypto";
 import { deleteFile } from "../../utils/deleteFile.js";
+import { Course } from "../../models/Course.js";
 
 export const sendConfirmationOtp = catchAsyncError(async (req, res, next) => {
   const { email, phone, password, confirmPassword } = req.body;
@@ -246,9 +247,15 @@ export const getLearnerDetails = catchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler("Learner not found", 401));
   }
 
+  const enrolledCourses = await Course.find({
+    learners: learner._id,
+  });
+
+
   res.status(200).json({
     success: true,
     learner,
+    enrolledCourses
   });
 });
 

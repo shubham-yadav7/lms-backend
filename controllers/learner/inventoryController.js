@@ -11,6 +11,7 @@ import ErrorHandler from "../../utils/ErrorHandler.js";
 import { Cashfree } from "cashfree-pg";
 import { v4 as uuidv4 } from "uuid";
 import Razorpay from "razorpay";
+import PurchasedItem from "../../models/PurchasedItem.js";
 
 const razorpay = new Razorpay({
   key_id: process.env.RZP_KEY,
@@ -274,7 +275,9 @@ export const fetchCoupons = catchAsyncError(async (req, res, next) => {
 
 export const createOrder = async (req, res) => {
   const { amount, cartItems } = req.body;
-
+  console.log("create order working")
+  console.log(process.env.RZP_KEY, "key")
+  console.log(process.env.RZP_SECRET, "secret")
   const options = {
     amount: amount,
     currency: "INR",
@@ -289,22 +292,40 @@ export const createOrder = async (req, res) => {
   }
 };
 
-export const verifyPayment = async (req, res) => {
-  const { response, cartItems } = req.body;
-  const learnerId = req.user._id;
+export const verifyPayment = catchAsyncError(async (req, res, next) => {
+  const { response, cartItems, user } = req.body;
+  const learnerId = user._id;
 
   // Ideally verify signature here for security
 
-  for (let courseId of cartItems) {
-    await Course.findByIdAndUpdate(courseId, {
-      $addToSet: { learners: learnerId }, // ensures no duplicates
-    });
+  for (let cartItem of cartItems) {
+    const courseSlug = cartItem.item.slug;
 
-    await PurchasedItem.create({
-      course: courseId,
-      learner: learnerId,
-    });
+    // Find the course using the slug
+    const course = await Course.findOneAndUpdate(
+      { slug: courseSlug },
+      { $addToSet: { learners: learnerId } }, // Avoid duplicates
+      { new: true }
+    );
+
+    if (course) {
+      await PurchasedItem.create({
+        course: course._id,
+        learner: learnerId,
+      });
+    }
   }
 
+  // for (let courseId of cartItems) {
+  //   await Course.findByIdAndUpdate(courseId, {
+  //     $addToSet: { learners: learnerId }, // ensures no duplicates
+  //   });
+
+  //   await PurchasedItem.create({
+  //     course: courseId,
+  //     learner: learnerId,
+  //   });
+  // }
+
   res.status(200).json({ message: "Payment successful and access granted" });
-};
+});
