@@ -8,6 +8,14 @@ import { CourseBundle } from "../../models/CourseBundle.js";
 import { Learner } from "../../models/Learner.js";
 import { Product } from "../../models/Product.js";
 import ErrorHandler from "../../utils/ErrorHandler.js";
+import { Cashfree } from "cashfree-pg";
+import { v4 as uuidv4 } from "uuid";
+import Razorpay from "razorpay";
+
+const razorpay = new Razorpay({
+  key_id: process.env.RZP_KEY,
+  key_secret: process.env.RZP_SECRET,
+});
 
 export const addToCart = catchAsyncError(async (req, res, next) => {
   const { id, type } = req.body;
@@ -15,7 +23,7 @@ export const addToCart = catchAsyncError(async (req, res, next) => {
 
   //  📝 Find learner
   let learner = await Learner.findOne({
-    creator: req.creatorInfo._id,
+    
     _id: req.user,
     deleted: false,
     status: true,
@@ -25,13 +33,13 @@ export const addToCart = catchAsyncError(async (req, res, next) => {
 
   // 📝 check cart is exists or not if not then create and assign to learner
   let cart = await Cart.findOne({
-    creator: req.creatorInfo._id,
+    
     learner: req.user,
   });
 
   if (!cart) {
     cart = await Cart.create({
-      creator: req.creatorInfo._id,
+      
       learner: req.user,
     });
     await Learner.findByIdAndUpdate(learner._id, { cart: cart._id });
@@ -107,7 +115,7 @@ export const removeFromCart = catchAsyncError(async (req, res, next) => {
 
 export const fetchCart = catchAsyncError(async (req, res, next) => {
   const learner = await Learner.findOne({
-    creator: req.creatorInfo._id,
+    
     _id: req.user,
     deleted: false,
     status: true,
@@ -237,13 +245,16 @@ export const fetchCart = catchAsyncError(async (req, res, next) => {
     cartTotal: _total,
     gst,
     grandTotal,
+    discountAmount: discountAmount || 0, // 👈 Add this line
+    coupon: coupon?._id || null,         // Optional: send back applied coupon info
+    message,                             // Optional: send message about coupon min limit
   });
 });
 
 export const fetchCoupons = catchAsyncError(async (req, res, next) => {
   // TODO: check all crud operation contains creator or not
   const coupons = await Coupon.find({
-    creator: req.creatorInfo._id,
+    
     expiredAt: { $gt: Date.now() },
     status: true,
     deleted: false,
@@ -259,3 +270,41 @@ export const fetchCoupons = catchAsyncError(async (req, res, next) => {
     coupons,
   });
 });
+
+
+export const createOrder = async (req, res) => {
+  const { amount, cartItems } = req.body;
+
+  const options = {
+    amount: amount,
+    currency: "INR",
+    receipt: `order_rcptid_${Date.now()}`,
+  };
+
+  try {
+    const order = await razorpay.orders.create(options);
+    res.status(200).json({ order, cartItems });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const verifyPayment = async (req, res) => {
+  const { response, cartItems } = req.body;
+  const learnerId = req.user._id;
+
+  // Ideally verify signature here for security
+
+  for (let courseId of cartItems) {
+    await Course.findByIdAndUpdate(courseId, {
+      $addToSet: { learners: learnerId }, // ensures no duplicates
+    });
+
+    await PurchasedItem.create({
+      course: courseId,
+      learner: learnerId,
+    });
+  }
+
+  res.status(200).json({ message: "Payment successful and access granted" });
+};

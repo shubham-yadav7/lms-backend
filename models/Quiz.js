@@ -12,11 +12,19 @@ const schema = new mongoose.Schema(
       ref: "course",
       required: true,
     },
+    topic: {
+      type: Schema.Types.ObjectId,
+      ref: "topic",
+      required: true,
+    },
     title: {
       type: String,
       required: true,
     },
     slug: {
+      type: String,
+    },
+    topicName: {
       type: String,
     },
     description: {

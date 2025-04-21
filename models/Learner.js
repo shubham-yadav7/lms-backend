@@ -6,11 +6,11 @@ import crypto from "crypto";
 
 const schema = new mongoose.Schema(
   {
-    creator: {
-      type: Schema.Types.ObjectId,
-      ref: "creator",
-      required: true,
-    },
+    // creator: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "creator",
+    //   required: true,
+    // },
     firstName: {
       type: String,
       required: [true, "Please enter your first name"],

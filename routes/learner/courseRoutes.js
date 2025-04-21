@@ -11,11 +11,11 @@ const router = express.Router();
 
 router
   .route("/categories/list")
-  .get(extractCreatorInfo, getAllCourseCategoriesList);
+  .get(getAllCourseCategoriesList);
 
-router.route("/list").get(extractCreatorInfo, getAllCoursesList);
-router.route("/paginate-list").get(extractCreatorInfo, getAllCourses);
-router.route("/:slug").get(extractCreatorInfo, getCourseBySlug);
+router.route("/list").get(getAllCoursesList);
+router.route("/paginate-list").get(getAllCourses);
+router.route("/:slug").get(getCourseBySlug);
 
 // router.route("/start-course/:id").get(extractCreatorInfo, getCourseDetails);
 

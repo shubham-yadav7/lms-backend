@@ -80,6 +80,8 @@ app.use(function (req, res, next) {
   next();
 });
 
+import homeRoute from "./routes/primaryRoute.js"
+
 // Creator route imports
 import creatorPrimaryRoutes from "./routes/creator/primaryRoute.js";
 import creatorCourseRoutes from "./routes/creator/courseRoute.js";
@@ -112,6 +114,8 @@ import learnerBundleRoutes from "./routes/learner/bundleRoutes.js";
 import learnerProductRoutes from "./routes/learner/productRoutes.js";
 import learnerHelpRoutes from "./routes/learner/helpRoutes.js";
 import learnerInventoryRoutes from "./routes/learner/inventoryRoutes.js";
+
+app.use("/", homeRoute);
 
 // Creators Routes
 app.use("/api/creator/auth", creatorAuthRoutes);

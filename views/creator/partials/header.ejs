@@ -10,11 +10,11 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui"
     />
-    <title>Admin Dashboard | <%= brandName %></title>
+    <title>Admin Dashboard | Learnr</title>
     <!-- Fevicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logos/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/logos/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/logos/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logos/learnr-logo-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/logos/learnr-logo-icon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/logos/learnr-logo-icon.png">
     <!-- Start css -->
     <!-- Switchery css -->
     <link href="/assets/plugins/switchery/switchery.min.css" rel="stylesheet" />
@@ -116,13 +116,13 @@
         <div class="sidebar">
           <!-- Start Logobar -->
           <div class="logobar">
-            <a href="/api/creator/dashboard" class="logo logo-large"
+            <a href="/api/creator/" class="logo logo-large"
               ><img
                 src="/assets/images/logos/learnr-logo.png"
                 class="img-fluid"
                 alt="logo"
             /></a>
-            <a href="/api/creator/dashboard" class="logo logo-small"
+            <a href="/api/creator/" class="logo logo-small"
               ><img
                 src="/assets/images/logos/learnr-logo-icon.png"
                 class="img-fluid"
@@ -180,6 +180,12 @@
           <div class="navigationbar">
             <ul class="vertical-menu">
               <li class="vertical-header">Modules</li>
+                <li>
+    <a href="/api/creator">
+      <i class="feather icon-home"></i>
+      <span>Dashboard</span>
+    </a>
+  </li>
               <li>
                 <a href="javaScript:void();">
                   <i class="feather icon-book-open"></i>
@@ -196,52 +202,13 @@
                     >
                   </li>
                   <li>
-                    <a href="/api/creator/course/languages/list">Language</a>
+                    <a href="/api/creator/course/languages/list">Languages</a>
                   </li>
                   <li>
                     <a href="/api/creator/course/deleted">Deleted Courses</a>
                   </li>
                 </ul>
               </li>
-              <!-- <li>
-                <a href="javaScript:void();">
-                  <i class="feather icon-layers"></i>
-                  <span>Course Bundles</span>
-                  <i class="feather icon-chevron-right pull-right"></i>
-                </a>
-                <ul class="vertical-submenu">
-                  <li>
-                    <a href="/api/creator/course-bundle/list">All Bundles</a>
-                  </li>
-                
-                  <li>
-                    <a href="/api/creator/course-bundle/deleted"
-                      >Deleted Bundles</a
-                    >
-                  </li>
-                </ul>
-              </li>
-              <li>
-                <a href="javaScript:void();">
-                  <i class="feather icon-archive"></i>
-                  <span>Products</span>
-                  <i class="feather icon-chevron-right pull-right"></i>
-                </a>
-                <ul class="vertical-submenu">
-                  <li>
-                    <a href="/api/creator/product/list">All Products</a>
-                  </li>
-                  <li>
-                    <a href="/api/creator/product/category/list"
-                      >Product Category</a
-                    >
-                  </li>
-                  <li>
-                    <a href="/api/creator/product/deleted">Deleted Products</a>
-                  </li>
-                </ul>
-              </li> -->
-              <!--  -->
               <li>
                 <a href="javaScript:void();">
                   <i class="feather icon-tag"></i>
@@ -257,107 +224,12 @@
                   </li>
                 </ul>
               </li>
-              <!-- <li>
-                <a href="javaScript:void();">
-                  <i class="feather icon-user"></i>
-                  <span>Instructor</span>
-                  <i class="feather icon-chevron-right pull-right"></i>
-                </a>
-                <ul class="vertical-submenu">
-                  <li>
-                    <a href="/api/creator/instructor/list">All Instructors</a>
-                  </li>
-                  <li>
-                    <a href="/api/creator/instructor/deleted"
-                      >Deleted Instructors</a
-                    >
-                  </li>
-                </ul>
-              </li> -->
-              <!-- <li>
-                <a href="javaScript:void();">
-                  <i class="feather icon-user"></i>
-                  <span>Sub Creators</span>
-                  <i class="feather icon-chevron-right pull-right"></i>
-                </a>
-                <ul class="vertical-submenu">
-                  <li>
-                      <a href="/api/creator/sub-creator/list">All Sub-Creators</a>
-                  </li>
-                  <li>
-                      <a href="/api/creator/sub-creator/deleted">Deleted Sub-Creators</a>
-                  </li>
-                </ul>
-              </li> -->
-              <!-- <li>
-                <a href="javaScript:void();">
-                  <i class="feather icon-user-check"></i>
-                  <span>Learner</span>
-                  <i class="feather icon-chevron-right pull-right"></i>
-                </a>
-                <ul class="vertical-submenu">
-                  <li>
-                    <a href="/api/creator/learner/list">All learners</a>
-                  </li>
-                  <li>
-                    <a href="/api/creator/learner/deleted">Deleted learners</a>
-                  </li>
-                </ul>
-              </li>
-              <li>
-                <a href="javaScript:void();">
-                  <i class="feather icon-globe"></i>
-                  <span>CMS</span>
-                  <i class="feather icon-chevron-right pull-right"></i>
-                </a>
-                <ul class="vertical-submenu">
-                  <li>
-                    <a href="/api/creator/announcement/list">Announcement</a>
-                  </li>
-                  <li>
-                    <a href="/api/creator/banner/list">Banner</a>
-                  </li>
-                  <li>
-                    <a href="/api/creator/contact/list">Contact</a>
-                  </li>
-                  <li>
-                    <a href="/api/creator/faq/list">Faq</a>
-                  </li>
-                  <li>
-                    <a href="/api/creator/feedback/list">Feedback</a>
-                  </li>
-                  <li>
-                    <a href="/api/creator/help/list">Help</a>
-                  </li>
-                  <li>
-                    <a href="/api/creator/newsletter/list">Newsletter</a>
-                  </li>
-                  <li>
-                    <a href="/api/creator/testimonial/list">Testimonials</a>
-                  </li>
-                </ul>
-              </li>
-              <li>
-                <a href="javaScript:void();">
-                  <i class="feather icon-sidebar"></i>
-                  <span>Blog</span>
-                  <i class="feather icon-chevron-right pull-right"></i>
-                </a>
-                <ul class="vertical-submenu">
-                  <li>
-                    <a href="/api/creator/blog/add">Add Posts</a>
-                  </li>
-                  <li>
-                    <a href="/api/creator/blog/list">All Posts</a>
-                  </li>
-                  <li>
-                    <a href="/api/creator/blog/category/list">Category</a>
-                  </li>
-                  <li>
-                    <a href="/api/creator/blog/tag/list">Tag</a>
-                  </li>
-                </ul>
-              </li> -->
+                <li>
+    <a href="/api/creator/setting/profile">
+      <i class="feather icon-user"></i>
+      <span>Profile</span>
+    </a>
+  </li>
             </ul>
           </div>
           <!-- End Navigationbar -->

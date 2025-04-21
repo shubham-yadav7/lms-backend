@@ -2794,7 +2794,7 @@ $(document).ready(function () {
     $(this)
       .serializeArray()
       .forEach((ip) => {
-        if (!ip.value && !ip.value.trim()) {
+        if (ip.name !== "videoLink" && (!ip.value || !ip.value.trim())) {
           error = true;
         }
       });
@@ -3199,6 +3199,9 @@ $(document).ready(function () {
   });
   $(".course-edit-select").select2({
     dropdownParent: $("#details-line"),
+  });
+  $(".course-edit-select2").select2({
+    dropdownParent: $("#details-line2"),
   });
   $(".add-bundle-select").select2({
     dropdownParent: $("#details-line"),

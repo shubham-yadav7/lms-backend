@@ -8,14 +8,19 @@ import moment from "moment";
 import XLSX from "xlsx";
 import { sortQuizQuestionsByNumber } from "../../utils/dataWatcher.js";
 import mongoose from "mongoose";
+import { Course } from "../../models/Course.js";
+import { Topic } from "../../models/Topic.js";
 
 // Quiz
 export const addQuiz = catchAsyncError(async (req, res, next) => {
-  const { title, description } = req.body;
+
+  const { title, description, topic } = req.body;
   const { courseId } = req.params;
-  if (!title || !description) {
+  if (!title || !description || !topic) {
     return next(new ErrorHandler("All fields are required.", 422));
   }
+
+  const selectedTopic = await Topic.findById(topic);
 
   await Quiz.create({
     creator: req.user.role === "creator" ? req.user._id : req.user.createdBy,
@@ -23,6 +28,8 @@ export const addQuiz = catchAsyncError(async (req, res, next) => {
     title,
     description,
     slug: slugify(title, { lower: true }),
+    topic: topic,
+    topicName: selectedTopic.title
   });
   req.flash("success", "Quiz created successfully.");
   res.redirect(`/api/creator/quiz/${courseId}/list`);
@@ -83,6 +90,8 @@ export const getAllQuiz = catchAsyncError(async (req, res, next) => {
 
   const quizzes = await Quiz.aggregate(aggregateQuery);
 
+  const course = await Course.findById(req.params.courseId).populate("topics");
+  console.log(quizzes[0].data,)
   sendResponse(req, res, "creator/quiz/course-quiz", {
     quizzes: quizzes[0].data,
     total: quizzes[0].metadata[0]
@@ -93,10 +102,12 @@ export const getAllQuiz = catchAsyncError(async (req, res, next) => {
     search: search ? search : "",
     moment,
     courseId: req.params.courseId,
+    topics: course?.topics
   });
 });
 export const editQuiz = catchAsyncError(async (req, res, next) => {
-  const { title, description } = req.body;
+  // return console.log(req.body)
+  const { title, description, topic } = req.body;
   const { courseId, id } = req.params;
 
   if (!title || !description) {
@@ -104,6 +115,7 @@ export const editQuiz = catchAsyncError(async (req, res, next) => {
   }
 
   const quiz = await Quiz.findById(id);
+  const selectedTopic = await Topic.findById(topic);
   if (!quiz) return next(new ErrorHandler("Quiz not found.", 404));
 
   await Quiz.findByIdAndUpdate(
@@ -112,6 +124,8 @@ export const editQuiz = catchAsyncError(async (req, res, next) => {
       title,
       slug: slugify(title, { lower: true }),
       description,
+      topic: topic,
+      topicName: selectedTopic.title
     }
   );
 

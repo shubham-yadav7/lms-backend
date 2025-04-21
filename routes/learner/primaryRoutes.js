@@ -11,17 +11,17 @@ import { getAllFaqsList } from "../../controllers/creator/faqController.js";
 
 const router = express.Router();
 
-router.route("/announcement").get(extractCreatorInfo, getActiveAnnouncement);
-router.route("/search").get(extractCreatorInfo, searchInputResult);
-router.route("/banner/list").get(extractCreatorInfo, getAllBannersList);
+router.route("/announcement").get(getActiveAnnouncement);
+router.route("/search").get(searchInputResult);
+router.route("/banner/list").get(getAllBannersList);
 router
   .route("/testimonial/list")
-  .get(extractCreatorInfo, getAllTestimonialsList);
+  .get(getAllTestimonialsList);
 router
   .route("/feedback/list")
-  .get(extractCreatorInfo, getAllFeedBackVideosList);
-router.route("/newsletter/add").post(extractCreatorInfo, addNewsLetter);
-router.route("/contact/add").post(extractCreatorInfo, addContact);
-router.route("/faq/list").get(extractCreatorInfo, getAllFaqsList);
+  .get(getAllFeedBackVideosList);
+router.route("/newsletter/add").post(addNewsLetter);
+router.route("/contact/add").post(addContact);
+router.route("/faq/list").get(getAllFaqsList);
 
 export default router;

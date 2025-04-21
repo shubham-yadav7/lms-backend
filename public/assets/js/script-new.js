@@ -80,6 +80,26 @@ $(document).ready(function () {
       },
     },
   });
+  $("#paidDescription").summernote({
+    height: 120,
+    minHeight: null,
+    maxHeight: null,
+    focus: false,
+    toolbar: [
+      // [groupName, [list of button]]
+      ["style", ["bold", "italic", "underline", "clear"]],
+      ["font", ["strikethrough", "superscript", "subscript"]],
+      ["para", ["ul", "ol", "paragraph"]],
+    ],
+    callbacks: {
+      onChange: function (contents) {
+        $(this).val(contents);
+      },
+      onPaste: function (contents) {
+        $(this).val(contents);
+      },
+    },
+  });
   $(".desc_summer").summernote({
     height: 120,
     minHeight: null,
@@ -257,6 +277,9 @@ $(document).ready(function () {
   });
   $(".course-edit-select").select2({
     dropdownParent: $("#details-line"),
+  });
+  $(".course-edit-select2").select2({
+    dropdownParent: $("#details-line2"),
   });
   $(".add-bundle-select").select2({
     dropdownParent: $("#details-line"),
@@ -888,7 +911,7 @@ $(document).ready(function () {
     $(this)
       .serializeArray()
       .forEach((ip) => {
-        if (!ip.value && !ip.value.trim()) {
+        if (ip.name !== "videoLink" && (!ip.value || !ip.value.trim())) {
           error = true;
         }
       });
@@ -2804,11 +2827,17 @@ $(document).ready(function () {
   $(".edit_quiz_btn").on("click", function () {
     let quiz = $(this).data("quiz");
     let courseId = $(this).data("courseid");
+    let topic = $(this).data("topic");
+    let topicValue = $(this).data("topic-name");
+    console.log(topic, "topicValue")
 
     let newUrl = `/api/creator/quiz/${courseId}/${quiz._id}?_method=PUT`;
     $(".quiz-edit-form").attr("action", newUrl);
 
     $(".quiz-edit-form #quizTitle").val(quiz.title);
+    // $(".quiz-edit-form #topic").val(topic);
+    $(".quiz-edit-form .alert .topic-value").text(topicValue.toString().replace(/"/g, ''));
+    
     $(".quiz-edit-form #quizDescription").summernote("code", quiz.description);
   });
 

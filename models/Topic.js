@@ -24,6 +24,13 @@ const schema = new mongoose.Schema(
       type: String,
       required: [true, "Please enter topic description"],
     },
+    paidDescription: {
+      type: String,
+      required: [true, "Please enter topic's paid description"],
+    },
+    videoLink: {
+      type: String,
+    },
     totalDuration: {
       totalSeconds: {
         type: Number,

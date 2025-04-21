@@ -67,13 +67,31 @@
             />
           </div>
           <div class="form-group">
-            <label class="mr-3" for="description">Description</label>
+            <label class="mr-3" for="description" class="text-dark">Description</label>
             <textarea
               name="description"
               id="description"
               cols="30"
               rows="10"
             ></textarea>
+          </div>
+            <div class="form-group">
+            <label class="mr-3" for="paidDescription" class="text-dark">Paid Description</label>
+            <textarea
+              name="paidDescription"
+              id="paidDescription"
+              cols="30"
+              rows="10"
+            ></textarea>
+          </div>
+          <div class="form-group m-t-10">
+            <label for="videoLink" class="text-dark">Video Link</label>
+            <input
+              type="text"
+              class="form-control"
+              id="videoLink"
+              name="videoLink"
+            />
           </div>
           <button
             type="submit"
@@ -133,6 +151,26 @@
               class="desc_summer"
             ></textarea>
           </div>
+           <div class="form-group">
+            <label class="mr-3" for="paidDescription">Paid Description</label>
+            <textarea
+              name="paidDescription"
+              id="paidDescription"
+              cols="30"
+              rows="10"
+              class="desc_summer"
+            ></textarea>
+          </div>
+            <div class="form-group m-t-10">
+            <label for="videoLink" class="text-dark">Video Link</label>
+            <input
+              type="text"
+              class="form-control"
+              id="videoLink"
+              name="videoLink"
+            />
+          </div>
+          <div id="videoPreviewEdit" class="mt-3"></div>
           <button type="submit" class="btn btn-success edit_section_btn m-t-10">
             <i class="feather icon-save m-r-5"></i> Save
           </button>
@@ -868,6 +906,8 @@
                         data-topic-id="<%= topic._id %>"
                         data-topic-title="<%= topic.title %>"
                         data-topic-description="<%= topic.description %>"
+                        data-topic-videolink="<%= topic.videoLink %>"
+                        data-topic-paiddescription="<%= topic.paidDescription %>"
                       >
                         <span
                           data-toggle="tooltip"
@@ -1118,17 +1158,47 @@
     const topicId = $(this).data("topic-id");
     const topicTitle = $(this).data("topic-title");
     const topicDescription = $(this).data("topic-description");
+    const videoLink = $(this).data("topic-videolink");
+    const paidDescription= $(this).data("topic-paiddescription");
 
     $("#section_edit_form").attr(
       "action",
       `${primaryLink}/${topicId}?_method=PUT&editType=sectionEdit`
     );
     $("#section_edit_form #sectionTitle").val(topicTitle);
+    $("#section_edit_form #videoLink").val(videoLink);
     $("#section_edit_form #editDescription").summernote(
       "code",
       topicDescription
     );
+       $("#section_edit_form #paidDescription").summernote(
+      "code",
+      paidDescription
+    );
     $("#editSectionModal").modal();
+
+    let embed = "";
+
+  // YouTube
+  if (videoLink.includes("youtube.com") || videoLink.includes("youtu.be")) {
+    const match = videoLink.match(/(?:youtube\.com\/.*v=|youtu\.be\/)([^&\n?#]+)/);
+    const videoId = match ? match[1] : null;
+    if (videoId) {
+      embed = `<iframe width="100%" height="315" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+    }
+  }
+
+  // Google Drive
+  else if (videoLink.includes("drive.google.com")) {
+    const match = videoLink.match(/\/d\/([^\/]+)\//);
+    const fileId = match ? match[1] : null;
+    if (fileId) {
+      embed = `<iframe src="https://drive.google.com/file/d/${fileId}/preview" width="100%" height="315" allow="autoplay"></iframe>`;
+    }
+  }
+
+  // Append preview to a container
+  $("#videoPreviewEdit").html(embed);
   });
 
   // $(".delete-topic").on("click", function (e) {

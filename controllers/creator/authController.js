@@ -14,7 +14,6 @@ export const registerCreator = catchAsyncError(async (req, res, next) => {
   const {
     firstName,
     lastName,
-    brandName,
     email,
     phone,
     password,
@@ -37,17 +36,15 @@ export const registerCreator = catchAsyncError(async (req, res, next) => {
   let _creator = {
     firstName,
     lastName,
-    brandName,
     email,
     phone,
     password,
-    slug: slugify(brandName, { lower: true }),
-    // role: "creator",
+    slug: slugify(`${firstName} ${lastName}`, { lower: true }),
   };
-  // TODO: Update slug in update profile controller
+
   creator = await Creator.create(_creator);
 
-  req.flash("success", "Registration successful.");
+  req.flash("success", "Registration successful! Please login to continue");
   res.redirect("/api/creator/auth/login");
 });
 
@@ -81,7 +78,7 @@ export const creatorForgotPassword = catchAsyncError(async (req, res, next) => {
   const data = `<p>Click on the link to reset Password.</p> <a class="d-block" href="${url}">Click Here</a> <p>If you have not requested then please ignore. </p>`;
   const { response } = await sendEmail({
     to: creator.email,
-    subject: `${creator.brandName}, Forgot Password request.`,
+    subject: `${creator.firstName} ${creator.lastName}, Forgot Password request.`,
     html: data,
   });
 
@@ -89,7 +86,7 @@ export const creatorForgotPassword = catchAsyncError(async (req, res, next) => {
 
   req.flash(
     "success",
-    "Resent password link send to your registered email id."
+    "Reset password link send to your registered email id."
   );
   res.redirect("/api/creator/auth/login");
 });
@@ -97,10 +94,12 @@ export const creatorForgotPassword = catchAsyncError(async (req, res, next) => {
 // Reset password
 export const creatorResetPasswordPage = catchAsyncError(
   async (req, res, next) => {
-    res.render("creator/auth/reset-password");
+
+    return res.render("creator/auth/reset-password");
   }
 );
 export const creatorResetPassword = catchAsyncError(async (req, res, next) => {
+  console.log("reset passwrd working")
   const { token } = req.params;
   const { password, confirmPassword } = req.body;
 
@@ -128,20 +127,21 @@ export const creatorResetPassword = catchAsyncError(async (req, res, next) => {
 
   creator.save();
 
+  console.log("creator updated")
+
   req.flash("success", "Password reset successfully.");
-  res.sendStatus(200);
+  res.redirect("/api/creator/auth/login");
 });
 
 // Logout
 export const logoutCreator = (req, res, next) => {
-  console.log("got logout")
-  req.logout(function (err) {
-    if (err) {
-      return next(new ErrorHandler("Unable to logout, please try again.", 302));
-    }
+  try {
+    req.logout();
     req.flash("success", "Logged out successfully.");
     res.redirect("/api/creator/auth/login");
-  });
+  } catch (err) {
+    return next(new ErrorHandler("Unable to logout, please try again.", 302));
+  }
 };
 
 // change password
@@ -166,5 +166,5 @@ export const creatorChangePassword = catchAsyncError(async (req, res, next) => {
   await creator.save();
 
   req.flash("success", "Password updated successfully.");
-  res.redirect("/api/creator/profile");
+  res.redirect("/api/creator/setting/profile");
 });

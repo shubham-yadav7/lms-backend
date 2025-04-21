@@ -80,12 +80,10 @@ const schema = new mongoose.Schema(
         type: String,
       },
     ],
-    // topics: [
-    //   {
-    //     type: Schema.Types.ObjectId,
-    //     ref: "topics",
-    //   },
-    // ],
+    topics: [{
+      type: Schema.Types.ObjectId,
+      ref: "topic"
+    }],
     ratings: [
       {
         type: Schema.Types.ObjectId,
@@ -139,6 +137,9 @@ const schema = new mongoose.Schema(
     coursePriority: {
       type: Number,
       default: 0,
+    },
+    totalDuration: {
+      type: String,
     },
     seo: {
       title: {

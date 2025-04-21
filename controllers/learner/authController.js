@@ -15,7 +15,6 @@ export const sendConfirmationOtp = catchAsyncError(async (req, res, next) => {
   }
 
   let learner = await Learner.findOne({
-    creator: req.creatorInfo._id,
     $or: [{ email: email }, { phone: phone }],
     deleted: false,
     status: true,
@@ -39,7 +38,7 @@ export const loginLearner = catchAsyncError(async (req, res, next) => {
   const { email, password, rememberMe } = req.body;
 
   const learner = await Learner.findOne({
-    creator: req.creatorInfo._id,
+
     $or: [{ email: email }, { phone: email }],
     deleted: false,
     status: true,
@@ -87,8 +86,7 @@ export const registerLearner = catchAsyncError(async (req, res, next) => {
   }
 
   let learner = await Learner.findOne({
-    creator: req.creatorInfo._id,
-    $or: [{ email: email }, { phone: phone }],
+    $or: [{ email: email }],
     deleted: false,
     status: true,
   });
@@ -102,7 +100,7 @@ export const registerLearner = catchAsyncError(async (req, res, next) => {
   }
 
   let _learner = {
-    creator: req.creatorInfo._id,
+
     firstName,
     lastName,
     email,
@@ -114,6 +112,7 @@ export const registerLearner = catchAsyncError(async (req, res, next) => {
   // TODO: Send Registration email
 
   sendToken(learner, 200, res);
+
 });
 
 export const learnerForgetPassword = catchAsyncError(async (req, res, next) => {
@@ -174,7 +173,7 @@ export const verifyResetOtp = catchAsyncError(async (req, res, next) => {
   }
 
   let learner = await Learner.findOne({
-    creator: req.creatorInfo._id,
+
     phone: req.body.phone,
     deleted: false,
     status: true,
@@ -238,7 +237,7 @@ export const resetPasswordLearner = catchAsyncError(async (req, res, next) => {
 export const getLearnerDetails = catchAsyncError(async (req, res, next) => {
   const learner = await Learner.findOne({
     _id: req.user,
-    creator: req.creatorInfo._id,
+
     deleted: false,
     status: true,
   });
@@ -258,7 +257,7 @@ export const updateProfile = catchAsyncError(async (req, res, next) => {
   let _message = "Account details updated successfully.";
   const learner = await Learner.findOne({
     _id: req.user,
-    creator: req.creatorInfo._id,
+
     deleted: false,
     status: true,
   });
@@ -316,7 +315,7 @@ export const changePassword = catchAsyncError(async (req, res, next) => {
 
   const learner = await Learner.findOne({
     _id: req.user,
-    creator: req.creatorInfo._id,
+
     deleted: false,
     status: true,
   }).select("+password");

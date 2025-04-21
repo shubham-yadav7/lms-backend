@@ -171,7 +171,6 @@ export const getAllCourseCategories = catchAsyncError(
 export const getAllCourseCategoriesList = catchAsyncError(
   async (req, res, next) => {
     const courseCategories = await CourseCategory.find({
-      creator: req.creatorInfo._id,
       deleted: false,
     }).sort({ createdAt: -1 });
     res.status(200).json({
@@ -383,6 +382,7 @@ export const editCourse = catchAsyncError(async (req, res, next) => {
     seoTitle,
     seoDescription,
     seoScripts,
+    totalDuration,
 
     status,
     popular,
@@ -426,6 +426,7 @@ export const editCourse = catchAsyncError(async (req, res, next) => {
       _course.language = language;
       _course.price = price;
       _course.discountedPrice = discountedPrice;
+      _course.totalDuration = totalDuration;
       break;
     }
     case "description-info": {
@@ -603,28 +604,7 @@ export const getAllCourses = catchAsyncError(async (req, res, next) => {
     {
       $match: query,
     },
-    {
-      $lookup: {
-        from: "courselanguages",
-        localField: "language",
-        foreignField: "_id",
-        as: "language",
-      },
-    },
-    {
-      $lookup: {
-        from: "coursecategories",
-        localField: "category",
-        foreignField: "_id",
-        as: "category",
-      },
-    },
-    {
-      $unwind: {
-        path: "$category",
-        preserveNullAndEmptyArrays: true,
-      },
-    },
+
     {
       $unset: "topics",
     },
@@ -683,18 +663,13 @@ export const getAllCourses = catchAsyncError(async (req, res, next) => {
 // course without pagination
 export const getAllCoursesList = catchAsyncError(async (req, res, next) => {
   let query = {
-    creator: req.creatorInfo._id,
     deleted: false,
     status: true,
   };
 
-  if (req.query.type === "popular") {
-    query.popular = true;
-  }
-
   // Add more queries according to requirements
 
-  const courses = await Course.find(query);
+  const courses = await Course.find();
 
   res.status(200).json({
     success: true,
@@ -707,100 +682,19 @@ export const getCourseBySlug = catchAsyncError(async (req, res, next) => {
   //  Course Details | topics | reviews and rating
   // Instructor All courses count
 
-  let query = {
-    creator: new mongoose.Types.ObjectId(req.creatorInfo._id),
+  const course = await Course.findOne({
     deleted: false,
-    status: true,
     slug,
-  };
+  }).populate("language").populate("category").populate("creator", "firstName lastName email");
 
-  let aggregateQuery = [
-    {
-      $match: query,
-    },
-    {
-      $lookup: {
-        from: "courselanguages",
-        localField: "language",
-        foreignField: "_id",
-        as: "language",
-      },
-    },
-    {
-      $lookup: {
-        from: "coursecategories",
-        localField: "category",
-        foreignField: "_id",
-        as: "category",
-      },
-    },
-    {
-      $unwind: {
-        path: "$category",
-        preserveNullAndEmptyArrays: true,
-      },
-    },
-    {
-      $lookup: {
-        from: "instructors",
-        localField: "instructor",
-        foreignField: "_id",
-        as: "instructor",
-      },
-    },
-    {
-      $lookup: {
-        from: "creators",
-        localField: "creator",
-        foreignField: "_id",
-        as: "creator",
-      },
-    },
-    {
-      $lookup: {
-        from: "reviews",
-        localField: "ratings",
-        foreignField: "_id",
-        as: "ratings",
-      },
-    },
-    {
-      $set: {
-        creator: { $arrayElemAt: ["$creator.brandName", 0] },
-      },
-    },
-  ];
-
-  const course = await Course.aggregate(aggregateQuery);
-
-  // Count total courses of instructor
-  let countArr = [];
-  // 📝 Always prefer "For of loop" instead of foreach in asynchronous operations.
-  for (const inst of course[0].instructor || []) {
-    const _count = await Course.countDocuments({
-      instructor: inst._id,
-      deleted: false,
-      status: true,
-      creator: req.creatorInfo._id,
-    });
-    countArr.push({
-      instructor: inst._id.toString(),
-      count: _count,
-    });
-  }
-
+  const topics = await Topic.find({ course: course._id }).sort({ position: 1 });
   // course topics
-  const topics = await Topic.find({
-    creator: req.creatorInfo._id,
-    course: course[0]._id,
-    deleted: false,
-  });
 
   res.status(200).json({
     success: true,
-    course: course[0],
-    totalInstructorCourses: countArr,
-    topics,
+    course: course,
+    topics
+    // totalInstructorCourses: countArr,
   });
 });
 export const deletedCourses = catchAsyncError(async (req, res, next) => {
@@ -921,7 +815,7 @@ export const restoreDeletedCourse = catchAsyncError(async (req, res, next) => {
 
 // TOPICS //
 export const courseTopicAdd = catchAsyncError(async (req, res, next) => {
-  let { title, description } = req.body;
+  let { title, description, videoLink, paidDescription } = req.body;
 
   let course = await Course.findById(req.params.id);
   if (!course) return next(new ErrorHandler("Course not found", 400));
@@ -930,10 +824,13 @@ export const courseTopicAdd = catchAsyncError(async (req, res, next) => {
     creator: req.user.role === "creator" ? req.user._id : req.user.createdBy,
     course: course._id,
     title,
+    videoLink,
     slug: slugify(title, { lower: true }),
     description,
+    paidDescription,
     deleted: false,
   });
+
 
   await Topic.create(_topic);
 
@@ -943,6 +840,7 @@ export const courseTopicAdd = catchAsyncError(async (req, res, next) => {
     course: course._id,
   });
   course.totalLessons = totalLessons;
+  course.topics.push(_topic._id);
   await course.save();
 
   req.flash("success", "Course topic added successfully");
@@ -986,6 +884,8 @@ export const courseTopicEdit = catchAsyncError(async (req, res, next) => {
     setAsIntro,
     practiceLink,
     practiceFiles,
+    videoLink,
+    paidDescription
   } = req.body;
 
   const topic = await Topic.findById(topicId);
@@ -994,9 +894,13 @@ export const courseTopicEdit = catchAsyncError(async (req, res, next) => {
   switch (editType) {
     // Edit section Form
     case "sectionEdit": {
+
+      console.log(videoLink)
       topic.title = title;
       topic.slug = slugify(title, { lower: true });
       topic.description = description;
+      topic.videoLink = videoLink;
+      topic.paidDescription = paidDescription;
       await topic.save();
       resMessage = "Section updated successfully.";
       break;

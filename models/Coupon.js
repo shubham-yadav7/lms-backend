@@ -2,11 +2,11 @@ import mongoose, { Schema } from "mongoose";
 
 const schema = new mongoose.Schema(
   {
-    creator: {
-      type: Schema.Types.ObjectId,
-      ref: "creator",
-      required: true,
-    },
+    // creator: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "creator",
+    //   required: true,
+    // },
     type: {
       type: String,
       required: true,

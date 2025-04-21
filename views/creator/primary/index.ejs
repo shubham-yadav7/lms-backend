@@ -1,1 +1,146 @@
-<%- include('../partials/header') %> <%- include('../partials/footer') %>
+<%- include('../partials/header') %>
+
+
+<div class="breadcrumbbar">
+  <div class="row align-items-center">
+    <div class="col-md-8 col-lg-6">
+      <h4 class="page-title">Dashboard</h4>
+      <div class="breadcrumb-list">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/instructor">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+        </ol>
+      </div>
+    </div>
+    <div class="col-md-4 col-lg-6">
+      <div class="widgetbar">
+        <a href="api/creator/course/list" class="btn btn-primary">View Courses</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="contentbar">
+  <!-- Start row -->
+  <div class="row">
+    <!-- Start col -->
+    
+    <!-- End col -->
+    <!-- Start col -->
+    <div class="col-md-12 col-lg-12 col-xl-6">
+      <div class="row">
+        <!-- Total Courses -->
+<div class="col-md-6 col-lg-6 col-xl-6">
+  <div class="card m-b-30">
+    <div class="card-header">
+      <h5 class="card-title mb-0">Total Courses</h5>
+    </div>
+    <div class="card-body text-center">
+      <p class="dash-analytic-icon">
+        <i class="feather icon-book text-primary primary-rgba"></i>
+      </p>
+      <h3 class="mb-3"><%= courseCount %></h3>
+      <p class="mb-0">Courses Available</p>
+    </div>
+  </div>
+</div>
+
+<!-- Total Learners -->
+<div class="col-md-6 col-lg-6 col-xl-6">
+  <div class="card m-b-30">
+    <div class="card-header">
+      <h5 class="card-title mb-0">Total Learners</h5>
+    </div>
+    <div class="card-body text-center">
+      <p class="dash-analytic-icon">
+        <i class="feather icon-users text-success success-rgba"></i>
+      </p>
+      <h3 class="mb-3"><%= learnerCount %></h3>
+      <p class="mb-0">Registered Students</p>
+    </div>
+  </div>
+</div>
+
+<!-- Total Categories -->
+<div class="col-md-6 col-lg-6 col-xl-6">
+  <div class="card m-b-30">
+    <div class="card-header">
+      <h5 class="card-title mb-0">Total Categories</h5>
+    </div>
+    <div class="card-body text-center">
+      <p class="dash-analytic-icon">
+        <i class="feather icon-layers text-warning warning-rgba"></i>
+      </p>
+      <h3 class="mb-3"><%= categoryCount %></h3>
+      <p class="mb-0">Course Categories</p>
+    </div>
+  </div>
+</div>
+
+<!-- Total Coupons -->
+<div class="col-md-6 col-lg-6 col-xl-6">
+  <div class="card m-b-30">
+    <div class="card-header">
+      <h5 class="card-title mb-0">Total Coupons</h5>
+    </div>
+    <div class="card-body text-center">
+      <p class="dash-analytic-icon">
+        <i class="feather icon-tag text-danger danger-rgba"></i>
+      </p>
+      <h3 class="mb-3"><%= couponCount %></h3>
+      <p class="mb-0">Active Coupons</p>
+    </div>
+  </div>
+</div>
+
+      </div>
+    </div>
+    <!-- End col -->
+    <!-- Start col -->
+    <div class="col-md-12 col-lg-6 col-xl-6">
+      <div class="card m-b-30">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col-8">
+              <h5 class="card-title mb-0">Top Courses</h5>
+            </div>
+            
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive dash-flag-icon">
+            <table class="table table-borderless mb-2">
+            <thead>
+  <tr>
+    <th scope="col">Sr.No</th>
+    <th scope="col">Course Title</th>
+    <th scope="col">Chapters</th>
+  </tr>
+</thead>
+           <tbody>
+  <% allCourses.forEach((course, index) => { %>
+    <tr>
+      <th scope="row"><%= index + 1 %></th>
+      <td>
+        <i class="feather icon-book text-primary mr-1"></i> 
+        <%= course.title %>
+      </td>
+      <td>
+        <i class="feather icon-layers text-success mr-1"></i>
+        <%= course.totalLessons %> Chapters
+      </td>
+    </tr>
+  <% }) %>
+</tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End col -->
+    
+  </div>
+  <!-- End row -->
+</div>
+
+<%- include('../partials/footer') %>
